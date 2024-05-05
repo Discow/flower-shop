@@ -28,6 +28,9 @@ import javax.mail.internet.MimeMessage;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 用户身份验证服务
+ */
 @Log
 @Transactional
 @Service

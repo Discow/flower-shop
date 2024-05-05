@@ -27,4 +27,9 @@ public class Flower {
     private String status; //状态 上架/下架
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date addTime; //添加时间
+
+    //关联分类 多对一
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private FlowerCategory flowerCategory;
 }
