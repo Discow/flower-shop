@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>登录</title>
+  <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+  <link href="/res/layui/css/layui.css" rel="stylesheet">
+  <link href="/res/css/center.css" rel="stylesheet">
+
+  <style>
+    .demo-login-container{width: 320px; margin: 21px auto 0;}
+    .demo-login-other .layui-icon{position: relative; display: inline-block; margin: 0 2px; top: 2px; font-size: 26px;}
+    .parent{background-image:url("res/img/background1.webp");background-position: center center;background-repeat: no-repeat;background-size: cover}
+  </style>
+  <script src="res/js/jquery-3.7.1.js"></script>
+  <script src="/res/layui/layui.js"></script>
+  <script src="/res/js/auth.js"></script>
+</head>
+<body>
+<div class="parent">
+  <div class="child">
+    <form class="layui-form">
+      <div class="demo-login-container">
+        <div style="text-align: center ;color: white ;font-size: 30px;font-family: 'Microsoft YaHei UI'; margin: 10px">用户登录</div>
+        <div class="layui-form-item">
+          <div class="layui-input-wrap">
+            <div class="layui-input-prefix">
+              <i class="layui-icon layui-icon-email"></i>
+            </div>
+            <input type="text" name="email" value="" lay-verify="required|email" placeholder="电子邮箱" lay-reqtext="请填写电子邮箱" autocomplete="off" class="layui-input" lay-affix="clear">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <div class="layui-input-wrap">
+            <div class="layui-input-prefix">
+              <i class="layui-icon layui-icon-password"></i>
+            </div>
+            <input type="password" name="password" value="" lay-verify="required" placeholder="密   码" lay-reqtext="请填写密码" autocomplete="off" class="layui-input" lay-affix="eye">
+          </div>
+        </div>
+        <div class="layui-form-item" id="vercode-form-item" hidden>
+          <div class="layui-row">
+            <div class="layui-col-xs7">
+              <div class="layui-input-wrap">
+                <div class="layui-input-prefix">
+                  <i class="layui-icon layui-icon-vercode"></i>
+                </div>
+                <input type="text" name="captcha" value="" lay-verify="" placeholder="图形验证码" lay-reqtext="请填写图形验证码" autocomplete="off" class="layui-input" lay-affix="clear" id="input-vercode">
+              </div>
+            </div>
+            <div class="layui-col-xs5">
+              <div style="margin-left: 10px;">
+                <img src="" onclick="getCaptcha()" id="captchaImg" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <input type="checkbox" name="remember" lay-skin="primary" title="记住密码">
+          <a href="/forgot-password.html" style="float: right; margin-top: 7px;">忘记密码？</a>
+        </div>
+        <div class="layui-form-item">
+          <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="demo-login">登录</button>
+        </div>
+        <div class="layui-form-item demo-login-other">
+<!--          <label>社交账号登录</label>-->
+<!--          <span style="padding: 0 21px 0 6px;">-->
+<!--        <a href="javascript:;"><i class="layui-icon layui-icon-login-qq" style="color: #3492ed;"></i></a>-->
+<!--        <a href="javascript:;"><i class="layui-icon layui-icon-login-wechat" style="color: #4daf29;"></i></a>-->
+<!--        <a href="javascript:;"><i class="layui-icon layui-icon-login-weibo" style="color: #cf1900;"></i></a>-->
+<!--      </span>-->
+          <a href="/register.html">注册帐号</a>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+
+</body>
+</html>

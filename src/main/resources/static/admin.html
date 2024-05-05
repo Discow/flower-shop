@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>后台管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/res/layui/css/layui.css" rel="stylesheet">
+    <script src="/res/layui/layui.js"></script>
+    <script src="/res/js/jquery-3.7.1.js"></script>
+    <style>
+        body {
+            overflow-y: scroll; /* 始终显示垂直滚动条 */
+        }
+    </style>
+</head>
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo layui-hide-xs layui-bg-black">后台管理</div>
+        <!-- 头部区域（可配合layui 已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+             移动端显示
+            <li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-header-event="menuLeft">
+                <i class="layui-icon layui-icon-spread-left"></i>
+            </li>
+            <li class="layui-nav-item layui-hide-xs layui-this"><a href="javascript:;">基本信息管理</a></li>
+<!--            <li class="layui-nav-item layui-hide-xs"><a href="javascript:;">成绩管理</a></li>-->
+            <li class="layui-nav-item">
+<!--                <a href="javascript:;">nav groups</a>-->
+<!--                <dl class="layui-nav-child">-->
+<!--                    <dd><a href="javascript:;">menu 11</a></dd>-->
+<!--                    <dd><a href="javascript:;">menu 22</a></dd>-->
+<!--                    <dd><a href="javascript:;">menu 33</a></dd>-->
+<!--                </dl>-->
+            </li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item layui-hide layui-show-sm-inline-block">
+                <a href="javascript:;">
+                    <img src="//unpkg.com/outeres@0.0.10/img/layui/icon-v2.png" class="layui-nav-img">
+                    <span id="username">tester</span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a>用户组：<span id="userGroup">xx管理员</span></a></dd>
+                    <dd><hr></dd>
+                    <dd><a href="javascript:;" id="myInfo">我的信息</a></dd>
+                    <dd><a href="/logout">退出登录</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item" lay-header-event="menuRight" lay-unselect>
+                <a href="javascript:;">
+                    <i class="layui-icon layui-icon-more-vertical"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+        <!-- 根据不同角色展示不同的功能模块-->
+        <div class="layui-side-scroll" id="module-items"></div>
+    </div>
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <div class="layui-card layui-panel" id="mainPanel"></div>
+            <br><br>
+        </div>
+    </div>
+    <div class="layui-footer" id="footer">
+        <!-- 底部固定区域 -->
+    </div>
+</div>
+
+<!--系统管理员的功能模块-->
+<script type="text/html" id="sys-admin-items">
+    <ul class="layui-nav layui-nav-tree" lay-filter="mainMenu" id="mainMenu">
+        <li class="layui-nav-item layui-this"><a href="javascript:loadSysStatus();">系统状态</a></li>
+        <li class="layui-nav-item"><a href="javascript:loadFlowerCategory();">鲜花分类</a></li>
+        <li class="layui-nav-item"><a href="javascript:loadFlowerManage();">鲜花管理</a></li>
+        <li class="layui-nav-item"><a href="javascript:loadUserManage();">用户管理</a></li>
+        <li class="layui-nav-item"><a href="javascript:loadOrderManage();">订单管理</a></li>
+        <li class="layui-nav-item"><a href="javascript:loadDbManage();">数据库维护</a></li>
+        <li class="layui-nav-item" id="personalCenter"><a href="javascript:loadPersonalCenter();">个人中心</a></li>
+    </ul>
+</script>
+
+<script>
+    //JS
+    layui.use(['element', 'layer', 'util'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+        var util = layui.util;
+        var $ = layui.$;
+
+        //头部事件
+        util.event('lay-header-event', {
+            menuLeft: function(othis){ // 左侧菜单事件
+                layer.msg('展开左侧菜单的操作', {icon: 0});
+            },
+            menuRight: function(){  // 右侧菜单事件
+                layer.open({
+                    type: 1,
+                    title: '更多',
+                    content: '<div style="padding: 15px;">处理右侧面板的操作</div>',
+                    area: ['260px', '100%'],
+                    offset: 'rt', // 右上角
+                    anim: 'slideLeft', // 从右侧抽屉滑出
+                    shadeClose: true,
+                    scrollbar: false
+                });
+            }
+        });
+
+        //以下是自定义代码
+        //不同角色展示不同的功能菜单
+        var role = localStorage.getItem("role");
+        if (role === 'ADMIN') {
+            $('#module-items').html($('#sys-admin-items').html());
+        }
+        element.render('nav','mainMenu');
+
+        //加载左侧功能模块
+        var subpagePrefix='/subpage/admin/'
+        //系统状态
+        window.loadSysStatus=function() {
+            $('#mainPanel').load(subpagePrefix+'system-status.html')
+        }
+        //鲜花分类
+        window.loadFlowerCategory=function() {
+            $('#mainPanel').load(subpagePrefix+'flower-category-manage.html')
+        }
+        //鲜花管理
+        window.loadFlowerManage=function() {
+            $('#mainPanel').load(subpagePrefix+'flower-manage.html')
+        }
+        //用户管理
+        window.loadUserManage=function() {
+            $('#mainPanel').load(subpagePrefix+'user-manage.html')
+        }
+        //订单管理
+        window.loadOrderManage=function() {
+            $('#mainPanel').load(subpagePrefix+'order-manage.html')
+        }
+        //数据库管理
+        window.loadDbManage=function() {
+            $('#mainPanel').load(subpagePrefix+'database-manage.html')
+        }
+        //个人中心
+        window.loadPersonalCenter=function() {
+            $('#mainPanel').load(subpagePrefix+'personal-center.html')
+        }
+
+        //TODO 这里写的好菜啊（doge）
+        document.getElementById('myInfo').addEventListener('click', function() {
+            // 移除当前高亮显示的菜单项的'layui-this'类
+            while (document.querySelector('#mainMenu .layui-nav-item.layui-this')) {
+                var highlightedItem = document.querySelector('#mainMenu .layui-nav-item.layui-this');
+                if (highlightedItem) {
+                    highlightedItem.classList.remove('layui-this');
+                }
+            }
+            document.getElementById('personalCenter').classList.add('layui-this');
+            loadPersonalCenter();
+        });
+
+        //预加载主体面板及底部固定区域
+        $(document).ready(function() {
+            var profile = JSON.parse(localStorage.getItem("profile"));
+            $('#username').html(profile.username) //展示已登录的用户名
+            $('#userGroup').html(profile.role==='ADMIN'?'系统管理员':'普通用户')
+            loadSysStatus()
+            $('#footer').load('footer.html')
+        });
+    });
+
+</script>
+</body>
+</html>

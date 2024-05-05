@@ -1,0 +1,14 @@
+/* 设置父容器 */
+.parent {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* 确保父容器占满整个视口高度 */
+}
+
+/* 设置要居中的div */
+.child {
+    width: 50%; /* 您可以根据需要设置宽度 */
+    height: 50%; /* 您可以根据需要设置高度 */
+    /* 添加其他所需的样式 */
+}

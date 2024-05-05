@@ -1,0 +1,16 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5023105",
+      "name": "身份证号",
+      "font_class": "shenfenzhenghao",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    }
+  ]
+}
