@@ -1,6 +1,8 @@
 package com.example.flowershop.repositories;
 
 import com.example.flowershop.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,6 +14,12 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email);
+
+    Page<User> findAll(Pageable pageable);
+    
+    Page<User> findByUsernameLike(String username, Pageable pageable);
+
+    Page<User> findByPhoneLike(String phone, Pageable pageable);
 
     boolean existsByEmail(String email);
 
