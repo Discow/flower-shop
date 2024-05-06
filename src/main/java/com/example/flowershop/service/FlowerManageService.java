@@ -2,6 +2,7 @@ package com.example.flowershop.service;
 
 import com.example.flowershop.entity.Flower;
 import com.example.flowershop.entity.FlowerCategory;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface FlowerManageService {
     //查询所有分类
     List<FlowerCategory> findCategoryAll();
     //支持分页查询全部分类（页码，每页行数）
-    List<FlowerCategory> findCategoryAll(Integer pageNo, Integer limit);
+    Page<FlowerCategory> findCategoryAll(Integer pageNo, Integer limit);
 
     //添加商品
     boolean addFlower(Flower flower);
@@ -29,7 +30,7 @@ public interface FlowerManageService {
     //查询全部商品
     List<Flower> findFlowerAll();
     //支持分页查询全部商品（页码，每页行数）
-    List<Flower> findFlowerAll(Integer pageNo, Integer limit);
+    Page<Flower> findFlowerAll(Integer pageNo, Integer limit);
     //模糊查询商品
     List<Flower> findFlowerByNameLike(String name);
 }

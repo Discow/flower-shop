@@ -1,6 +1,7 @@
 package com.example.flowershop.service;
 
 import com.example.flowershop.entity.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -21,12 +22,12 @@ public interface UserManageService {
     List<User> findUserAll();
 
     //支持分页查询所有用户
-    List<User> findUserAll(Integer pageNo, Integer limit);
+    Page<User> findUserAll(Integer pageNo, Integer limit);
 
     //根据手机号模糊查询
-    List<User> findByPhone(String phone, Integer pageNo, Integer limit);
+    Page<User> findByPhone(String phone, Integer pageNo, Integer limit);
 
     //根据用户名模糊查询
-    List<User> findByUsername(String username, Integer pageNo, Integer limit);
+    Page<User> findByUsername(String username, Integer pageNo, Integer limit);
 
 }

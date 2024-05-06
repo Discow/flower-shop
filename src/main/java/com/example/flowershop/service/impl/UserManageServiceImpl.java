@@ -3,6 +3,7 @@ package com.example.flowershop.service.impl;
 import com.example.flowershop.entity.User;
 import com.example.flowershop.repositories.UserRepository;
 import com.example.flowershop.service.UserManageService;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -58,20 +59,20 @@ public class UserManageServiceImpl implements UserManageService {
     }
 
     @Override
-    public List<User> findUserAll(Integer pageNo, Integer limit) {
+    public Page<User> findUserAll(Integer pageNo, Integer limit) {
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return userRepository.findAll(pageable).getContent();
+        return userRepository.findAll(pageable);
     }
 
     @Override
-    public List<User> findByPhone(String phone, Integer pageNo, Integer limit) {
+    public Page<User> findByPhone(String phone, Integer pageNo, Integer limit) {
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return userRepository.findByPhoneLike("%" + phone + "%", pageable).getContent();
+        return userRepository.findByPhoneLike("%" + phone + "%", pageable);
     }
 
     @Override
-    public List<User> findByUsername(String username, Integer pageNo, Integer limit) {
+    public Page<User> findByUsername(String username, Integer pageNo, Integer limit) {
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return userRepository.findByUsernameLike("%" + username + "%", pageable).getContent();
+        return userRepository.findByUsernameLike("%" + username + "%", pageable);
     }
 }
