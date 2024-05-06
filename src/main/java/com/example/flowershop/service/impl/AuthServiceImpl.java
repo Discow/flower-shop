@@ -12,6 +12,9 @@ import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -211,10 +214,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public List<LoginRecord> findRecord(String email) {
+    public Page<LoginRecord> findRecord(String email, Integer page, Integer limit) {
         User user = userRepository.findByEmail(email).orElse(null);
         if (user != null) {
-            return loginRecordRepository.findByUserId(user.getId());
+            Pageable pageable = PageRequest.of(page - 1, limit);
+            return loginRecordRepository.findByUserId(user.getId(), pageable);
         }
         return null;
     }

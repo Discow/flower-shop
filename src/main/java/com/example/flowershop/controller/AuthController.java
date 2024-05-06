@@ -4,11 +4,10 @@ import com.example.flowershop.dto.RestBean;
 import com.example.flowershop.entity.LoginRecord;
 import com.example.flowershop.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController //自动将控制器方法的返回值转换为JSON或XML格式的响应体，并发送给客户端，省略在每个方法加上@RestController
 //传入参数用于接收来自前端的数据，返回值返回给前端
@@ -112,8 +111,12 @@ public class AuthController {
     //查询登录历史（不能由前端传来账号进行查询，以防隐私泄露）
     @PreAuthorize("isAuthenticated()")
     @GetMapping("login-record")
-    public RestBean<?> loginRecord(Authentication authentication) {
-        List<LoginRecord> record = authService.findRecord(authentication.getName());
-        return RestBean.success(record, record.size());
+    public RestBean<?> loginRecord(Authentication authentication,
+                                   @RequestParam("page") String page,
+                                   @RequestParam("limit") String limit) {
+        Page<LoginRecord> record = authService.findRecord(authentication.getName(),
+                Integer.valueOf(page),
+                Integer.valueOf(limit));
+        return RestBean.success(record.getContent(), (int) record.getTotalElements());
     }
 }

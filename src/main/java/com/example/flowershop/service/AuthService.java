@@ -2,9 +2,9 @@ package com.example.flowershop.service;
 
 import com.example.flowershop.entity.LoginRecord;
 import com.example.flowershop.entity.User;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import java.util.List;
 import java.util.Map;
 
 public interface AuthService extends UserDetailsService {
@@ -27,5 +27,5 @@ public interface AuthService extends UserDetailsService {
     //记录登录历史
     void addRecord(String ipAddr, String email, String status);
     //查询登录历史
-    List<LoginRecord> findRecord(String email);
+    Page<LoginRecord> findRecord(String email, Integer page, Integer limit);
 }
