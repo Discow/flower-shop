@@ -1,5 +1,6 @@
 package com.example.flowershop.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class User {
     @Column(unique = true)
     private String email;
     private String username;
+    @JsonIgnore
     private String password;
     private String phone;
     @Enumerated(EnumType.STRING) //枚举类型
@@ -34,5 +36,6 @@ public class User {
 
     //建立关联 用户-订单 一对多 一方放弃维护
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     List<Order> orders;
 }
