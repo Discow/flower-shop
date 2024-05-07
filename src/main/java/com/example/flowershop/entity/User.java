@@ -1,7 +1,5 @@
 package com.example.flowershop.entity;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,7 +8,6 @@ import java.util.List;
 /**
  * 用户信息表
  */
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Builder
 @Getter
 @Setter
