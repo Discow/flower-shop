@@ -6,11 +6,11 @@ import com.example.flowershop.entity.FlowerCategory;
 import com.example.flowershop.service.FlowerManageService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -21,7 +21,7 @@ public class FlowerManageController {
 
     @PostMapping("add-flower")
     public RestBean<?> addFlower(String categoryId, String name, String description,
-                                 String price, String status,@RequestParam("image") MultipartFile image) {
+                                 String price, String status,@RequestParam("image") String image) {
         try {
             Flower flower = saveFlower(categoryId, name, description, price, status, image);
 
@@ -37,7 +37,8 @@ public class FlowerManageController {
 
     @PostMapping("modify-flower")
     public RestBean<?> modifyFlower(String categoryId, String name, String description,
-                                 String price, String status,@RequestParam("image") MultipartFile image) {
+                                    String price, String status,
+                                    @RequestParam(value = "image", required = false) String image) {
         try {
             Flower flower = saveFlower(categoryId, name, description, price, status, image);
 
@@ -75,12 +76,17 @@ public class FlowerManageController {
     }
 
     private Flower saveFlower(String categoryId, String name, String description,
-                              String price, String status, MultipartFile image) throws IOException {
+                              String price, String status, String base64Image) throws IOException {
         FlowerCategory category = FlowerCategory.builder()
                 .id(Integer.valueOf(categoryId))
                 .build();
 
-        byte[] imageBytes = image.getBytes();
+        byte[] imageBytes = null;
+        if (base64Image != null) {
+            // 去除Base64编码前缀
+            String base64Encoded = base64Image.substring(base64Image.indexOf(",") + 1);
+            imageBytes = Base64.getDecoder().decode(base64Encoded);
+        }
 
         return Flower.builder()
                 .description(description)
