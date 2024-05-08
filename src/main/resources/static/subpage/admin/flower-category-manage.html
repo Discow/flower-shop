@@ -16,8 +16,303 @@
     <blockquote class="layui-elem-quote layui-text">
         鲜花分类
     </blockquote>
-
+    <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
+<!--表格上的工具栏-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <div class="layui-form-item">
+            <div class="layui-input-group">
+                <div class="layui-input-prefix">
+                    搜索
+                </div>
+                <input type="text" placeholder="按分类名搜索" class="layui-input" lay-affix="search" lay-filter="search">
+            </div>
+        </div>
+
+        <button class="layui-btn layui-btn-sm" id="dropdownButton">
+            管理
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+        </button>
+
+        <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue" onclick="loadStuInfo()">显示全部</button>
+
+        <button class="layui-btn layui-btn-sm layui-btn-primary" id="rowMode">
+            <span>{{= d.lineStyle ? '多行' : '单行' }}模式</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+        </button>
+    </div>
+</script>
+<!--单元格内的操作选项-->
+<script type="text/html" id="barDemo">
+    <div class="layui-clear-space">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs" lay-event="more">
+            更多
+            <i class="layui-icon layui-icon-down"></i>
+        </a>
+    </div>
+</script>
+<!--弹出的编辑框-->
+<script type="text/html" id="editForm">
+    <div style="padding: 16px;">
+        <form class="layui-form layui-form-pane" lay-filter="editFormFilter">
+            <div class="layui-form-item">
+                <label class="layui-form-label">分类名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">分类描述</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入描述" name="description" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <button class="layui-btn" lay-submit lay-filter="ok">确认</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+</script>
+<script>
+    layui.use(['table', 'dropdown', 'form'], function () {
+        var $ = layui.$;
+        var table = layui.table;
+        var dropdown = layui.dropdown;
+        var form=layui.form
+
+        // 创建渲染实例
+        table.render({
+            elem: '#test',
+            url: '/admin/get-all-category', // 此处为静态模拟数据，实际使用时需换成真实接口
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            height: 'full-205', // 最大高度减去其他容器已占有的高度差
+            css: [ // 重设当前表格样式
+                '.layui-table-tool-temp{padding-right: 145px;}'
+            ].join(''),
+            cellMinWidth: 80,
+            totalRow: true, // 开启合计行
+            page: true,
+            cols: [[
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'id', width: 80, title: 'ID', sort: true},
+                {field: 'name', title: '分类名称'},
+                {field: 'description', title: '分类描述'},
+                {fixed: 'right', title: '操作', width: 134, minWidth: 125, toolbar: '#barDemo'}
+            ]],
+            done: function () {
+                var id = this.id;
+                // 下拉按钮
+                dropdown.render({
+                    elem: '#dropdownButton', // 可绑定在任意元素中，此处以上述按钮为例
+                    data: [{
+                        id: 'add',
+                        title: '添加'
+                    }, {
+                        id: 'update',
+                        title: '编辑'
+                    }, {
+                        id: 'delete',
+                        title: '删除'
+                    }],
+                    // 菜单被点击的事件
+                    click: function (obj) {
+                        var checkStatus = table.checkStatus(id)
+                        var data = checkStatus.data; // 获取选中的数据
+                        switch (obj.id) {
+                            case 'add':
+                                layer.open({
+                                    title: '添加',
+                                    type: 1,
+                                    content: $('#editForm').html(),
+                                    success: function () {
+                                        fillForm(data)
+                                        submitForm(data, '/admin/add-category')
+                                    }
+                                });
+                                break;
+                            case 'update':
+                                if (data.length !== 1) return layer.msg('请选择一行');
+                                layer.open({
+                                    title: '编辑',
+                                    type: 1,
+                                    content: $('#editForm').html(),
+                                    success: function () {
+                                        fillForm(data)
+                                        submitForm(data, '/admin/modify-category')
+                                    }
+                                });
+                                break;
+                            case 'delete':
+                                if (data.length === 0) {
+                                    return layer.msg('请选择一行');
+                                }
+                                deleteCategory(data)
+                                break;
+                        }
+                    }
+                });
+
+                // 行模式
+                dropdown.render({
+                    elem: '#rowMode',
+                    data: [{
+                        id: 'default-row',
+                        title: '单行模式（默认）'
+                    }, {
+                        id: 'multi-row',
+                        title: '多行模式'
+                    }],
+                    // 菜单被点击的事件
+                    click: function (obj) {
+                        var checkStatus = table.checkStatus(id)
+                        var data = checkStatus.data; // 获取选中的数据
+                        switch (obj.id) {
+                            case 'default-row':
+                                table.reload('test', {
+                                    lineStyle: null // 恢复单行
+                                });
+                                // layer.msg('已设为单行');
+                                break;
+                            case 'multi-row':
+                                table.reload('test', {
+                                    // 设置行样式，此处以设置多行高度为例。若为单行，则没必要设置改参数 - 注：v2.7.0 新增
+                                    lineStyle: 'height: 95px;'
+                                });
+                                // layer.msg('即通过设置 lineStyle 参数可开启多行');
+                                break;
+                        }
+                    }
+                });
+            },
+            error: function (res, msg) {
+                console.log(res, msg)
+            }
+        });
+
+        // 单元格中的工具事件
+        table.on('tool(test)', function (obj) { // 双击 toolDouble
+            var data = obj.data; // 获得当前行数据
+            // console.log(obj)
+            if (obj.event === 'edit') {
+                layer.open({
+                    title: '编辑 - id:' + data.id,
+                    type: 1,
+                    content: $('#editForm').html(),
+                    success: function () {
+                        fillForm(data)
+                        submitForm(data, '/admin/modify-category')
+                    }
+                });
+            } else if (obj.event === 'more') {
+                // 更多 - 下拉菜单
+                dropdown.render({
+                    elem: this, // 触发事件的 DOM 对象
+                    show: true, // 外部事件触发即显示
+                    data: [{
+                        title: '查看',
+                        id: 'detail'
+                    }, {
+                        title: '删除',
+                        id: 'del'
+                    }],
+                    click: function (menudata) {
+                        if (menudata.id === 'detail') {
+                            layer.msg('查看操作，当前行 ID:' + data.id);
+                        } else if (menudata.id === 'del') {
+                            layer.confirm('确认删除行 [id: ' + data.id + '] 吗？', function (index) {
+                                obj.del(); // 删除对应行（tr）的DOM结构
+                                layer.close(index);
+                                // 向服务端发送删除指令
+                                deleteCategory(data)
+                            });
+                        }
+                    },
+                    align: 'right', // 右对齐弹出
+                    style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' // 设置额外样式
+                })
+            }
+        });
+
+        //搜索框点击事件
+        form.on('input-affix(search)', function(data){
+            var elem = data.elem; // 输入框
+            var value = elem.value; // 输入框的值
+            if(!value){
+                layer.msg('请输入搜索内容');
+                return elem.focus()
+            };
+            // 刷新表格
+            table.reload('test', {
+                where: {
+                    searchName: value,
+                },
+            });
+        });
+
+
+        //表单提交按钮
+        function submitForm(data,url) {
+            form.on('submit(ok)', function(data1) {
+                var field = data1.field; // 获取表单字段值
+                if (data.length > 0) { //获取并填充id的值，判断data是否为数组类型
+                    field.id = data[0].id;
+                } else {
+                    field.id=data.id
+                }
+                $.post(url,field,function (data) {
+                    if (data.code === 200) {
+                        layer.closeAll();
+                        table.reload('test');
+                        layer.msg(data.msg, {icon: 1});
+                    } else {
+                        layer.msg(data.msg, {icon: 5});
+                    }
+                });
+                return false; //阻止表单默认行为
+            })
+        }
+
+        function deleteCategory(data) {
+            var id;
+            if (data.length > 0) { //获取并填充id的值，判断data是否为数组类型
+                id = data[0].id;
+            } else {
+                id = data.id
+            }
+            $.get("/admin/delete-category", {
+                categoryId: id,
+            },function (data) {
+                if (data.code === 200) {
+                    layer.msg(data.msg, {icon: 1});
+                } else {
+                    layer.msg(data.msg, {icon: 5});
+                }
+            });
+        }
+
+        // 填充表单
+        function fillForm(data) {
+            if (data.length > 0) { //判断data是否为数组类型
+                data = data[0];
+            }
+            form.val('editFormFilter', {
+                id: data.id,
+                name: data.name,
+                description: data.description,
+            });
+        }
+    });
+</script>
 
 </body>
 </html>
