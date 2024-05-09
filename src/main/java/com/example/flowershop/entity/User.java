@@ -34,8 +34,12 @@ public class User {
         ADMIN
     }
 
-    //建立关联 用户-订单 一对多 一方放弃维护
-    @OneToMany(mappedBy = "user")
+    //建立关联 用户-订单 一对多 一方放弃维护，忽略序列化JSON以避免栈溢出
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @JsonIgnore
     List<Order> orders;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    List<LoginRecord> loginRecords;
 }

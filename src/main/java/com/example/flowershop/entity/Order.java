@@ -31,7 +31,7 @@ public class Order {
     private Date time; //下单时间
 
     //建立关联
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 

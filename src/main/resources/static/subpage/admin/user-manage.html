@@ -257,7 +257,8 @@
                         if (menudata.id === 'detail') {
                             layer.msg('查看操作，当前行 ID:' + data.id);
                         } else if (menudata.id === 'del') {
-                            layer.confirm('确认删除行 [id: ' + data.id + '] 吗？', function (index) {
+                            layer.confirm('确认删除用户 [id: ' + data.id + '] 吗？<br>' +
+                                '<span style="color:red;">警告：删除用户将会删除订单等与之关联的信息！</span>', function (index) {
                                 obj.del(); // 删除对应行（tr）的DOM结构
                                 layer.close(index);
                                 // 向服务端发送删除指令
