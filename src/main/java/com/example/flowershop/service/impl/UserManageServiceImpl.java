@@ -34,6 +34,7 @@ public class UserManageServiceImpl implements UserManageService {
         User user = userRepository.findByEmail(newUser.getEmail()).orElse(null);
         if (user != null) {
             newUser.setId(user.getId());
+            newUser.setPassword(user.getPassword());
             userRepository.save(newUser);
             return true;
         } else {

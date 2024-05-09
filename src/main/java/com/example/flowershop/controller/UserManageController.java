@@ -5,10 +5,7 @@ import com.example.flowershop.entity.User;
 import com.example.flowershop.service.UserManageService;
 import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -31,8 +28,8 @@ public class UserManageController {
     }
 
     @PostMapping("modify-user")
-    public RestBean<?> modifyUser(String email, String username, String password,
-                               String phone, String role) {
+    public RestBean<?> modifyUser(String email, String username, @RequestParam(required = false) String password,
+                                  String phone, String role) {
         User user = saveUser(email, username, password, phone, role);
         if (userManageService.modifyUser(user)) {
             return RestBean.success("修改用户成功");
@@ -84,10 +81,13 @@ public class UserManageController {
         } else if ("admin".equalsIgnoreCase(role)) {
             roleEnum = User.Role.ADMIN;
         }
+        if (password != null) {
+            password = encoder.encode(password);
+        }
         return User.builder()
                 .email(email)
                 .username(username)
-                .password(encoder.encode(password))
+                .password(password)
                 .phone(phone)
                 .role(roleEnum)
                 .build();
