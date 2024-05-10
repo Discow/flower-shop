@@ -78,7 +78,7 @@
         // 创建渲染实例
         table.render({
             elem: '#test',
-            url: '/admin/get-orders', // 此处为静态模拟数据，实际使用时需换成真实接口
+            url: '/api/admin/get-orders', // 此处为静态模拟数据，实际使用时需换成真实接口
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -187,7 +187,7 @@
                 } else {
                     field.orderId=data.id
                 }
-                $.post(url,field,function (data) {
+                $.post('/api'+url,field,function (data) {
                     if (data.code === 200) {
                         layer.closeAll();
                         table.reload('test');

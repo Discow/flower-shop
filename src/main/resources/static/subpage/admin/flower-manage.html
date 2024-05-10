@@ -130,7 +130,7 @@
         // 创建渲染实例
         table.render({
             elem: '#test',
-            url: '/admin/get-all-flower',
+            url: '/api/admin/get-all-flower',
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -296,7 +296,7 @@
                 } else {
                     field.id = data.id
                 }
-                $.post(url, field, function (data) {
+                $.post('/api'+url, field, function (data) {
                     if (data.code === 200) {
                         layer.closeAll();
                         table.reload('test');
@@ -316,7 +316,7 @@
             } else {
                 id = data.id
             }
-            $.get("/admin/delete-flower", {
+            $.get("/api/admin/delete-flower", {
                 flowerId: id,
             }, function (data) {
                 if (data.code === 200) {
@@ -356,7 +356,7 @@
             });
 
             //填充分类下拉框
-            $.get("/admin/get-all-category",{
+            $.get("/api/admin/get-all-category",{
                 page: 1,
                 limit: 1000,
             }, function (data) {

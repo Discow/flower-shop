@@ -46,7 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .failureHandler(failureHandler)
                 .and()
                 .logout()
-                .logoutUrl("/logout")
+                .logoutUrl("/api/logout")
                 .logoutSuccessUrl("/login.html")
                 .and()
                 .rememberMe()

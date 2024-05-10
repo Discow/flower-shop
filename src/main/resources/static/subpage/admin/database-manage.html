@@ -51,7 +51,7 @@
 
         table.render({
             elem: '#database-maintain-logs',
-            url: '/admin/get-maintain-logs', // 此处为静态模拟数据，实际使用时需换成真实接口
+            url: '/api/admin/get-maintain-logs', // 此处为静态模拟数据，实际使用时需换成真实接口
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -89,7 +89,7 @@
                 layer.confirm('确认恢复到 [file: ' + data.fileName + '] 么', function (index) {
                     layer.close(index);
                     // 向服务端发送指令
-                    $.get('/admin/restore-database',{
+                    $.get('/api/admin/restore-database',{
                         fileName: data.fileName
                     },function (data) {
                         if (data.code === 200) {
@@ -108,7 +108,7 @@
             layer.confirm('是否立即备份？', function (index) {
                 layer.close(index);
                 // 向服务端发送指令
-                $.get('/admin/backup-database', function (data) {
+                $.get('/api/admin/backup-database', function (data) {
                     if (data.code === 200) {
                         layer.msg(data.msg, {icon: 1});
                         table.reloadData('database-maintain-logs')

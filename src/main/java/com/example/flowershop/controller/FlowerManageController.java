@@ -14,7 +14,7 @@ import java.util.Base64;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/")
+@RequestMapping("/api/admin/")
 public class FlowerManageController {
     @Resource
     FlowerManageService flowerManageService;

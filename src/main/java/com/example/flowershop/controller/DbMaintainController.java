@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/")
+@RequestMapping("/api/admin/")
 @PreAuthorize("hasAuthority('ADMIN')") //只有系统管理员可以维护数据库
 public class DbMaintainController {
     @Resource

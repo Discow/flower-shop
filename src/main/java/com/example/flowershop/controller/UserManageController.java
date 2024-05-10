@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/admin/")
+@RequestMapping("/api/admin/")
 public class UserManageController {
     @Resource
     UserManageService userManageService;
