@@ -13,9 +13,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 @Configuration
 @EnableMethodSecurity //开启基于方法的授权
@@ -28,6 +30,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     CustomAuthenticationSuccessHandler successHandler;
     @Resource
     CustomAuthenticationFailureHandler failureHandler;
+    @Resource
+    DataSource dataSource;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -51,7 +55,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .rememberMe()
                 .rememberMeParameter("remember")
-                .tokenRepository(new InMemoryTokenRepositoryImpl())
+                .tokenRepository(persistentTokenRepository())
                 .and()
                 .csrf().disable();
     }
@@ -70,5 +74,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
         registration.addUrlPatterns("/api/auth/doLogin");
         return registration;
+    }
+
+    //配置将token持久化到数据库
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(){
+        JdbcTokenRepositoryImpl repository = new JdbcTokenRepositoryImpl();  //使用基于JDBC的实现
+        repository.setDataSource(dataSource);   //配置数据源
+        return repository;
     }
 }
