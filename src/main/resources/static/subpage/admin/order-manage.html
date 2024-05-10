@@ -16,8 +16,201 @@
     <blockquote class="layui-elem-quote layui-text">
         订单管理
     </blockquote>
-
+    <div style="padding: 5px;">
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+    </div>
 </div>
+<!--表格上的工具栏-->
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <div class="layui-form-item">
+            <div class="layui-input-group">
+                <div class="layui-input-prefix">
+                    搜索
+                </div>
+                <input type="text" placeholder="按分类名搜索" class="layui-input" lay-affix="search" lay-filter="search">
+            </div>
+        </div>
 
+        <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue" onclick="loadStuInfo()">显示全部</button>
+
+        <button class="layui-btn layui-btn-sm layui-btn-primary" id="rowMode">
+            <span>{{= d.lineStyle ? '多行' : '单行' }}模式</span>
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+        </button>
+    </div>
+</script>
+<!--单元格内的操作选项-->
+<script type="text/html" id="barDemo">
+    <div class="layui-clear-space">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">修改状态</a>
+    </div>
+</script>
+<!--弹出的编辑框-->
+<script type="text/html" id="editForm">
+    <div style="padding: 16px;">
+        <form class="layui-form layui-form-pane" lay-filter="editFormFilter">
+            <div class="layui-form-item">
+                <label class="layui-form-label">订单状态</label>
+                <div class="layui-input-inline">
+                    <select name="status">
+                        <option value="已发货">发货</option>
+                        <option value="已取消">取消</option>
+                        <option value="已完成">完成</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <button class="layui-btn" lay-submit lay-filter="ok">确认</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </form>
+    </div>
+</script>
+<script>
+    layui.use(['table', 'dropdown', 'form'], function () {
+        var $ = layui.$;
+        var table = layui.table;
+        var dropdown = layui.dropdown;
+        var form=layui.form
+
+        // 创建渲染实例
+        table.render({
+            elem: '#test',
+            url: '/admin/get-orders', // 此处为静态模拟数据，实际使用时需换成真实接口
+            toolbar: '#toolbarDemo',
+            defaultToolbar: ['filter', 'exports', 'print', {
+                title: '提示',
+                layEvent: 'LAYTABLE_TIPS',
+                icon: 'layui-icon-tips'
+            }],
+            height: 'full-205', // 最大高度减去其他容器已占有的高度差
+            css: [ // 重设当前表格样式
+                '.layui-table-tool-temp{padding-right: 145px;}'
+            ].join(''),
+            cellMinWidth: 80,
+            totalRow: true, // 开启合计行
+            page: true,
+            cols: [[
+                {field: 'id', title: '订单号', sort: true},
+                {field: 'username', title: '用户名'},
+                {field: 'email', minWidth: 130, title: '电子邮箱'},
+                {field: 'phone', minWidth: 120, title: '联系电话'},
+                {field: 'receiveType', title: '收货方式'},
+                {field: 'paymentType', title: '支付方式'},
+                {field: 'time', minWidth: 160, title: '下单时间'},
+                {field: 'totalAmount', title: '订单总金额'},
+                {field: 'status', title: '订单状态'},
+                {fixed: 'right', title: '操作', toolbar: '#barDemo'}
+            ]],
+            done: function () {
+                var id = this.id;
+
+                // 行模式
+                dropdown.render({
+                    elem: '#rowMode',
+                    data: [{
+                        id: 'default-row',
+                        title: '单行模式（默认）'
+                    }, {
+                        id: 'multi-row',
+                        title: '多行模式'
+                    }],
+                    // 菜单被点击的事件
+                    click: function (obj) {
+                        var checkStatus = table.checkStatus(id)
+                        var data = checkStatus.data; // 获取选中的数据
+                        switch (obj.id) {
+                            case 'default-row':
+                                table.reload('test', {
+                                    lineStyle: null // 恢复单行
+                                });
+                                // layer.msg('已设为单行');
+                                break;
+                            case 'multi-row':
+                                table.reload('test', {
+                                    // 设置行样式，此处以设置多行高度为例。若为单行，则没必要设置改参数 - 注：v2.7.0 新增
+                                    lineStyle: 'height: 95px;'
+                                });
+                                // layer.msg('即通过设置 lineStyle 参数可开启多行');
+                                break;
+                        }
+                    }
+                });
+            },
+            error: function (res, msg) {
+                console.log(res, msg)
+            }
+        });
+
+        // 单元格中的工具事件
+        table.on('tool(test)', function (obj) { // 双击 toolDouble
+            var data = obj.data; // 获得当前行数据
+            // console.log(obj)
+            if (obj.event === 'edit') {
+                layer.open({
+                    title: '编辑 - id:' + data.id,
+                    type: 1,
+                    content: $('#editForm').html(),
+                    success: function () {
+                        fillForm(data)
+                        submitForm(data, '/admin/modify-order-status')
+                    }
+                });
+            }
+        });
+
+        //搜索框点击事件
+        form.on('input-affix(search)', function(data){
+            var elem = data.elem; // 输入框
+            var value = elem.value; // 输入框的值
+            if(!value){
+                layer.msg('请输入搜索内容');
+                return elem.focus()
+            };
+            // 刷新表格
+            table.reload('test', {
+                where: {
+                    searchName: value,
+                },
+            });
+        });
+
+
+        //表单提交按钮
+        function submitForm(data,url) {
+            form.on('submit(ok)', function(data1) {
+                var field = data1.field; // 获取表单字段值
+                if (data.length > 0) { //获取并填充id的值，判断data是否为数组类型
+                    field.orderId = data[0].id;
+                } else {
+                    field.orderId=data.id
+                }
+                $.post(url,field,function (data) {
+                    if (data.code === 200) {
+                        layer.closeAll();
+                        table.reload('test');
+                        layer.msg(data.msg, {icon: 1});
+                    } else {
+                        layer.msg(data.msg, {icon: 5});
+                    }
+                });
+                return false; //阻止表单默认行为
+            })
+        }
+
+        // 填充表单
+        function fillForm(data) {
+            if (data.length > 0) { //判断data是否为数组类型
+                data = data[0];
+            }
+            form.val('editFormFilter', {
+                id: data.id,
+                status: data.status,
+            });
+        }
+    });
+</script>
 </body>
 </html>

@@ -14,7 +14,7 @@ public interface UserInfoAndOrders {
     String getUsername();
     String getPhone();
     @Value("#{target.order_id}")
-    Integer getOrderId();
+    Integer getId();
     String getStatus();
     @Value("#{target.total_amount}")
     BigDecimal getTotalAmount();
