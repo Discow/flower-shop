@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface CustomerOrderService {
     //下单
-    boolean addOrder(String paymentType, String receiveType, List<OrderItemDto> items);
+    boolean addOrder(String paymentType, String receiveType, String note, List<OrderItemDto> items);
 
     //删除订单
     boolean deleteOrder(Integer orderId);

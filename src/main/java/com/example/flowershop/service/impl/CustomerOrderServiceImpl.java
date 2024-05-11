@@ -40,7 +40,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     private static final String DELETE_STATUS = "已删除";
 
     @Override
-    public boolean addOrder(String paymentType, String receiveType, List<OrderItemDto> items) {
+    public boolean addOrder(String paymentType, String receiveType, String note, List<OrderItemDto> items) {
         //TODO 用户邮箱从spring security获取，想办法构建items列表
         String email = "test@qq.com";
         User user = userRepository.findByEmail(email).orElse(null);
@@ -51,6 +51,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             order.setTotalAmount(calculateTotalAmount(items)); //由系统计算订单总金额
             order.setPaymentType(paymentType);
             order.setReceiveType(receiveType);
+            order.setNote(note);
             order.setTime(new Date());
             order.setUser(user); //关联用户
             Integer orderId = orderRepository.saveAndFlush(order).getId(); //保存订单基本信息到订单表

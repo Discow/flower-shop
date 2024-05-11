@@ -27,6 +27,7 @@ public class Order {
     private BigDecimal totalAmount; //总金额
     private String paymentType; //支付方式
     private String receiveType; //收货方式
+    private String note; //订单备注
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date time; //下单时间
 

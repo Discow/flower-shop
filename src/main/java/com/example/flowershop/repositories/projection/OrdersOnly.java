@@ -20,6 +20,7 @@ public interface OrdersOnly {
     String getPaymentType();
     @Value("#{target.receive_type}")
     String getReceiveType();
+    String getNote();
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     Date getTime();
 }
