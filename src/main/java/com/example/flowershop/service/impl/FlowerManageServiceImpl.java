@@ -90,6 +90,11 @@ public class FlowerManageServiceImpl implements FlowerManageService {
         Flower flower = flowerRepository.findByName(newFlower.getName()).orElse(null);
         if (flower != null) {
             newFlower.setId(flower.getId());
+            //如果上传图片（字节数组）为空，则还是使用之前的图片
+            byte[] newPicture = newFlower.getPicture();
+            if (newPicture == null || newPicture.length == 0) {
+                newFlower.setPicture(flower.getPicture());
+            }
             flowerRepository.save(newFlower);
             return true;
         } else {
