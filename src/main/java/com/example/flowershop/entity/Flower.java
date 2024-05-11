@@ -24,6 +24,7 @@ public class Flower {
     @Lob
     @Column(columnDefinition = "longblob")
     private byte[] picture; //图片 longblob类型
+    private Integer inventory; //库存数量
     private String status; //状态 上架/下架
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date addTime; //添加时间

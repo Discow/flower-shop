@@ -21,9 +21,9 @@ public class FlowerManageController {
 
     @PostMapping("add-flower")
     public RestBean<?> addFlower(String categoryId, String name, String description,
-                                 String price, String status,@RequestParam("image") String image) {
+                                 String price, String inventory, String status, @RequestParam("image") String image) {
         try {
-            Flower flower = saveFlower(categoryId, name, description, price, status, image);
+            Flower flower = saveFlower(categoryId, name, description, price, inventory, status, image);
 
             if (flowerManageService.addFlower(flower)) {
                 return RestBean.success("商品添加成功");
@@ -37,10 +37,10 @@ public class FlowerManageController {
 
     @PostMapping("modify-flower")
     public RestBean<?> modifyFlower(String categoryId, String name, String description,
-                                    String price, String status,
+                                    String price, String inventory, String status,
                                     @RequestParam(value = "image", required = false) String image) {
         try {
-            Flower flower = saveFlower(categoryId, name, description, price, status, image);
+            Flower flower = saveFlower(categoryId, name, description, price, inventory, status, image);
 
             if (flowerManageService.modifyFlower(flower)) {
                 return RestBean.success("商品修改成功");
@@ -76,7 +76,7 @@ public class FlowerManageController {
     }
 
     private Flower saveFlower(String categoryId, String name, String description,
-                              String price, String status, String base64Image) throws IOException {
+                              String price, String inventory, String status, String base64Image) throws IOException {
         FlowerCategory category = FlowerCategory.builder()
                 .id(Integer.valueOf(categoryId))
                 .build();
@@ -93,6 +93,7 @@ public class FlowerManageController {
                 .name(name)
                 .picture(imageBytes)
                 .price(BigDecimal.valueOf(Long.parseLong(price)))
+                .inventory(Integer.valueOf(inventory))
                 .status(status)
                 .flowerCategory(category) //关联类别
                 .build();
