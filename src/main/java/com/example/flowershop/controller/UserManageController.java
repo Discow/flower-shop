@@ -40,6 +40,9 @@ public class UserManageController {
 
     @GetMapping("delete-user")
     public RestBean<?> deleteUser(String userId) {
+        if ("-1".equals(userId)) {
+            return RestBean.failure("系统保留账户禁止删除");
+        }
         if (userManageService.deleteUser(Integer.valueOf(userId))) {
             return RestBean.success("删除用户成功");
         } else {

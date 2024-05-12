@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface CustomerOrderService {
     //下单
-    boolean addOrder(String paymentType, String receiveType, String note, List<OrderItemDto> items);
+    boolean addOrder(String email, String paymentType, String receiveType, String note, List<OrderItemDto> items);
 
     //删除订单
     boolean deleteOrder(Integer orderId);
@@ -20,6 +20,6 @@ public interface CustomerOrderService {
     boolean cancelOrder(Integer orderId);
 
     //查询当前用户的全部订单（仅获取订单集合）
-    Page<OrdersOnly> findOrderAll(Integer pageNo, Integer limit);
+    Page<OrdersOnly> findOrderAll(String email, Integer pageNo, Integer limit);
 
 }

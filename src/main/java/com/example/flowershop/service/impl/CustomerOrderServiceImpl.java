@@ -40,9 +40,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     private static final String DELETE_STATUS = "已删除";
 
     @Override
-    public boolean addOrder(String paymentType, String receiveType, String note, List<OrderItemDto> items) {
-        //TODO 用户邮箱从spring security获取，想办法构建items列表
-        String email = "test@qq.com";
+    public boolean addOrder(String email, String paymentType, String receiveType, String note, List<OrderItemDto> items) {
+        //TODO 用户邮箱在controller层从spring security获取，想办法构建items列表
         User user = userRepository.findByEmail(email).orElse(null);
 
         try {
@@ -101,9 +100,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public Page<OrdersOnly> findOrderAll(Integer pageNo, Integer limit) {
-        //TODO 从spring security获取当前用户
-        String email = "test@qq.com";
+    public Page<OrdersOnly> findOrderAll(String email, Integer pageNo, Integer limit) {
+        //TODO 在controller层从spring security获取当前用户
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
         return userRepository.findOrderByEmail(email, pageable);
     }

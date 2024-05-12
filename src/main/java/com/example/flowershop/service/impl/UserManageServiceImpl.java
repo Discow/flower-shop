@@ -1,6 +1,8 @@
 package com.example.flowershop.service.impl;
 
 import com.example.flowershop.entity.User;
+import com.example.flowershop.repositories.CommentRepository;
+import com.example.flowershop.repositories.FavoriteRepository;
 import com.example.flowershop.repositories.UserRepository;
 import com.example.flowershop.service.UserManageService;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,13 @@ import java.util.List;
 public class UserManageServiceImpl implements UserManageService {
     @Resource
     UserRepository userRepository;
+    @Resource
+    FavoriteRepository favoriteRepository;
+    @Resource
+    CommentRepository commentRepository;
+
+    //已删除的用户通用id
+    private static final Integer DELETED_USER_ID = -1;
 
     @Override
     public boolean addUser(User user) {
@@ -44,6 +53,10 @@ public class UserManageServiceImpl implements UserManageService {
 
     @Override
     public boolean deleteUser(Integer userId) {
+        //先转移收藏和评论记录到专用的“已删除用户”
+        transferRecordToDeletedAccount(userId);
+
+        //级联删除该用户关联的订单和登录记录
         try {
             userRepository.deleteById(userId);
             return true;
@@ -75,5 +88,11 @@ public class UserManageServiceImpl implements UserManageService {
     public Page<User> findByUsername(String username, Integer pageNo, Integer limit) {
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
         return userRepository.findByUsernameLike("%" + username + "%", pageable);
+    }
+
+    // 将指定用户的收藏和评论记录转移到通用账户
+    public void transferRecordToDeletedAccount(Integer userId) {
+        favoriteRepository.transferToDeletedAccount(userId, DELETED_USER_ID);
+        commentRepository.transferToDeletedAccount(userId, DELETED_USER_ID);
     }
 }

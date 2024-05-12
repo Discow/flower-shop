@@ -25,7 +25,7 @@ class CustomerOrderServiceTest {
         ArrayList<OrderItemDto> items = new ArrayList<>();
         items.add(new OrderItemDto(1, 1));
         items.add(new OrderItemDto(2, 1));
-        System.out.println(service.addOrder("支付宝", "同城速递","测试备注", items));
+        System.out.println(service.addOrder(String.valueOf(3), "支付宝", "同城速递", "测试备注", items));
     }
 
     @Test
@@ -40,6 +40,6 @@ class CustomerOrderServiceTest {
 
     @Test
     void findOrderAll() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findOrderAll(1, 10).getContent()));
+        System.out.println(objectMapper.writeValueAsString(service.findOrderAll(String.valueOf(3), 1, 10).getContent()));
     }
 }
