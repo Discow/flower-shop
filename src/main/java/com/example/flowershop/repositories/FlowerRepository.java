@@ -20,6 +20,9 @@ public interface FlowerRepository extends JpaRepository<Flower,Integer> {
 
     List<Flower> findByNameLike(String name);
 
+    @Query(value = "select flower.id,flower.name,price,flower.description,picture,inventory,status,add_time,category_id from flower,flower_category where flower_category.name=:categoryName", nativeQuery = true)
+    Page<Flower> findByCategoryName(String categoryName, Pageable pageable);
+
     Page<Flower> findAll(Pageable pageable);
 
     @Query(value = "select price from flower where id=:id", nativeQuery = true)

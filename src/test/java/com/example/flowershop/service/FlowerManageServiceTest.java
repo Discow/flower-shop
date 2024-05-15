@@ -105,4 +105,9 @@ class FlowerManageServiceTest {
     void findFlowerByNameLike() throws JsonProcessingException {
         System.out.println(objectMapper.writeValueAsString(service.findFlowerByNameLike("玫瑰")));
     }
+
+    @Test
+    void findByCategoryName() throws JsonProcessingException {
+        System.out.println(objectMapper.writeValueAsString(service.findByCategoryName("分类1",1,10)));
+    }
 }

@@ -128,4 +128,10 @@ public class FlowerManageServiceImpl implements FlowerManageService {
     public List<Flower> findFlowerByNameLike(String name) {
         return flowerRepository.findByNameLike("%"+name+"%");
     }
+
+    @Override
+    public Page<Flower> findByCategoryName(String categoryName, Integer pageNo, Integer limit) {
+        Pageable pageable = PageRequest.of(pageNo - 1, limit);
+        return flowerRepository.findByCategoryName(categoryName, pageable);
+    }
 }
