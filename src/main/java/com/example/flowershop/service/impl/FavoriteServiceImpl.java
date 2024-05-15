@@ -4,7 +4,11 @@ import com.example.flowershop.entity.Favorite;
 import com.example.flowershop.entity.User;
 import com.example.flowershop.repositories.FavoriteRepository;
 import com.example.flowershop.repositories.UserRepository;
+import com.example.flowershop.repositories.projection.FavoriteDetail;
 import com.example.flowershop.service.FavoriteService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -69,6 +73,17 @@ public class FavoriteServiceImpl implements FavoriteService {
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return false;
+        }
+    }
+
+    @Override
+    public Page<FavoriteDetail> findMyFavorite(String email, Integer pageNo, Integer limit) {
+        User user = userRepository.findByEmail(email).orElse(null);
+        Pageable pageable = PageRequest.of(pageNo - 1, limit);
+        if (user != null) {
+            return favoriteRepository.findByUserId(user.getId(), pageable);
+        } else {
+            return null;
         }
     }
 }
