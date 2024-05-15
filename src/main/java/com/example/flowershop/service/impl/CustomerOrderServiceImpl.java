@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Transactional
 @Service
@@ -38,6 +39,7 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     private static final String PAID_STATUS = "已支付";
     private static final String CANCEL_STATUS = "已取消";
     private static final String DELETE_STATUS = "已删除";
+    private static final String RECEIPTED_STATUS = "已完成";
 
     @Override
     public boolean addOrder(String email, String paymentType, String receiveType, String note, List<OrderItemDto> items) {
@@ -76,8 +78,12 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public boolean deleteOrder(Integer orderId) {
+    public boolean deleteOrder(String email, Integer orderId) {
         //逻辑删除，将订单状态标记成已删除
+        // TODO 安全漏洞警告：应当限制只能删除当前登录用户所拥有的订单
+        if (!checkOrderPermission(email, orderId)) { //没有权限则失败
+            return false;
+        }
         try {
             orderRepository.modifyOrderStatus(orderId, DELETE_STATUS);
             return true;
@@ -88,10 +94,35 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public boolean cancelOrder(Integer orderId) {
+    public boolean cancelOrder(String email, Integer orderId) {
         //将订单状态修改成已取消
+        // TODO 安全漏洞警告：应当限制只能取消当前登录用户所拥有的订单
+        if (!checkOrderPermission(email, orderId)) { //没有权限则失败
+            return false;
+        }
         try {
             orderRepository.modifyOrderStatus(orderId, CANCEL_STATUS);
+            return true;
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean confirmReceipt(String email, Integer orderId) {
+        //将订单状态修改成已完成
+        // TODO 安全漏洞警告：应当限制只能取消当前登录用户所拥有的订单
+        if (!checkOrderPermission(email, orderId)) { //没有权限则失败
+            return false;
+        }
+        //如果订单已取消或者已删除则不能再确认收货
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order == null || order.getStatus().equals(CANCEL_STATUS) || order.getStatus().equals(DELETE_STATUS)) {
+            return false;
+        }
+        try {
+            orderRepository.modifyOrderStatus(orderId, RECEIPTED_STATUS);
             return true;
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -114,5 +145,15 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             totalAmount = totalAmount.add(price.multiply(new BigDecimal(item.getQuantity()))); //单价*数量再累加
         }
         return totalAmount;
+    }
+
+    //订单权限校验，检查订单是否属于当前用户
+    boolean checkOrderPermission(String email, Integer orderId) {
+        //获取当前登录的用户id
+        Integer currentUserId = userRepository.findByEmail(email).orElse(null).getId();
+        //获取订单所属的用户id
+        Integer orderUserId = orderRepository.findById(orderId).orElse(null).getUser().getId();
+        //如果取消的不是属于自己的订单则失败
+        return Objects.equals(currentUserId, orderUserId);
     }
 }

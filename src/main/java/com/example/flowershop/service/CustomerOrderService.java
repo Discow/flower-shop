@@ -14,10 +14,13 @@ public interface CustomerOrderService {
     boolean addOrder(String email, String paymentType, String receiveType, String note, List<OrderItemDto> items);
 
     //删除订单
-    boolean deleteOrder(Integer orderId);
+    boolean deleteOrder(String email, Integer orderId);
 
     //取消订单
-    boolean cancelOrder(Integer orderId);
+    boolean cancelOrder(String email, Integer orderId);
+
+    //确认收货
+    boolean confirmReceipt(String email, Integer orderId);
 
     //查询当前用户的全部订单（仅获取订单集合）
     Page<OrdersOnly> findOrderAll(String email, Integer pageNo, Integer limit);
