@@ -4,7 +4,11 @@ import com.example.flowershop.entity.Comment;
 import com.example.flowershop.entity.User;
 import com.example.flowershop.repositories.CommentRepository;
 import com.example.flowershop.repositories.UserRepository;
+import com.example.flowershop.repositories.projection.CommentDetail;
 import com.example.flowershop.service.CommentService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -70,5 +74,11 @@ public class CommentServiceImpl implements CommentService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return false;
         }
+    }
+
+    @Override
+    public Page<CommentDetail> findByFlowerId(Integer flowerId, Integer pageNo, Integer limit) {
+        Pageable pageable = PageRequest.of(pageNo - 1, limit);
+        return commentRepository.findByFlowerId(flowerId, pageable);
     }
 }
