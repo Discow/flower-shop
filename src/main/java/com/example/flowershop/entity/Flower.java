@@ -1,5 +1,6 @@
 package com.example.flowershop.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -32,5 +33,6 @@ public class Flower {
     //关联分类 多对一
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonBackReference
     private FlowerCategory flowerCategory;
 }

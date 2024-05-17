@@ -4,6 +4,7 @@ import com.example.flowershop.entity.Flower;
 import com.example.flowershop.entity.FlowerCategory;
 import com.example.flowershop.repositories.FlowerCategoryRepository;
 import com.example.flowershop.repositories.FlowerRepository;
+import com.example.flowershop.repositories.projection.FlowerAndCategory;
 import com.example.flowershop.service.FlowerManageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -119,9 +120,9 @@ public class FlowerManageServiceImpl implements FlowerManageService {
     }
 
     @Override
-    public Page<Flower> findFlowerAll(Integer pageNo, Integer limit) {
+    public Page<FlowerAndCategory> findFlowerAll(Integer pageNo, Integer limit) {
         Pageable pageable = PageRequest.of(pageNo - 1, limit); //索引号=页码-1
-        return flowerRepository.findAll(pageable);
+        return flowerRepository.findFlowerAndCategoryAll(pageable);
     }
 
     @Override
@@ -133,5 +134,10 @@ public class FlowerManageServiceImpl implements FlowerManageService {
     public Page<Flower> findByCategoryName(String categoryName, Integer pageNo, Integer limit) {
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
         return flowerRepository.findByCategoryName(categoryName, pageable);
+    }
+
+    @Override
+    public Page<Flower> findByStatus(String status, Pageable pageable) {
+        return flowerRepository.findByStatus(status, pageable);
     }
 }

@@ -2,6 +2,7 @@ package com.example.flowershop.service;
 
 import com.example.flowershop.entity.Flower;
 import com.example.flowershop.entity.FlowerCategory;
+import com.example.flowershop.repositories.projection.FlowerAndCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -31,9 +32,11 @@ public interface FlowerManageService {
     //查询全部商品
     List<Flower> findFlowerAll();
     //支持分页查询全部商品（页码，每页行数）
-    Page<Flower> findFlowerAll(Integer pageNo, Integer limit);
+    Page<FlowerAndCategory> findFlowerAll(Integer pageNo, Integer limit);
     //模糊查询商品
     List<Flower> findFlowerByNameLike(String name);
     //按分类名查询商品
     Page<Flower> findByCategoryName(String categoryName, Integer pageNo, Integer limit);
+    //按商品状态查询
+    Page<Flower> findByStatus(String status, Pageable pageable);
 }

@@ -161,11 +161,7 @@
                 {field: 'id', width: 80, title: 'ID', sort: true},
                 {field: 'name', title: '鲜花名称'},
                 {field: 'description', title: '鲜花描述'},
-                {
-                    field: 'categoryName', title: '所属分类', templet: function (d) {
-                        return d.flowerCategory !== null ? d.flowerCategory.name : '';
-                    }
-                },
+                {field: 'categoryName', title: '所属分类'},
                 {field: 'price', title: '单价'},
                 {field: 'picture', title: '图片', templet: function(d){
                         if (d.picture !== null) {
