@@ -1,10 +1,184 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>首页</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Flowers shop</title>
+  <link rel="stylesheet" href="/res/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/res/css/reset.css">
+  <link rel="stylesheet" href="/res/css/main.css">
+  <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond&display=swap" rel="stylesheet">
+  <script src="/res/layui/layui.js"></script>
+  <script src="/res/js/jquery-3.7.1.js"></script>
 </head>
 <body>
-<p>这里是首页</p>
+
+  <!-- main container -->
+
+  <main class="main-container">
+    <div class="page1">
+      <div class="frame">
+
+        <!-- Header -->
+
+        <header>
+          <nav class="nav-bar">
+<!--            <img class="rose-logo" src="/res/img/rose-logo.png" alt="logo">-->
+            <h1 class="brand-header">
+<!--              <a href="index.html">网上花店</a>-->
+            </h1>
+            <ul class="menu">
+              <li><a href="/my-orders.html">我的订单</a></li>
+              <li><a href="/my-favorite.html">我的收藏</a></li>
+              <li><a href="">购物车</a></li>
+
+            </ul>
+          </nav>
+        </header  >
+
+        <!-- main image container -->
+
+        <div class="main-img-container position-absolute">
+<!--          <img class="main-img" src="/res/img/tnjarbouquet.png" alt="">-->
+        </div>
+        <div class="main-text">
+          <h2 class="caption" style="font-family: 'Microsoft JhengHei Light'">木子·花语</h2>
+          <h3 class="sub-caption">From certified florist designers</h3>
+<!--          <div class="order-btn">-->
+<!--            <a href="#">查看商品</a>-->
+<!--          </div>-->
+          <div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  best offers  section-->
+
+<!--    <div class="frame">-->
+<!--      <section class="best-offers">-->
+<!--        <div class="best-offers-bar">-->
+<!--          <h3 class="title">最新上架</h3>-->
+<!--          <div class="arrows">-->
+<!--            <a href="">-->
+<!--              <i class="fa fa-angle-left" aria-hidden="true"></i>-->
+<!--            </a>-->
+<!--            &nbsp;-->
+<!--            <a href="">-->
+<!--              <i class="fa fa-angle-right" aria-hidden="true"></i>-->
+<!--            </a>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="offers">-->
+<!--          <div class="left-offer offer">-->
+<!--            <div class="left-offer-info">-->
+<!--              <span class="name-price" id="top1-name"></span>-->
+<!--              <span id="top1-price"> <a href=""><i class="fa fa-shopping-cart purple-cart" aria-hidden="true"></i></a>-->
+<!--              </span>-->
+<!--&lt;!&ndash;              <div class="discount">-50%</div>&ndash;&gt;-->
+<!--            </div>-->
+<!--            <div class="left-offer-img-frame">-->
+<!--              <img src="" alt="" id="top1-picture">-->
+<!--            </div>-->
+<!--          </div>-->
+<!--          <div class="offers-right">-->
+<!--            <div class="upper-right-offer right-offer offer">-->
+<!--              <div class="right-offer-info">-->
+<!--                <div>-->
+<!--                  <span class="name-price" id="top2-name"></span>-->
+<!--                  <span id="top2-price"> <a href=""><i class="fa fa-shopping-cart purple-cart" aria-hidden="true"></i></a></span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="right-offer-img-frame">-->
+<!--                <img src="" alt="" id="top2-picture">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--            <div class="lower-right-offer right-offer offer">-->
+<!--              <div class="right-offer-info">-->
+<!--                <div>-->
+<!--                  <span class="name-price" id="top3-name"></span>-->
+<!--                  <span id="top3-price"> <a href=""><i class="fa fa-shopping-cart purple-cart" aria-hidden="true"></i></a></span>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="right-offer-img-frame">-->
+<!--                <img src="" alt="" id="top3-picture">-->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </section>-->
+<!--    </div>-->
+
+  <!-- product sample section -->
+
+    <section class="product-samples-section" id="ID-flow-demo">
+    </section>
+  </main>
+
+<script>
+  layui.use(['flow', 'jquery'], function(){
+    var flow = layui.flow;
+    var $ = layui.jquery;
+
+    // 流加载实例
+    flow.load({
+      elem: '#ID-flow-demo', // 流加载容器
+      end: '<div class="no-more-data"></div>',
+      done: function(page, next){ // 执行下一页的回调
+        // 使用Ajax获取数据
+        $.get('/api/customer/get-flower', {
+          page: page,
+          limit: 1 // 每个分类下加载的商品数量
+        }, function(res){
+          // 假设res.data是包含分类及其产品数据的数组，res.count是总记录数
+          var items = [];
+          layui.each(res.data, function(index, category){
+            // 构建每个分类的HTML字符串
+            items.push("<div class=\"product-samples-header\">\n" +
+                    "  <h3 class=\"title\">"+category.name+"</h3>\n" +
+                    "</div>\n" +
+                    "<div class=\"samples-box\">");
+
+            // 构建该分类下每个产品的HTML字符串
+            layui.each(category.flowers, function(idx, flower){
+              items.push("  <div class=\"product1"+''+" product\">\n" +
+                      "    <div class=\"img-frame\">\n" +
+                      "      <a href=\"product.html?id="+flower.id+"\">\n" +
+                      "        <img src="+(flower.picture ? 'data:image/jpeg;base64,'+flower.picture : 'default-image.jpg')+" alt=\""+flower.name+"\">\n" +
+                      "      </a>\n" +
+                      "    </div>\n" +
+                      "    <span>"+flower.name+"</span>\n" +
+                      "    <span class=\"price-span\">￥"+flower.price+"\n" +
+                      "      <a href=\"\"><i class=\"fa fa-shopping-cart\" aria-hidden=\"true\"></i></a>\n" +
+                      "      <a href=\"\"><i class=\"fa fa-heart-o\" aria-hidden=\"true\"></i></a>\n" +
+                      "    </span>\n" +
+                      "  </div>");
+            });
+
+            items.push("</div>"); // 结束该分类的产品盒子
+          });
+          // 使用next函数将构建好的HTML字符串数组插入到页面中
+          next(items.join(''), page * 1 < res.count); // 如果当前页*limit小于总记录数，继续加载
+        });
+      }
+    });
+
+    // $(document).ready(function() {
+    //   $.get("/api/customer/get-latest-flower",{page:1,limit:3}, function (response) {
+    //     if (response && response.data && response.data.length > 0) {
+    //       // 遍历返回的数据
+    //       $.each(response.data, function(index, item) {
+    //         // 根据 index 更新对应的 HTML 元素
+    //         $('#top' + (index + 1) + '-name').text(item.name);
+    //         $('#top' + (index + 1) + '-price').html('￥'+item.price.toFixed(2)+"&nbsp<a href=\"\"><i class=\"fa fa-shopping-cart purple-cart\" aria-hidden=\"true\"></i></a>");
+    //         $('#top' + (index + 1) + '-picture').attr('src', 'data:image/jpeg;base64,'+item.picture);
+    //       });
+    //     }
+    //   });
+    // });
+
+  });
+</script>
 </body>
 </html>
