@@ -3,7 +3,7 @@ package com.example.flowershop.controller;
 import com.example.flowershop.dto.RestBean;
 import com.example.flowershop.entity.Flower;
 import com.example.flowershop.entity.FlowerCategory;
-import com.example.flowershop.service.FlowerManageService;
+import com.example.flowershop.service.MainPageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,21 +23,25 @@ import java.util.List;
 @RequestMapping("/api/customer/")
 public class MainPageController {
     @Resource
-    FlowerManageService flowerManageService;
+    MainPageService mainPageService;
 
     //查询商品
     @GetMapping("get-flower")
     public RestBean<?> getFlower(@RequestParam(required = false) String name,
                                  @RequestParam(required = false) String categoryName,
-                                 String page, String limit) {
+                                 @RequestParam(required = false) String id,
+                                 @RequestParam(required = false) String page,
+                                 @RequestParam(required = false) String limit) {
         if (name != null) { //按商品名查询
-            List<Flower> flowers = flowerManageService.findFlowerByNameLike(name);
+            List<Flower> flowers = mainPageService.findFlowerByNameLike(name);
             return RestBean.success(flowers, flowers.size());
         } else if (categoryName != null) { //按分类名查询
-            Page<Flower> flowers = flowerManageService.findByCategoryName(categoryName, Integer.valueOf(page), Integer.valueOf(limit));
+            Page<Flower> flowers = mainPageService.findByCategoryName(categoryName, Integer.valueOf(page), Integer.valueOf(limit));
             return RestBean.success(flowers.getContent(), (int) flowers.getTotalElements());
+        } else if (id != null) {
+            return RestBean.success(mainPageService.findById(Integer.valueOf(id)), 1);
         } else { //查询全部
-            Page<FlowerCategory> flowers = flowerManageService.findCategoryAll(
+            Page<FlowerCategory> flowers = mainPageService.findCategoryAll(
                     Integer.valueOf(page),
                     Integer.valueOf(limit));
             return RestBean.success(flowers.getContent(), (int) flowers.getTotalElements());
@@ -48,7 +52,14 @@ public class MainPageController {
     @GetMapping("get-latest-flower")
     public RestBean<?> getLatest(String page, String limit) {
         Pageable pageable = PageRequest.of(Integer.parseInt(page) - 1, Integer.parseInt(limit), Sort.by("addTime").descending());
-        Page<Flower> flowers = flowerManageService.findByStatus("已上架", pageable);
+        Page<Flower> flowers = mainPageService.findByStatus("已上架", pageable);
         return RestBean.success(flowers.getContent(), (int) flowers.getTotalElements());
+    }
+
+    //获取随机的三个商品
+    @GetMapping("get-random-three")
+    public RestBean<?> getRandomThree() {
+        List<Flower> flowers = mainPageService.getRandomThree();
+        return RestBean.success(flowers, flowers.size());
     }
 }

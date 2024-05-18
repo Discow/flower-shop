@@ -136,8 +136,4 @@ public class FlowerManageServiceImpl implements FlowerManageService {
         return flowerRepository.findByCategoryName(categoryName, pageable);
     }
 
-    @Override
-    public Page<Flower> findByStatus(String status, Pageable pageable) {
-        return flowerRepository.findByStatus(status, pageable);
-    }
 }

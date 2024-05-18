@@ -31,4 +31,8 @@ public interface FlowerRepository extends JpaRepository<Flower,Integer> {
     BigDecimal findPriceById(@Param("id") Integer id);
 
     Page<Flower> findByStatus(String status, Pageable pageable);
+
+    @Query(value = "select * from flower ORDER BY rand() LIMIT 3", nativeQuery = true)
+    List<Flower> findRandomThree();
+
 }
