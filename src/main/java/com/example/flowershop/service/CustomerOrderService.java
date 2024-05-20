@@ -23,6 +23,6 @@ public interface CustomerOrderService {
     boolean confirmReceipt(String email, Integer orderId);
 
     //查询当前用户的全部订单（仅获取订单集合）
-    Page<OrdersOnly> findOrderAll(String email, Integer pageNo, Integer limit);
+    Page<OrdersOnly> findOrderAll(String email, String status, Integer pageNo, Integer limit);
 
 }

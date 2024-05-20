@@ -38,8 +38,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
     private static final String PAID_STATUS = "已支付";
     private static final String CANCEL_STATUS = "已取消";
-    private static final String DELETE_STATUS = "已删除";
     private static final String RECEIPTED_STATUS = "已完成";
+    private static final String PAID_DELETED_STATUS = "paid_deleted";
+    private static final String UNPAID_DELETED_STATUS = "unpaid_deleted";
 
     @Override
     public boolean addOrder(String email, String paymentType, String receiveType, String note, List<OrderItemDto> items) {
@@ -79,13 +80,18 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
 
     @Override
     public boolean deleteOrder(String email, Integer orderId) {
-        //逻辑删除，将订单状态标记成已删除
+        //逻辑删除，将订单状态标记成已删除，如果订单已完成，则标记为‘paid_deleted’，如果订单在取消后删除，则标记为unpaid_deleted
         // TODO 安全漏洞警告：应当限制只能删除当前登录用户所拥有的订单
         if (!checkOrderPermission(email, orderId)) { //没有权限则失败
             return false;
         }
         try {
-            orderRepository.modifyOrderStatus(orderId, DELETE_STATUS);
+            Order order = orderRepository.findById(orderId).orElse(null);
+            if (order != null && RECEIPTED_STATUS.equals(order.getStatus())) { //订单已完成的删除操作
+                orderRepository.modifyOrderStatus(orderId, PAID_DELETED_STATUS);
+            } else {
+                orderRepository.modifyOrderStatus(orderId, UNPAID_DELETED_STATUS); //订单已取消的删除操作
+            }
             return true;
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -118,7 +124,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         }
         //如果订单已取消或者已删除则不能再确认收货
         Order order = orderRepository.findById(orderId).orElse(null);
-        if (order == null || order.getStatus().equals(CANCEL_STATUS) || order.getStatus().equals(DELETE_STATUS)) {
+        if (order == null || order.getStatus().equals(CANCEL_STATUS)
+                || order.getStatus().equals(PAID_DELETED_STATUS)
+                || order.getStatus().equals(UNPAID_DELETED_STATUS)) {
             return false;
         }
         try {
@@ -131,10 +139,13 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public Page<OrdersOnly> findOrderAll(String email, Integer pageNo, Integer limit) {
+    public Page<OrdersOnly> findOrderAll(String email, String status, Integer pageNo, Integer limit) {
         //TODO 在controller层从spring security获取当前用户
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return userRepository.findOrderByEmail(email, pageable);
+        if (status != null && !"".equals(status)) {
+            return orderRepository.findOrderByEmailAndStatus(email, status, pageable);
+        }
+        return userRepository.findOrderByEmailExcludeDeleted(email, pageable);
     }
 
     //计算订单总金额

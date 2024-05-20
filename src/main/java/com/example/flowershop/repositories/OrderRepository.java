@@ -1,6 +1,7 @@
 package com.example.flowershop.repositories;
 
 import com.example.flowershop.entity.Order;
+import com.example.flowershop.repositories.projection.OrdersOnly;
 import com.example.flowershop.repositories.projection.UserInfoAndOrders;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +21,13 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
             "FROM `order` o JOIN user u ON u.id = o.user_id WHERE o.id=:orderId", nativeQuery = true)
     Page<UserInfoAndOrders> findOrderById(@Param("orderId") Integer id, Pageable pageable);
 
-    @Query(value = "SELECT o.id AS order_id, u.id AS user_id, u.email, u.username, u.phone, o.status, o.total_amount, o.payment_type, o.receive_type, o.note, o.time " +
+    @Query(value = "SELECT o.id AS order_id, u.id AS user_id, u.email, u.username, u.phone, o.total_amount, o.payment_type, o.receive_type, o.note, o.time," +
+            "CASE WHEN o.status IN ('paid_deleted', 'unpaid_deleted') THEN '由用户删除' ELSE o.status END AS status " +
             "FROM `order` o JOIN user u ON u.id = o.user_id", nativeQuery = true)
     Page<UserInfoAndOrders> findOrderAll(Pageable pageable);
 
+    //根据订单状态查询
+    @Query(value = "SELECT o.id AS order_id, u.id AS user_id, u.email, u.username, u.phone, o.status, o.total_amount, o.payment_type, o.receive_type, o.note, o.time " +
+            "FROM `order` o JOIN user u ON u.id = o.user_id WHERE u.email=:email AND o.status=:status", nativeQuery = true)
+    Page<OrdersOnly> findOrderByEmailAndStatus(@Param("email") String email, @Param("status") String status, Pageable pageable);
 }

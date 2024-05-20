@@ -34,9 +34,10 @@ public class OrderCustomerController {
 
     //查看订单
     @GetMapping("get-order")
-    public RestBean<?> getOrder(Authentication authentication, String page, String limit) {
+    public RestBean<?> getOrder(Authentication authentication, @RequestParam(required = false) String status,
+                                String page, String limit) {
         String email = authentication.getName();
-        Page<OrdersOnly> orders = customerOrderService.findOrderAll(email, Integer.valueOf(page), Integer.valueOf(limit));
+        Page<OrdersOnly> orders = customerOrderService.findOrderAll(email, status, Integer.valueOf(page), Integer.valueOf(limit));
         return RestBean.success(orders.getContent(), (int) orders.getTotalElements());
     }
 
