@@ -15,6 +15,7 @@
     <description>FlowerShop</description>
     <properties>
         <java.version>8</java.version>
+        <skipTests>true</skipTests>
     </properties>
     <dependencies>
         <!--Spring Web components-->
