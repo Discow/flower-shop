@@ -40,9 +40,8 @@ public class FlowerManageServiceImpl implements FlowerManageService {
 
     @Override
     public boolean modifyCategory(FlowerCategory newFlowerCategory) {
-        FlowerCategory category = flowerCategoryRepository.findByName(newFlowerCategory.getName()).orElse(null);
+        FlowerCategory category = flowerCategoryRepository.findById(newFlowerCategory.getId()).orElse(null);
         if (category != null) {
-            newFlowerCategory.setId(category.getId());
             flowerCategoryRepository.save(newFlowerCategory);
             return true;
         } else {
@@ -86,11 +85,10 @@ public class FlowerManageServiceImpl implements FlowerManageService {
 
     @Override
     public boolean modifyFlower(Flower newFlower) {
-        newFlower.setAddTime(new Date());
-        //按商品名查询Id
-        Flower flower = flowerRepository.findByName(newFlower.getName()).orElse(null);
+        newFlower.setAddTime(new Date()); //设置修改时间
+        //修改之前查询商品是否存在
+        Flower flower = flowerRepository.findById(newFlower.getId()).orElse(null);
         if (flower != null) {
-            newFlower.setId(flower.getId());
             //如果上传图片（字节数组）为空，则还是使用之前的图片
             byte[] newPicture = newFlower.getPicture();
             if (newPicture == null || newPicture.length == 0) {

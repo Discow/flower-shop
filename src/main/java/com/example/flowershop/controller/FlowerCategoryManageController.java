@@ -30,8 +30,9 @@ public class FlowerCategoryManageController {
     }
 
     @PostMapping("modify-category")
-    public RestBean<?> modifyCategory(String name, String description) {
+    public RestBean<?> modifyCategory(String id, String name, String description) {
         FlowerCategory category = new FlowerCategory();
+        category.setId(Integer.valueOf(id));
         category.setName(name);
         category.setDescription(description);
         if (flowerManageService.modifyCategory(category)) {

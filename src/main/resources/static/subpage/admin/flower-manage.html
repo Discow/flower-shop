@@ -37,10 +37,6 @@
 
         <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue" onclick="loadStuInfo()">显示全部</button>
 
-        <button class="layui-btn layui-btn-sm layui-btn-primary" id="rowMode">
-            <span>{{= d.lineStyle ? '多行' : '单行' }}模式</span>
-            <i class="layui-icon layui-icon-down layui-font-12"></i>
-        </button>
     </div>
 </script>
 <!--单元格内的操作选项-->
@@ -84,9 +80,8 @@
                     <label class="layui-form-label">商品状态</label>
                     <div class="layui-input-inline">
                         <select name="status">
-                            <option value="已上架">上架</option>
+                            <option value="已上架" selected>上架</option>
                             <option value="已下架">下架</option>
-                            <option value="无货">无货</option>
                         </select>
                     </div>
                 </div>
@@ -154,8 +149,11 @@
             ].join(''),
             cellMinWidth: 80,
             lineStyle: 'height: 95px;',
-            totalRow: true, // 开启合计行
             page: true,
+            initSort: {
+                field: 'id',
+                type: 'asc'
+            },
             cols: [[
                 {type: 'checkbox', fixed: 'left'},
                 {field: 'id', width: 80, title: 'ID', sort: true},
@@ -172,7 +170,7 @@
                     }},
                 {field: 'inventory', title: '库存数量'},
                 {field: 'status', title: '状态'},
-                {field: 'addTime', title: '操作时间'},
+                {field: 'addTime', title: '操作时间', sort: true},
                 {fixed: 'right', title: '操作', width: 134, minWidth: 125, toolbar: '#barDemo'}
             ]],
             done: function () {
@@ -287,7 +285,7 @@
             }
             ;
             // 刷新表格
-            table.reload('test', {
+            table.reloadData('test', {
                 where: {
                     searchName: value,
                 },
@@ -321,7 +319,7 @@
                 $.post('/api'+url, field, function (data) {
                     if (data.code === 200) {
                         layer.closeAll();
-                        table.reload('test');
+                        table.reloadData('test');
                         layer.msg(data.msg, {icon: 1});
                     } else {
                         layer.msg(data.msg, {icon: 5});
@@ -370,14 +368,19 @@
                 },
             });
 
-            form.val('editFormFilter', {
-                id: data.id,
-                name: data.name,
-                description: data.description,
-                price: data.price,
-                status: data.status,
-                inventory: data.inventory,
-            });
+            //如果id为未定义，则为添加操作，不需要填充表单
+            if (data.id !== undefined) {
+                form.val('editFormFilter', {
+                    id: data.id,
+                    name: data.name,
+                    description: data.description,
+                    price: data.price,
+                    status: data.status,
+                    inventory: data.inventory,
+                });
+            } else {
+                form.render()
+            }
 
             //填充分类下拉框
             $.get("/api/admin/get-all-category",{

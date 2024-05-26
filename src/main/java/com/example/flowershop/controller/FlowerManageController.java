@@ -24,7 +24,7 @@ public class FlowerManageController {
     public RestBean<?> addFlower(String categoryId, String name, String description,
                                  String price, String inventory, String status, @RequestParam("image") String image) {
         try {
-            Flower flower = saveFlower(categoryId, name, description, price, inventory, status, image);
+            Flower flower = saveFlower(null, categoryId, name, description, price, inventory, status, image);
 
             if (flowerManageService.addFlower(flower)) {
                 return RestBean.success("商品添加成功");
@@ -37,11 +37,11 @@ public class FlowerManageController {
     }
 
     @PostMapping("modify-flower")
-    public RestBean<?> modifyFlower(String categoryId, String name, String description,
+    public RestBean<?> modifyFlower(String id, String categoryId, String name, String description,
                                     String price, String inventory, String status,
                                     @RequestParam(value = "image", required = false) String image) {
         try {
-            Flower flower = saveFlower(categoryId, name, description, price, inventory, status, image);
+            Flower flower = saveFlower(id, categoryId, name, description, price, inventory, status, image);
 
             if (flowerManageService.modifyFlower(flower)) {
                 return RestBean.success("商品修改成功");
@@ -76,7 +76,7 @@ public class FlowerManageController {
         return RestBean.success(flowers, flowers.size());
     }
 
-    private Flower saveFlower(String categoryId, String name, String description,
+    private Flower saveFlower(String id, String categoryId, String name, String description,
                               String price, String inventory, String status, String base64Image) throws IOException {
         FlowerCategory category = FlowerCategory.builder()
                 .id(Integer.valueOf(categoryId))
@@ -90,6 +90,7 @@ public class FlowerManageController {
         }
 
         return Flower.builder()
+                .id(id != null ? Integer.valueOf(id) : null)
                 .description(description)
                 .name(name)
                 .picture(imageBytes)

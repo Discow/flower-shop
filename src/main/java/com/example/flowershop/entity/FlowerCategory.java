@@ -22,7 +22,7 @@ public class FlowerCategory {
     private String description;
 
     //建立关联
-    @OneToMany(mappedBy = "flowerCategory")
+    @OneToMany(mappedBy = "flowerCategory", cascade = CascadeType.REMOVE)
     @JsonManagedReference
     List<Flower> flowers;
 }
