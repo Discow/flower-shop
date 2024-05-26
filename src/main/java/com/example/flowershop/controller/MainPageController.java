@@ -20,7 +20,7 @@ import java.util.List;
  * 商城主页控制器，负责展示搜索商品
  */
 @RestController
-@RequestMapping("/api/customer/")
+@RequestMapping("/api/customer/mainPage/")
 public class MainPageController {
     @Resource
     MainPageService mainPageService;

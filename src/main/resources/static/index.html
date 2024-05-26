@@ -127,7 +127,7 @@
       end: '<div class="no-more-data"></div>',
       done: function(page, next){ // 执行下一页的回调
         // 使用Ajax获取数据
-        $.get('/api/customer/get-flower', {
+        $.get('/api/customer/mainPage/get-flower', {
           page: page,
           limit: 1 // 每个分类下加载的商品数量
         }, function(res){
@@ -165,7 +165,7 @@
     });
 
     // $(document).ready(function() {
-    //   $.get("/api/customer/get-latest-flower",{page:1,limit:3}, function (response) {
+    //   $.get("/api/customer/mainPage/get-latest-flower",{page:1,limit:3}, function (response) {
     //     if (response && response.data && response.data.length > 0) {
     //       // 遍历返回的数据
     //       $.each(response.data, function(index, item) {

@@ -357,7 +357,7 @@
 
           //填充商品详情页
           $(document).ready(function () {
-              $.get('/api/customer/get-flower',{id:productId}, function (response) {
+              $.get('/api/customer/mainPage/get-flower',{id:productId}, function (response) {
                   $('#name').text(response.data.name)
                   $('#price').text('￥'+response.data.price)
                   $('#description').text(response.data.description)
@@ -367,7 +367,7 @@
               });
 
               //填充相关推荐
-              $.get('/api/customer/get-random-three', function (res) {
+              $.get('/api/customer/mainPage/get-random-three', function (res) {
                   $.each(res.data,function (index, items) {
                       var iRelated=index+1
                       var relatedProduct = "<div class=\"related"+iRelated+" related\">\n" +
