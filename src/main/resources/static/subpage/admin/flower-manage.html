@@ -378,6 +378,7 @@
                     status: data.status,
                     inventory: data.inventory,
                 });
+                var categoryName = data.categoryName;
             } else {
                 form.render()
             }
@@ -391,6 +392,9 @@
                 var select = $('select[name="categoryId"]');
                 categories.forEach(function(category){
                     var option = new Option(category.name, category.id);
+                    if (category.name === categoryName) {
+                        option.selected = true;
+                    }
                     select.append(option);
                 });
                 form.render('select'); // 更新渲染
