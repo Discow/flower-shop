@@ -2,6 +2,7 @@ package com.example.flowershop.entity;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
@@ -23,6 +24,7 @@ public class FlowerCategory {
 
     //建立关联
     @OneToMany(mappedBy = "flowerCategory", cascade = CascadeType.REMOVE)
+    @Where(clause = "status='已上架'")
     @JsonManagedReference
     List<Flower> flowers;
 }

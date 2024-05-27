@@ -32,7 +32,7 @@ public interface FlowerRepository extends JpaRepository<Flower,Integer> {
 
     Page<Flower> findByStatus(String status, Pageable pageable);
 
-    @Query(value = "select * from flower ORDER BY rand() LIMIT 3", nativeQuery = true)
+    @Query(value = "select * from flower where (status <> '已下架') ORDER BY rand() LIMIT 3", nativeQuery = true)
     List<Flower> findRandomThree();
 
 }
