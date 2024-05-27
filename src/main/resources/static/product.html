@@ -357,8 +357,18 @@
 
           //填充商品详情页
           $(document).ready(function () {
+              if (productId === null || productId === '' || productId === 'undefined') {
+                  window.location.href='/index.html'
+                  return
+              }
+
               $.get('/api/customer/mainPage/get-flower',{id:productId}, function (response) {
-                  $('#name').text(response.data.name)
+                  if (response.data.status === '已下架') {
+                      $('.buy-btn').replaceWith("<span style='color: hotpink;margin-left: 5px'>此商品已下架</span>")
+                  }else if (response.data.inventory === 0) {
+                      $('.buy-btn').replaceWith("<span style='color: hotpink;margin-left: 5px'>此商品已售罄</span>")
+                  }
+                  $('#name').text(response.data.name);
                   $('#price').text('￥'+response.data.price)
                   $('#description').text(response.data.description)
                   $('#inventory').text(response.data.inventory)

@@ -39,7 +39,7 @@ public class MainPageController {
             Page<Flower> flowers = mainPageService.findByCategoryName(categoryName, Integer.valueOf(page), Integer.valueOf(limit));
             return RestBean.success(flowers.getContent(), (int) flowers.getTotalElements());
         } else if (id != null) {
-            return RestBean.success(mainPageService.findById(Integer.valueOf(id)), 1);
+            return RestBean.success(mainPageService.findById(!id.equals("") ? Integer.valueOf(id) : null), 1);
         } else { //查询全部
             Page<FlowerCategory> flowers = mainPageService.findCategoryAll(
                     Integer.valueOf(page),
