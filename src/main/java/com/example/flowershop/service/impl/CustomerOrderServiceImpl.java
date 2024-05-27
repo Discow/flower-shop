@@ -1,6 +1,7 @@
 package com.example.flowershop.service.impl;
 
 import com.example.flowershop.dto.OrderItemDto;
+import com.example.flowershop.entity.Flower;
 import com.example.flowershop.entity.Order;
 import com.example.flowershop.entity.OrderDetail;
 import com.example.flowershop.entity.User;
@@ -19,10 +20,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Transactional
 @Service
@@ -61,6 +59,20 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             //设置关联商品信息（商品id，购买数量）
             ArrayList<OrderDetail> orderDetails = new ArrayList<>();
             for (OrderItemDto item : items) {
+                //查询商品的库存是否充足
+                Flower flower = flowerRepository.findById(item.getFlowerId()).orElse(null);
+                if (flower == null) {
+                    throw new Exception("商品不存在！");
+                }
+                Integer inventory = flower.getInventory();
+                //减少对应商品的库存
+                int newInventory = inventory - item.getQuantity();
+                //当前库存为0或购买数量超过库存都返回库存不足
+                if (inventory == 0 || newInventory < 0) {
+                    throw new Exception("库存不足！");
+                }
+                flowerRepository.updateInventory(flower.getId(), newInventory);
+                //设置关联信息
                 OrderDetail.OrderDetailPK pk = new OrderDetail.OrderDetailPK();
                 pk.setOrderId(orderId);
                 pk.setFlowerId(item.getFlowerId());

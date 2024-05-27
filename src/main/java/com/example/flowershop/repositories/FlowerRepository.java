@@ -5,6 +5,7 @@ import com.example.flowershop.repositories.projection.FlowerAndCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -35,4 +36,8 @@ public interface FlowerRepository extends JpaRepository<Flower,Integer> {
     @Query(value = "select * from flower where (status <> '已下架') ORDER BY rand() LIMIT 3", nativeQuery = true)
     List<Flower> findRandomThree();
 
+    //更新库存
+    @Modifying
+    @Query(value = "update flower set inventory=:inventory where id=:id", nativeQuery = true)
+    void updateInventory(Integer id, Integer inventory);
 }
