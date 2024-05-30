@@ -12,14 +12,43 @@
 </head>
 <body>
 
-<div>
-    <div style="padding: 0 5px;">
-        <table class="layui-hide" id="test" lay-filter="test"></table>
-    </div>
+<div style="padding: 0 5px;">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
 <!--表格上的工具栏-->
 <script type="text/html" id="toolbarDemo">
+    <form class="layui-form yadmin-search-area input">
+        <div class="layui-form-item" style="height: 0">
+            <div class="layui-inline">
+                <label for="phone" class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="phone" autocomplete="off" id="phone" class="layui-input">
+                </div>
 
+                <label for="status" class="layui-form-label" style="padding-left: 5px">收货方式</label>
+                <div class="layui-input-inline">
+                    <select name="receiveType" id="receiveType">
+                        <option value="全部">全部</option>
+                        <option value="到店自取">到店自取</option>
+                        <option value="上门配送">上门配送</option>
+                    </select>
+                </div>
+
+                <label for="status" class="layui-form-label">状态</label>
+                <div class="layui-input-inline">
+                    <select name="status" id="status">
+                        <option value="全部">全部</option>
+                        <option value="待处理">待处理</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </div>
+
+                <button lay-submit="" lay-filter="search" class="layui-btn layui-btn-sm layui-btn-primary table-action">
+                    <i class="layui-icon layui-icon-search"></i>
+                </button>
+            </div>
+        </div>
+    </form>
 </script>
 <!--单元格内的操作选项-->
 <script type="text/html" id="barDemo">
