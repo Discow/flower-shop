@@ -7,13 +7,171 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/res/layui/css/layui.css" rel="stylesheet">
+    <link href="/res/css/common.css" rel="stylesheet">
+    <link href="/res/css/system-status.css" rel="stylesheet">
     <script src="/res/layui/layui.js"></script>
-</head>
-<body>
+    <style>
+        .layadmin-takerates {
+            padding-top: 5px;
+        }
 
-<div>
-<!--    TODO 总订单数、营业额、总商品数量、待处理订单、最近登录审计、系统、数据库版本信息-->
+        .layadmin-takerates .layui-progress {
+            margin: 50px 0 60px
+        }
+
+        .layadmin-takerates .layui-progress:last-child {
+            margin-bottom: 10px
+        }
+
+        .layadmin-takerates .layui-progress h3 {
+            position: absolute;
+            right: 0;
+            top: -35px;
+            color: #999;
+            font-size: 14px
+        }
+
+        .layadmin-takerates .layui-progress-bar {
+            text-align: left
+        }
+
+        .layadmin-takerates .layui-progress-text {
+            top: -35px;
+            line-height: 26px;
+            font-size: 26px
+        }
+    </style>
+</head>
+<!--TODO 总订单数、营业额、总商品数量、待处理订单、最近登录审计、系统、数据库版本信息-->
+<body>
+<div class="layui-body" style="margin-bottom: 15px">
+    <div class="layui-fluid ew-console-wrapper">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <p style="font-size:14px;color: rgba(0,0,0,.45);">总订单金额
+                            <span class="pull-right">
+                                    <i class="ri-exchange-cny-fill ri-xl" style="vertical-align: -0.3em;"></i>
+                                </span>
+                        </p>
+                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥&nbsp;</span>85,84787
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <p style="font-size:14px;color: rgba(0,0,0,.45);">访问量
+                            <span class="pull-right">
+                                    <i class="ri-funds-line ri-xl" style="vertical-align: -0.3em;"></i>
+                                </span>
+                        </p>
+                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;"></span>92,648
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <p style="font-size:14px;color: rgba(0,0,0,.45);">活跃用户
+                            <span class="pull-right">
+                                    <i class="ri-ghost-2-line ri-xl" style="vertical-align: -0.3em;"></i>
+                                </span>
+                        </p>
+                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;"></span>12684
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <p style="font-size:14px;color: rgba(0,0,0,.45);">总支出金额
+                            <span class="pull-right">
+                                    <i class="ri-hand-coin-line ri-xl" style="vertical-align: -0.3em;"></i>
+                                </span>
+                        </p>
+                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥&nbsp;</span>4675217
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-lg8 layui-col-md7">
+                <div class="layui-card">
+                    <div class="layui-card-header">登录日志</div>
+                    <div class="layui-card-body">
+                        <table class="layui-table"
+                               lay-data="{height:384, url:'/data/user/loginlog.json', page:true, limit: 10 ,skin: 'line', even: true,size: 'sm'}"
+                               lay-filter="test">
+                            <thead>
+                            <tr>
+                                <th lay-data="{field:'userName'}">用户名</th>
+                                <th lay-data="{field:'IP'}">IP</th>
+                                <th lay-data="{field:'status'}">状态</th>
+                                <th lay-data="{field:'creationTime', sort: true}">登陆时间</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-lg4 layui-col-md5">
+                <div class="layui-card">
+                    <div class="layui-card-header">系统状态</div>
+                    <div class="layui-card-body layadmin-takerates">
+                        <div class="layui-progress" lay-showpercent="yes">
+                            <h3>CPU 使用率</h3>
+                            <div class="layui-progress-bar" lay-percent="58%" style="width: 58%;"><span class="layui-progress-text">58%</span></div>
+                        </div>
+                        <div class="layui-progress" lay-showpercent="yes">
+                            <h3>内存占用率</h3>
+                            <div class="layui-progress-bar layui-bg-red" lay-percent="90%" style="width: 90%;"><span class="layui-progress-text">90%</span></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-card">
+                    <div class="layui-card-header">版本信息</div>
+                    <div class="layui-card-body layui-text">
+                        <table class="layui-table">
+                            <colgroup>
+                                <col width="200">
+                                <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                                <td>操作系统</td>
+                                <td>
+                                    Windows
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Spring Boot版本</td>
+                                <td>v2.6.15</td>
+                            </tr>
+                            <tr>
+                                <td>MySQL版本</td>
+                                <td>v8.0</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+    })
+</script>
 
 </body>
 </html>
