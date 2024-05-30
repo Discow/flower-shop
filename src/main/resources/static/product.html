@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Flowers shop - Product page</title>
+  <title>商品详情</title>
   <link rel="stylesheet" href="/res/css/bootstrap.min.css">
     <link rel="stylesheet" href="/res/layui/css/layui.css">
     <link rel="stylesheet" href="/res/css/font-awesome.min.css">
@@ -109,12 +109,7 @@
         </div>
 
         <div class="other-options line">
-<!--          <div class="color-picker">-->
-<!--            <span>花语：</span>-->
-
-<!--          </div>-->
-<!--          -->
-        <div>
+          <div>
             <div class="color-picker" style="margin-bottom: 20px;">
                 <span style="font-family: 'Microsoft Himalaya'">花语：</span>
                 <span class="huayu-content" id="description"></span>
@@ -129,21 +124,10 @@
             </div>
             <div class="" style="margin-bottom: 20px;">
                 <span style="font-family: 'Microsoft Himalaya'">已售：</span>
-                <span>100 件</span>
+                <span>100 件（模拟数据）</span>
             </div>
-        </div>
+          </div>
 
-<!--          <div class="delivery">-->
-<!--            <span>配送方式</span>-->
-<!--            <div class="delivery-options">-->
-<!--              <div class="options-line">-->
-<!--                <div class="checkmark1 checkmark"></div>-->
-<!--                <div class="delivery-option">到店自取</div>-->
-<!--                <div class="checkmark2 checkmark"></div>-->
-<!--                <div class="delivery-option">同城配送</div>-->
-<!--              </div>-->
-<!--          </div>-->
-<!--        </div>-->
         </div>
         <div class="total line">
 <!--          <span class="old-price">$89</span>-->
@@ -185,13 +169,13 @@
           <div class="layui-form-item layui-form-text">
               <label class="layui-form-label">订单备注</label>
               <div class="layui-input-block">
-                  <textarea id="note" name="remark" placeholder="请输入内容" class="layui-textarea"></textarea>
+                  <textarea id="note" name="remark" placeholder="请输入订单备注" class="layui-textarea"></textarea>
               </div>
           </div>
           <div class="layui-form-item">
               <label class="layui-form-label">购买数量</label>
               <div class="layui-input-block">
-                  <input type="number" id="quantity" name="quantity" value="1" placeholder="请输入数量" autocomplete="off" class="layui-input" min="1" step="1" lay-affix="number">
+                  <input type="number" lay-verify="required" id="quantity" name="quantity" value="1" placeholder="请输入数量" autocomplete="off" class="layui-input" min="1" step="1" max="99" oninput="validity.valid||(value='');" lay-affix="number">
               </div>
           </div>
           <div class="layui-form-item">
@@ -205,24 +189,28 @@
               <div class="layui-form-item">
                   <label class="layui-form-label">收件人</label>
                   <div class="layui-input-block">
-                      <input type="text" name="receiver" required lay-verify="required" placeholder="请输入收件人姓名"
+                      <input type="text" name="receiver" id="receiver" placeholder="请输入收件人姓名"
                              autocomplete="off" class="layui-input">
                   </div>
               </div>
               <div class="layui-form-item">
                   <label class="layui-form-label">收货地址</label>
                   <div class="layui-input-block">
-                      <input type="text" name="address" required lay-verify="required" placeholder="请输入收货地址"
+                      <input type="text" name="address" id="address" placeholder="请输入收货地址"
                              autocomplete="off" class="layui-input">
                   </div>
               </div>
               <div class="layui-form-item">
                   <label class="layui-form-label">送达时间</label>
                   <div class="layui-input-block">
-                      <input type="text" name="deliveryTime" id="deliveryTime" required lay-verify="required" placeholder="请输入预计送达时间"
+                      <input type="text" name="deliveryTime" id="deliveryTime" placeholder="请输入预计送达时间"
                              autocomplete="off" class="layui-input">
                   </div>
               </div>
+          </div>
+
+          <div class="layui-form-item" style="padding-left: 30px">
+              <span id="total-amount">总金额：0 元</span>
           </div>
       </form>
   </script>
@@ -310,11 +298,23 @@
                           type: 'datetime', //日期时间选择器
                           min: 0 //设置最小可选时间为当前时间
                       });
+                      // 在按钮容器的左侧添加显示总金额的元素
+                      function calculateTotalAmount() {
+                          var quantity = Number($('#quantity').val());
+                          var totalAmount = quantity * unitPrice;
+                          $('#total-amount').text('总金额：'+totalAmount+' 元');
+                      }
+                      setInterval(calculateTotalAmount, 200);
                       form.render()
                   },
                   yes: function (index, layero) {
+                      //校验表单输入
+                      var isValid = form.validate('.layui-input');  // 主动触发验证，v2.7.0 新增
+                      if(!isValid){
+                          return false
+                      }
+
                       // 提交订单的逻辑处理
-                      //TODO test
                       var queryString = "paymentType="+$('input[name="payment"]:checked').val()
                           +"&receiveType="+$('input[name="delivery"]:checked').val()+""
                           +"&note="+$('#note').val()+"";
@@ -333,7 +333,9 @@
                           data:JSON.stringify(payload),
                           success: function(data) {
                               if (data.code === 200) {
-                                  layer.alert(data.msg, {icon: 1});
+                                  layer.alert(data.msg, {icon: 1},function () {
+                                      window.location.href='/my-orders.html'
+                                  });
                               } else {
                                   layer.alert(data.msg, {icon: 5});
                               }
@@ -350,8 +352,14 @@
           form.on('radio(deliveryType)', function (data) {
               if (data.value === '上门配送') {
                   $('.delivery-info').show();
+                  $('#receiver').attr('lay-verify','required')
+                  $('#address').attr('lay-verify','required')
+                  $('#deliveryTime').attr('lay-verify','required')
               } else {
                   $('.delivery-info').hide();
+                  $('#receiver').removeAttr('lay-verify')
+                  $('#address').removeAttr('lay-verify')
+                  $('#deliveryTime').removeAttr('lay-verify')
               }
           });
 
@@ -363,6 +371,9 @@
               }
 
               $.get('/api/customer/mainPage/get-flower',{id:productId}, function (response) {
+                  //设置单价全局变量
+                  window.unitPrice = response.data.price;
+
                   if (response.data.status === '已下架') {
                       $('.buy-btn').replaceWith("<span style='color: hotpink;margin-left: 5px'>此商品已下架</span>")
                   }else if (response.data.inventory === 0) {

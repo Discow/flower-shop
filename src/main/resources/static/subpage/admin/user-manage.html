@@ -7,84 +7,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/res/layui/css/layui.css" rel="stylesheet">
-    <!--父页面已经导入layui.js，子页面不能再次导入，不然会出现表单提交两次的情况-->
-    <!--<script src="/res/layui/layui.js"></script>-->
+    <link href="/res/css/common.css" rel="stylesheet">
+    <script src="/res/layui/layui.js"></script>
 </head>
 <body>
 
 <div>
-    <blockquote class="layui-elem-quote layui-text">
-        用户管理
-    </blockquote>
-    <table class="layui-hide" id="test" lay-filter="test"></table>
+    <div style="padding: 0 5px;">
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+    </div>
 </div>
 <!--表格上的工具栏-->
 <script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
-        <div class="layui-form-item">
-            <div class="layui-input-group">
-                <div class="layui-input-prefix">
-                    搜索
-                </div>
-                <input type="text" placeholder="按用户名搜索" class="layui-input" lay-affix="search" lay-filter="search">
-            </div>
-        </div>
 
-        <button class="layui-btn layui-btn-sm" id="dropdownButton">
-            管理
-            <i class="layui-icon layui-icon-down layui-font-12"></i>
-        </button>
-
-        <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue" onclick="loadStuInfo()">显示全部</button>
-
-        <button class="layui-btn layui-btn-sm layui-btn-primary" id="rowMode">
-            <span>{{= d.lineStyle ? '多行' : '单行' }}模式</span>
-            <i class="layui-icon layui-icon-down layui-font-12"></i>
-        </button>
-    </div>
 </script>
 <!--单元格内的操作选项-->
 <script type="text/html" id="barDemo">
     <div class="layui-clear-space">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-xs" lay-event="more">
-            更多
-            <i class="layui-icon layui-icon-down"></i>
-        </a>
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">
+            <i class="layui-icon layui-icon-edit" title="编辑"></i>
+            编辑
+        </button>
+
+        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">
+            <i class="layui-icon layui-icon-delete" title="删除"></i>
+            删除
+        </button>
     </div>
 </script>
 <!--弹出的编辑框-->
 <script type="text/html" id="editForm">
     <div style="padding: 16px;">
         <form class="layui-form layui-form-pane" lay-filter="editFormFilter">
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户名</label>
-                <div class="layui-input-block">
-                    <input type="text" name="username" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">密码</label>
-                <div class="layui-input-block">
-                    <input type="password" name="password" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">电子邮箱</label>
-                <div class="layui-input-block">
-                    <input type="text" name="email" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">手机号</label>
-                <div class="layui-input-block">
-                    <input type="text" name="phone" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-
             <div class="layui-form-item">
                 <label class="layui-form-label">角色</label>
                 <div class="layui-input-block">
@@ -96,8 +50,31 @@
             </div>
 
             <div class="layui-form-item">
-                <button class="layui-btn" lay-submit lay-filter="ok">确认</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" lay-verify="required" name="username" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-block">
+                    <input type="password" placeholder="留空则不修改密码" name="password" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">电子邮箱</label>
+                <div class="layui-input-block">
+                    <input type="text" lay-verify="required" name="email" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">手机号</label>
+                <div class="layui-input-block">
+                    <input type="text" lay-verify="required" name="phone" autocomplete="off" class="layui-input">
+                </div>
             </div>
         </form>
     </div>
@@ -119,13 +96,10 @@
                 layEvent: 'LAYTABLE_TIPS',
                 icon: 'layui-icon-tips'
             }],
-            height: 'full-205', // 最大高度减去其他容器已占有的高度差
-            css: [ // 重设当前表格样式
-                '.layui-table-tool-temp{padding-right: 145px;}'
-            ].join(''),
+            height: 'full-35', // 最大高度减去其他容器已占有的高度差
             cellMinWidth: 80,
-            totalRow: true, // 开启合计行
             page: true,
+            limit: 12,
             cols: [[
                 {type: 'checkbox', fixed: 'left'},
                 {field: 'id', width: 80, title: 'ID', sort: true},
@@ -135,90 +109,17 @@
                 {field: 'role', title: '角色', templet: function (d) {
                         return d.role === 'USER' ? '顾客' : '管理员';
                     }},
-                {fixed: 'right', title: '操作', width: 134, minWidth: 125, toolbar: '#barDemo'}
+                {fixed: 'right', title: '操作', width: 134, minWidth: 150, toolbar: '#barDemo'}
             ]],
             done: function () {
                 var id = this.id;
-                // 下拉按钮
-                dropdown.render({
-                    elem: '#dropdownButton', // 可绑定在任意元素中，此处以上述按钮为例
-                    data: [{
-                        id: 'add',
-                        title: '添加'
-                    }, {
-                        id: 'update',
-                        title: '编辑'
-                    }, {
-                        id: 'delete',
-                        title: '删除'
-                    }],
-                    // 菜单被点击的事件
-                    click: function (obj) {
-                        var checkStatus = table.checkStatus(id)
-                        var data = checkStatus.data; // 获取选中的数据
-                        switch (obj.id) {
-                            case 'add':
-                                layer.open({
-                                    title: '添加',
-                                    type: 1,
-                                    content: $('#editForm').html(),
-                                    success: function () {
-                                        fillForm(data)
-                                        submitForm(data, '/admin/add-user')
-                                    }
-                                });
-                                break;
-                            case 'update':
-                                if (data.length !== 1) return layer.msg('请选择一行');
-                                layer.open({
-                                    title: '编辑',
-                                    type: 1,
-                                    content: $('#editForm').html(),
-                                    success: function () {
-                                        fillForm(data)
-                                        submitForm(data, '/admin/modify-user')
-                                    }
-                                });
-                                break;
-                            case 'delete':
-                                if (data.length === 0) {
-                                    return layer.msg('请选择一行');
-                                }
-                                deleteUser(data)
-                                break;
-                        }
-                    }
-                });
-
-                // 行模式
-                dropdown.render({
-                    elem: '#rowMode',
-                    data: [{
-                        id: 'default-row',
-                        title: '单行模式（默认）'
-                    }, {
-                        id: 'multi-row',
-                        title: '多行模式'
-                    }],
-                    // 菜单被点击的事件
-                    click: function (obj) {
-                        var checkStatus = table.checkStatus(id)
-                        var data = checkStatus.data; // 获取选中的数据
-                        switch (obj.id) {
-                            case 'default-row':
-                                table.reload('test', {
-                                    lineStyle: null // 恢复单行
-                                });
-                                // layer.msg('已设为单行');
-                                break;
-                            case 'multi-row':
-                                table.reload('test', {
-                                    // 设置行样式，此处以设置多行高度为例。若为单行，则没必要设置改参数 - 注：v2.7.0 新增
-                                    lineStyle: 'height: 95px;'
-                                });
-                                // layer.msg('即通过设置 lineStyle 参数可开启多行');
-                                break;
-                        }
+                //隐藏特定的行(隐藏系统保留用户)
+                this.elem.next('.layui-table-view').find('.layui-table-body tbody tr').each(function(){
+                    var $row = $(this);
+                    var rowData = table.cache['test'][$row.index()];
+                    if(rowData && rowData.id === -1){
+                        // 如果行数据的id等于特定ID，则隐藏该行
+                        $row.hide();
                     }
                 });
             },
@@ -230,85 +131,55 @@
         // 单元格中的工具事件
         table.on('tool(test)', function (obj) { // 双击 toolDouble
             var data = obj.data; // 获得当前行数据
-            // console.log(obj)
             if (obj.event === 'edit') {
                 layer.open({
                     title: '编辑 - id:' + data.id,
                     type: 1,
                     content: $('#editForm').html(),
+                    maxmin: true,
+                    shadeClose: true,
+                    btn: ['确认', '取消'],
                     success: function () {
                         fillForm(data)
+                    },
+                    yes: function (index, layero) {
+                        var isValid = form.validate('.layui-input');  // 主动触发验证，v2.7.0 新增
+                        if(!isValid){
+                            return false
+                        }
                         submitForm(data, '/admin/modify-user')
+                        layer.close(index);
                     }
                 });
-            } else if (obj.event === 'more') {
-                // 更多 - 下拉菜单
-                dropdown.render({
-                    elem: this, // 触发事件的 DOM 对象
-                    show: true, // 外部事件触发即显示
-                    data: [{
-                        title: '查看',
-                        id: 'detail'
-                    }, {
-                        title: '删除',
-                        id: 'del'
-                    }],
-                    click: function (menudata) {
-                        if (menudata.id === 'detail') {
-                            layer.msg('查看操作，当前行 ID:' + data.id);
-                        } else if (menudata.id === 'del') {
-                            layer.confirm('确认删除用户 [id: ' + data.id + '] 吗？<br>' +
-                                '<span style="color:red;">警告：删除用户将会删除订单等与之关联的信息！</span>', function (index) {
-                                obj.del(); // 删除对应行（tr）的DOM结构
-                                layer.close(index);
-                                // 向服务端发送删除指令
-                                deleteUser(data)
-                            });
-                        }
-                    },
-                    align: 'right', // 右对齐弹出
-                    style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' // 设置额外样式
-                })
+            } else if (obj.event === 'del') {
+                layer.confirm('确认删除用户 [id: ' + data.id + '] 吗？<br>' +
+                    '<span style="color:red;">警告：删除用户将会删除订单等与之关联的信息！</span>', function (index) {
+                    obj.del(); // 删除对应行（tr）的DOM结构
+                    layer.close(index);
+                    // 向服务端发送删除指令
+                    deleteUser(data)
+                });
             }
         });
 
-        //搜索框点击事件
-        form.on('input-affix(search)', function(data){
-            var elem = data.elem; // 输入框
-            var value = elem.value; // 输入框的值
-            if(!value){
-                layer.msg('请输入搜索内容');
-                return elem.focus()
-            };
-            // 刷新表格
-            table.reload('test', {
-                where: {
-                    searchName: value,
-                },
-            });
-        });
-
-
         //表单提交按钮
         function submitForm(data,url) {
-            form.on('submit(ok)', function(data1) {
-                var field = data1.field; // 获取表单字段值
-                if (data.length > 0) { //获取并填充id的值，判断data是否为数组类型
-                    field.id = data[0].id;
+            var field = form.val("editFormFilter"); // 获取表单字段值
+            if (data.length > 0) { //获取并填充id的值，判断data是否为数组类型
+                field.id = data[0].id;
+            } else {
+                field.id=data.id
+            }
+            $.post('/api'+url,field,function (data) {
+                if (data.code === 200) {
+                    layer.closeAll();
+                    table.reloadData('test');
+                    layer.msg(data.msg, {icon: 1});
                 } else {
-                    field.id=data.id
+                    layer.msg(data.msg, {icon: 5});
                 }
-                $.post('/api'+url,field,function (data) {
-                    if (data.code === 200) {
-                        layer.closeAll();
-                        table.reload('test');
-                        layer.msg(data.msg, {icon: 1});
-                    } else {
-                        layer.msg(data.msg, {icon: 5});
-                    }
-                });
-                return false; //阻止表单默认行为
-            })
+            });
+            return false; //阻止表单默认行为
         }
 
         function deleteUser(data) {

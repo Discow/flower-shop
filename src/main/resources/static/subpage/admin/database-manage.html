@@ -7,17 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/res/layui/css/layui.css" rel="stylesheet">
-    <!--父页面已经导入layui.js，子页面不能再次导入，不然会出现表单提交两次的情况-->
-    <!--<script src="/res/layui/layui.js"></script>-->
+    <link href="/res/css/common.css" rel="stylesheet">
+    <script src="/res/layui/layui.js"></script>
 </head>
 <body>
 
 <div>
-    <blockquote class="layui-elem-quote layui-text">
-        数据库维护
-    </blockquote>
-
-    <div style="padding: 5px;">
+    <div style="padding: 0 5px;">
         数据库备份与还原↓：
         <hr class="layui-border-blue">
         <table class="layui-hide" id="database-maintain-logs" lay-filter="database-maintain-logs"></table>
@@ -29,8 +25,7 @@
 <script type="text/html" id="toolbarDemo">
     <!--    按钮容器-->
     <div class="layui-btn-container layui-inline">
-        <button class="layui-btn layui-btn-sm" onclick="manualBackup()">立即备份</button>
-        <button class="layui-btn layui-btn-sm" onclick="">自动备份设置</button>
+        <button class="layui-btn layui-btn-normal layui-btn-xs" onclick="manualBackup()">立即备份</button>
     </div>
     <div class="layui-inline">
         当前节点：<span id="current-node"></span>
@@ -39,7 +34,11 @@
 </script>
 <script type="text/html" id="operateBar">
     <div class="layui-clear-space">
-        <a class="layui-btn layui-btn-xs" lay-event="restore">还原到此节点</a>
+        {{#  if(d.status === '备份成功'){ }}
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="restore">还原到此节点</a>
+        {{#  } else { }}
+
+        {{#  } }}
     </div>
 </script>
 <script>
@@ -58,10 +57,7 @@
                 layEvent: 'LAYTABLE_TIPS',
                 icon: 'layui-icon-tips'
             }],
-            // height: 'full-35', // 最大高度减去其他容器已占有的高度差
-            css: [ // 重设当前表格样式
-                '.layui-table-tool-temp{padding-right: 145px;}'
-            ].join(''),
+            height: 'full-85', // 最大高度减去其他容器已占有的高度差
             cellMinWidth: 80,
             page: true,
             cols: [[

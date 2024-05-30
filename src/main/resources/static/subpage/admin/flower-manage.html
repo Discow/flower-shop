@@ -7,46 +7,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="/res/layui/css/layui.css" rel="stylesheet">
-    <!--父页面已经导入layui.js，子页面不能再次导入，不然会出现表单提交两次的情况-->
-    <!--<script src="/res/layui/layui.js"></script>-->
+    <link href="/res/css/common.css" rel="stylesheet">
+    <script src="/res/layui/layui.js"></script>
+
+    <style>
+        .highlight-row {
+            background-color: rgba(255, 0, 0, 0.20) !important; /* 将背景设置为红色 */
+        }
+    </style>
 </head>
 <body>
 
 <div>
-    <blockquote class="layui-elem-quote layui-text">
-        鲜花管理
-    </blockquote>
-    <table class="layui-hide" id="test" lay-filter="test"></table>
+    <div style="padding: 0 5px;">
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+    </div>
 </div>
 <!--表格上的工具栏-->
 <script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
-        <div class="layui-form-item">
-            <div class="layui-input-group">
-                <div class="layui-input-prefix">
-                    搜索
-                </div>
-                <input type="text" placeholder="按商品名称搜索" class="layui-input" lay-affix="search" lay-filter="search">
-            </div>
-        </div>
 
-        <button class="layui-btn layui-btn-sm" id="dropdownButton">
-            管理
-            <i class="layui-icon layui-icon-down layui-font-12"></i>
-        </button>
-
-        <button class="layui-btn layui-btn-sm layui-btn-primary layui-border-blue" onclick="loadStuInfo()">显示全部</button>
-
-    </div>
 </script>
 <!--单元格内的操作选项-->
 <script type="text/html" id="barDemo">
     <div class="layui-clear-space">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-xs" lay-event="more">
-            更多
-            <i class="layui-icon layui-icon-down"></i>
-        </a>
+        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">
+            <i class="layui-icon layui-icon-edit" title="编辑"></i>
+            编辑
+        </button>
+
+        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">
+            <i class="layui-icon layui-icon-delete" title="删除"></i>
+            删除
+        </button>
     </div>
 </script>
 <!--弹出的编辑框-->
@@ -57,13 +49,13 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">鲜花名称</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="name" autocomplete="off" class="layui-input">
+                        <input type="text" lay-verify="required" name="name" autocomplete="off" class="layui-input">
                     </div>
                 </div>
                 <div class="layui-inline">
                     <label class="layui-form-label">单价</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="price" autocomplete="off" class="layui-input">
+                        <input type="text" lay-verify="required" name="price" autocomplete="off" class="layui-input">
                     </div>
                 </div>
             </div>
@@ -91,7 +83,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">库存数量</label>
                     <div class="layui-input-inline">
-                        <input type="number" name="inventory" autocomplete="off" class="layui-input" min="0" step="1" lay-affix="number">
+                        <input type="number" lay-verify="required" name="inventory" autocomplete="off" class="layui-input" min="0" step="1" lay-affix="number">
                     </div>
                 </div>
             </div>
@@ -116,11 +108,6 @@
                     <textarea placeholder="请输入描述" name="description" class="layui-textarea"></textarea>
                 </div>
             </div>
-
-            <div class="layui-form-item">
-                <button class="layui-btn" lay-submit lay-filter="ok">确认</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-            </div>
         </form>
     </div>
 </script>
@@ -143,13 +130,12 @@
                 layEvent: 'LAYTABLE_TIPS',
                 icon: 'layui-icon-tips'
             }],
-            height: 'full-205', // 最大高度减去其他容器已占有的高度差
-            css: [ // 重设当前表格样式
-                '.layui-table-tool-temp{padding-right: 145px;}'
-            ].join(''),
+            height: 'full-35', // 最大高度减去其他容器已占有的高度差
+            smartReloadModel: true,
             cellMinWidth: 80,
             lineStyle: 'height: 95px;',
             page: true,
+            limit: 5,
             initSort: {
                 field: 'id',
                 type: 'asc'
@@ -171,58 +157,17 @@
                 {field: 'inventory', title: '库存数量'},
                 {field: 'status', title: '状态'},
                 {field: 'addTime', title: '操作时间', sort: true},
-                {fixed: 'right', title: '操作', width: 134, minWidth: 125, toolbar: '#barDemo'}
+                {fixed: 'right', title: '操作', minWidth: 150, toolbar: '#barDemo'}
             ]],
             done: function () {
                 var id = this.id;
-                // 下拉按钮
-                dropdown.render({
-                    elem: '#dropdownButton', // 可绑定在任意元素中，此处以上述按钮为例
-                    data: [{
-                        id: 'add',
-                        title: '添加'
-                    }, {
-                        id: 'update',
-                        title: '编辑'
-                    }, {
-                        id: 'delete',
-                        title: '删除'
-                    }],
-                    // 菜单被点击的事件
-                    click: function (obj) {
-                        var checkStatus = table.checkStatus(id)
-                        var data = checkStatus.data; // 获取选中的数据
-                        switch (obj.id) {
-                            case 'add':
-                                layer.open({
-                                    title: '添加',
-                                    type: 1,
-                                    content: $('#editForm').html(),
-                                    success: function () {
-                                        fillForm(data)
-                                        submitForm(data, '/admin/add-flower')
-                                    }
-                                });
-                                break;
-                            case 'update':
-                                if (data.length !== 1) return layer.msg('请选择一行');
-                                layer.open({
-                                    title: '编辑',
-                                    type: 1,
-                                    content: $('#editForm').html(),
-                                    success: function () {
-                                        fillForm(data)
-                                        submitForm(data, '/admin/modify-flower')
-                                    }
-                                });
-                                break;
-                            case 'delete':
-                                if (data.length === 0) {
-                                    return layer.msg('请选择一行');
-                                }
-                                deleteFlower(data)
-                                break;
-                        }
+
+                //高亮库存为0的行
+                this.elem.next('.layui-table-view').find('.layui-table-body tr').each(function(){
+                    var data = table.cache['test'][$(this).data('index')];
+                    // 检查 inventory 值是否为 0
+                    if(data.inventory === 0){
+                        $(this).addClass('highlight-row'); // 为行添加自定义的 CSS 类
                     }
                 });
             },
@@ -234,99 +179,74 @@
         // 单元格中的工具事件
         table.on('tool(test)', function (obj) { // 双击 toolDouble
             var data = obj.data; // 获得当前行数据
-            // console.log(obj)
             if (obj.event === 'edit') {
                 layer.open({
                     title: '编辑 - id:' + data.id,
                     type: 1,
                     content: $('#editForm').html(),
+                    btn: ['确认', '取消'],
+                    maxmin: true,
+                    shadeClose: true,
+                    offset: '0%',
                     success: function () {
                         fillForm(data)
+                    },
+                    yes: function (index, layero) {
+                        var isValid = form.validate('.layui-input');  // 主动触发验证，v2.7.0 新增
+                        if(!isValid){
+                            return false
+                        }
                         submitForm(data, '/admin/modify-flower')
+                        layer.close(index);
                     }
                 });
-            } else if (obj.event === 'more') {
-                // 更多 - 下拉菜单
-                dropdown.render({
-                    elem: this, // 触发事件的 DOM 对象
-                    show: true, // 外部事件触发即显示
-                    data: [{
-                        title: '查看',
-                        id: 'detail'
-                    }, {
-                        title: '删除',
-                        id: 'del'
-                    }],
-                    click: function (menudata) {
-                        if (menudata.id === 'detail') {
-                            layer.msg('查看操作，当前行 ID:' + data.id);
-                        } else if (menudata.id === 'del') {
-                            layer.confirm('确认删除行 [id: ' + data.id + '] 吗？', function (index) {
-                                obj.del(); // 删除对应行（tr）的DOM结构
-                                layer.close(index);
-                                // 向服务端发送删除指令
-                                deleteFlower(data)
-                            });
-                        }
-                    },
-                    align: 'right', // 右对齐弹出
-                    style: 'box-shadow: 1px 1px 10px rgb(0 0 0 / 12%);' // 设置额外样式
-                })
+            } else if (obj.event === 'del') {
+                layer.confirm('确认删除商品 [' + data.name + '] 吗？<br><span style="color: red">警告：删除后将无法恢复！</span>', function (index) {
+                    obj.del(); // 删除对应行（tr）的DOM结构
+                    layer.close(index);
+                    // 向服务端发送删除指令
+                    deleteFlower(data)
+                });
             }
-        });
-
-        //搜索框点击事件
-        form.on('input-affix(search)', function (data) {
-            var elem = data.elem; // 输入框
-            var value = elem.value; // 输入框的值
-            if (!value) {
-                layer.msg('请输入搜索内容');
-                return elem.focus()
-            }
-            ;
-            // 刷新表格
-            table.reloadData('test', {
-                where: {
-                    searchName: value,
-                },
-            });
         });
 
         $(document).on('click', '.layui-table td[data-field="picture"] img', function(){
             var src = $(this).attr('src');
-            // 使用layer.open弹出图片预览
-            layer.open({
-                type: 1,
-                title: false, // 不显示标题栏
-                closeBtn: true,
-                area: 'auto',
-                shade: 0.5,
-                id: 'LAY_layuipro', // 设定一个id，防止重复弹出
-                moveType: 1, // 拖拽模式，0或者1
-                content: '<img src="' + src + '" style="width: 100%; height: auto;">'
+            // 使用layer.photos弹出图片预览
+            layer.photos({
+                photos: {
+                    "title": "Photos Demo",
+                    "start": 0,
+                    "data": [
+                        {
+                            "alt": "图片浏览",
+                            "pid": 5,
+                            "src": src,
+                        }
+                    ]
+                },
+                footer: false // 是否显示底部栏 --- 2.8.16+
             });
         });
 
         //表单提交按钮
         function submitForm(data, url) {
-            form.on('submit(ok)', function (data1) {
-                var field = data1.field; // 获取表单字段值
-                if (data.length > 0) { //获取并填充id的值，判断data是否为数组类型
-                    field.id = data[0].id;
+            var field = form.val("editFormFilter"); // 获取表单字段值
+            if (data.length > 0) { //获取并填充id的值，判断data是否为数组类型
+                field.id = data[0].id;
+            } else {
+                field.id = data.id
+            }
+            $.post('/api'+url, field, function (data) {
+                if (data.code === 200) {
+                    layer.closeAll();
+                    table.reloadData('test');
+                    layer.msg(data.msg, {icon: 1});
                 } else {
-                    field.id = data.id
+                    layer.msg(data.msg, {icon: 5});
                 }
-                $.post('/api'+url, field, function (data) {
-                    if (data.code === 200) {
-                        layer.closeAll();
-                        table.reloadData('test');
-                        layer.msg(data.msg, {icon: 1});
-                    } else {
-                        layer.msg(data.msg, {icon: 5});
-                    }
-                });
-                return false; //阻止表单默认行为
-            })
+            });
+            return false; //阻止表单默认行为
         }
 
         function deleteFlower(data) {

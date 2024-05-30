@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Flowers shop</title>
+  <title>木子·花语</title>
   <link rel="stylesheet" href="/res/css/font-awesome.min.css">
   <link rel="stylesheet" href="/res/css/reset.css">
   <link rel="stylesheet" href="/res/css/main.css">
@@ -32,6 +32,7 @@
               <li><a href="/my-orders.html">我的订单</a></li>
               <li><a href="/my-favorite.html">我的收藏</a></li>
               <li><a href="">购物车</a></li>
+                <li><a href="#" id="username" style="font-size: medium"></a></li>
 
             </ul>
           </nav>
@@ -177,6 +178,12 @@
     //     }
     //   });
     // });
+
+      $(document).ready(function () {
+          $.get('/api/auth/my-profile', function (response) {
+             $('#username').text('欢迎，'+response.data.username)
+          });
+      })
 
   });
 </script>
