@@ -107,11 +107,6 @@ public class DbManageServiceImpl implements DbManageService {
         }
     }
 
-    @Override
-    public boolean destroy() {
-        return false;
-    }
-
     //用于执行系统命令行
     @SneakyThrows
     private int execCommand(String command) {

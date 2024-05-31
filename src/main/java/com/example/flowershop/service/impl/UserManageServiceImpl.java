@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @Transactional
 @Service
@@ -70,11 +69,6 @@ public class UserManageServiceImpl implements UserManageService {
     }
 
     @Override
-    public List<User> findUserAll() {
-        return userRepository.findAll();
-    }
-
-    @Override
     public Page<User> findUser(Integer pageNo, Integer limit, String username, String email, String role) {
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
         //使用QueryDSL动态查询
@@ -92,18 +86,6 @@ public class UserManageServiceImpl implements UserManageService {
         }
         //单表查询所有字段的动态查询可借助jpa的findAll方法
         return userRepository.findAll(builder, pageable);
-    }
-
-    @Override
-    public Page<User> findByPhone(String phone, Integer pageNo, Integer limit) {
-        Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return userRepository.findByPhoneLike("%" + phone + "%", pageable);
-    }
-
-    @Override
-    public Page<User> findByUsername(String username, Integer pageNo, Integer limit) {
-        Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return userRepository.findByUsernameLike("%" + username + "%", pageable);
     }
 
     // 将指定用户的收藏和评论记录转移到通用账户

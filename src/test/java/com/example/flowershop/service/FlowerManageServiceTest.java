@@ -45,12 +45,6 @@ class FlowerManageServiceTest {
     }
 
     @Test
-    void findCategoryAll() throws JsonProcessingException {
-        String s = objectMapper.writeValueAsString(service.findCategoryAll());
-        System.out.println(s);
-    }
-
-    @Test
     void findCategoryAllPage() throws JsonProcessingException {
         System.out.println(objectMapper.writeValueAsString(service.findCategory(1, 10, null)));
     }
@@ -93,22 +87,7 @@ class FlowerManageServiceTest {
     }
 
     @Test
-    void findFlowerAll() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findFlowerAll()));
-    }
-
-    @Test
     void findFlowerAllPage() throws JsonProcessingException {
         System.out.println(objectMapper.writeValueAsString(service.findFlower(1, 10, null, null)));
-    }
-
-    @Test
-    void findFlowerByNameLike() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findFlowerByNameLike("玫瑰")));
-    }
-
-    @Test
-    void findByCategoryName() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findByCategoryName("分类1",1,10)));
     }
 }

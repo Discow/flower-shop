@@ -22,8 +22,8 @@ public class FavoriteCustomerController {
 
     //添加收藏
     @GetMapping("add-favorite")
-    public RestBean<?> addFavorite(Authentication authentication, String flowerId) {
-        if (favoriteService.addFavorite(authentication.getName(), Integer.valueOf(flowerId))) {
+    public RestBean<?> addFavorite(Authentication authentication, Integer flowerId) {
+        if (favoriteService.addFavorite(authentication.getName(), flowerId)) {
             return RestBean.success();
         } else {
             return RestBean.failure("添加收藏失败");
@@ -32,8 +32,8 @@ public class FavoriteCustomerController {
 
     //取消收藏
     @GetMapping("remove-favorite")
-    public RestBean<?> removeFavorite(Authentication authentication, String flowerId) {
-        if (favoriteService.removeFavorite(authentication.getName(), Integer.valueOf(flowerId))) {
+    public RestBean<?> removeFavorite(Authentication authentication, Integer flowerId) {
+        if (favoriteService.removeFavorite(authentication.getName(), flowerId)) {
             return RestBean.success();
         } else {
             return RestBean.failure("取消收藏失败");
@@ -42,8 +42,8 @@ public class FavoriteCustomerController {
 
     //查看我的收藏
     @GetMapping("get-favorite")
-    public RestBean<?> getFavorite(Authentication authentication, String page, String limit) {
-        Page<FavoriteDetail> myFavorite = favoriteService.findMyFavorite(authentication.getName(), Integer.valueOf(page), Integer.valueOf(limit));
+    public RestBean<?> getFavorite(Authentication authentication, Integer page, Integer limit) {
+        Page<FavoriteDetail> myFavorite = favoriteService.findMyFavorite(authentication.getName(), page, limit);
         return RestBean.success(myFavorite.getContent(), (int) myFavorite.getTotalElements());
     }
 }

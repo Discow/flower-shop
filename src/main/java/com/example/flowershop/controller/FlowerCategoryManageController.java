@@ -27,9 +27,9 @@ public class FlowerCategoryManageController {
     }
 
     @PostMapping("modify-category")
-    public RestBean<?> modifyCategory(String id, String name, String description) {
+    public RestBean<?> modifyCategory(Integer id, String name, String description) {
         FlowerCategory category = new FlowerCategory();
-        category.setId(Integer.valueOf(id));
+        category.setId(id);
         category.setName(name);
         category.setDescription(description);
         if (flowerManageService.modifyCategory(category)) {
@@ -40,8 +40,8 @@ public class FlowerCategoryManageController {
     }
 
     @GetMapping("delete-category")
-    public RestBean<?> deleteCategory(String categoryId) {
-        if (flowerManageService.deleteCategory(Integer.valueOf(categoryId))) {
+    public RestBean<?> deleteCategory(Integer categoryId) {
+        if (flowerManageService.deleteCategory(categoryId)) {
             return RestBean.success("分类删除成功");
         } else {
             return RestBean.failure("分类删除失败");

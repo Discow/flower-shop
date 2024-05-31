@@ -165,25 +165,11 @@
       }
     });
 
-    // $(document).ready(function() {
-    //   $.get("/api/customer/mainPage/get-latest-flower",{page:1,limit:3}, function (response) {
-    //     if (response && response.data && response.data.length > 0) {
-    //       // 遍历返回的数据
-    //       $.each(response.data, function(index, item) {
-    //         // 根据 index 更新对应的 HTML 元素
-    //         $('#top' + (index + 1) + '-name').text(item.name);
-    //         $('#top' + (index + 1) + '-price').html('￥'+item.price.toFixed(2)+"&nbsp<a href=\"\"><i class=\"fa fa-shopping-cart purple-cart\" aria-hidden=\"true\"></i></a>");
-    //         $('#top' + (index + 1) + '-picture').attr('src', 'data:image/jpeg;base64,'+item.picture);
-    //       });
-    //     }
-    //   });
-    // });
-
-      $(document).ready(function () {
-          $.get('/api/auth/my-profile', function (response) {
-             $('#username').text('欢迎，'+response.data.username)
-          });
-      })
+    $(document).ready(function () {
+      $.get('/api/auth/my-profile', function (response) {
+         $('#username').text('欢迎，'+response.data.username)
+      });
+    })
 
   });
 </script>

@@ -11,7 +11,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
-public class FlowerAndCategory {
+public class FlowerAndCategoryDto {
     private Integer id;
     private String name;
     private BigDecimal price;

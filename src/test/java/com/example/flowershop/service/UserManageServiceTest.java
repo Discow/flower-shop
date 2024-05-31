@@ -53,22 +53,7 @@ class UserManageServiceTest {
     }
 
     @Test
-    void findUserAll() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findUserAll()));
-    }
-
-    @Test
     void testFindUser() throws JsonProcessingException {
         System.out.println(objectMapper.writeValueAsString(service.findUser(1, 10, null, null, null).getContent()));
-    }
-
-    @Test
-    void findByPhone() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findByPhone("13", 1, 10).getContent()));
-    }
-
-    @Test
-    void findByUsername() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findByUsername("test", 1, 10).getContent()));
     }
 }

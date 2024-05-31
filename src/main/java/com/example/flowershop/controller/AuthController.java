@@ -27,9 +27,9 @@ public class AuthController {
      * @param type   1：注册，2：重置密码
      */
     @GetMapping("send-verify-code")
-    public RestBean<?> sendVerifyCode(@RequestParam String mailTo, @RequestParam String type) {
+    public RestBean<?> sendVerifyCode(@RequestParam String mailTo, @RequestParam Integer type) {
         try {
-            authService.sendMailVerifyCode(mailTo, Integer.valueOf(type));
+            authService.sendMailVerifyCode(mailTo, type);
             return RestBean.success("验证码发送成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -111,12 +111,8 @@ public class AuthController {
     //查询登录历史（不能由前端传来账号进行查询，以防隐私泄露）
     @PreAuthorize("isAuthenticated()")
     @GetMapping("login-record")
-    public RestBean<?> loginRecord(Authentication authentication,
-                                   @RequestParam("page") String page,
-                                   @RequestParam("limit") String limit) {
-        Page<LoginRecord> record = authService.findRecord(authentication.getName(),
-                Integer.valueOf(page),
-                Integer.valueOf(limit));
+    public RestBean<?> loginRecord(Authentication authentication, Integer page, Integer limit) {
+        Page<LoginRecord> record = authService.findRecord(authentication.getName(), page, limit);
         return RestBean.success(record.getContent(), (int) record.getTotalElements());
     }
 }

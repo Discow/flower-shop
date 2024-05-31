@@ -23,11 +23,6 @@ public class MainPageServiceImpl implements MainPageService {
     FlowerCategoryRepository flowerCategoryRepository;
 
     @Override
-    public Page<Flower> findByStatus(String status, Pageable pageable) {
-        return flowerRepository.findByStatus(status, pageable);
-    }
-
-    @Override
     public Flower findById(Integer id) {
         return flowerRepository.findById(id).orElse(null);
     }
@@ -35,17 +30,6 @@ public class MainPageServiceImpl implements MainPageService {
     @Override
     public List<Flower> getRandomThree() {
         return flowerRepository.findRandomThree();
-    }
-
-    @Override
-    public List<Flower> findFlowerByNameLike(String name) {
-        return flowerRepository.findByNameLike("%"+name+"%");
-    }
-
-    @Override
-    public Page<Flower> findByCategoryName(String categoryName, Integer pageNo, Integer limit) {
-        Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return flowerRepository.findByCategoryName(categoryName, pageable);
     }
 
     @Override

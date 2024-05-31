@@ -35,16 +35,17 @@ public class OrderCustomerController {
     //查看订单
     @GetMapping("get-order")
     public RestBean<?> getOrder(Authentication authentication, @RequestParam(required = false) String status,
-                                String page, String limit) {
+                                Integer page, Integer limit) {
         String email = authentication.getName();
-        Page<OrdersOnly> orders = customerOrderService.findOrderAll(email, status, Integer.valueOf(page), Integer.valueOf(limit));
+        //TODO 改用QueryDSL
+        Page<OrdersOnly> orders = customerOrderService.findOrderAll(email, status, page, limit);
         return RestBean.success(orders.getContent(), (int) orders.getTotalElements());
     }
 
     //取消订单
     @GetMapping("cancel-order")
-    public RestBean<?> cancelOrder(Authentication authentication, String orderId) {
-        if (customerOrderService.cancelOrder(authentication.getName(), Integer.valueOf(orderId))) {
+    public RestBean<?> cancelOrder(Authentication authentication, Integer orderId) {
+        if (customerOrderService.cancelOrder(authentication.getName(), orderId)) {
             return RestBean.success("订单取消成功");
         } else {
             return RestBean.failure("订单取消失败");
@@ -53,8 +54,8 @@ public class OrderCustomerController {
 
     //删除订单
     @GetMapping("delete-order")
-    public RestBean<?> deleteOrder(Authentication authentication, String orderId) {
-        if (customerOrderService.deleteOrder(authentication.getName(), Integer.valueOf(orderId))) {
+    public RestBean<?> deleteOrder(Authentication authentication, Integer orderId) {
+        if (customerOrderService.deleteOrder(authentication.getName(), orderId)) {
             return RestBean.success("订单删除成功");
         } else {
             return RestBean.failure("订单删除失败");
@@ -63,8 +64,8 @@ public class OrderCustomerController {
 
     //确认收货
     @GetMapping("confirm-receipt")
-    public RestBean<?> confirmReceipt(Authentication authentication, String orderId) {
-        if (customerOrderService.confirmReceipt(authentication.getName(), Integer.valueOf(orderId))) {
+    public RestBean<?> confirmReceipt(Authentication authentication, Integer orderId) {
+        if (customerOrderService.confirmReceipt(authentication.getName(), orderId)) {
             return RestBean.success("确认收货成功");
         } else {
             return RestBean.failure("确认收货失败：当前订单已取消");

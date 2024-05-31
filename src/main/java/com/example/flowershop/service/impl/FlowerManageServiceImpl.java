@@ -1,6 +1,6 @@
 package com.example.flowershop.service.impl;
 
-import com.example.flowershop.dto.FlowerAndCategory;
+import com.example.flowershop.dto.FlowerAndCategoryDto;
 import com.example.flowershop.entity.Flower;
 import com.example.flowershop.entity.FlowerCategory;
 import com.example.flowershop.entity.QFlower;
@@ -71,11 +71,6 @@ public class FlowerManageServiceImpl implements FlowerManageService {
     }
 
     @Override
-    public List<FlowerCategory> findCategoryAll() {
-        return flowerCategoryRepository.findAll();
-    }
-
-    @Override
     public Page<FlowerCategory> findCategory(Integer pageNo, Integer limit, String name) {
         Pageable pageable = PageRequest.of(pageNo - 1, limit); //索引号=页码-1
         //使用QueryDSL动态查询
@@ -130,12 +125,7 @@ public class FlowerManageServiceImpl implements FlowerManageService {
     }
 
     @Override
-    public List<Flower> findFlowerAll() {
-        return flowerRepository.findAll();
-    }
-
-    @Override
-    public Page<FlowerAndCategory> findFlower(Integer pageNo, Integer limit, String name, String status) {
+    public Page<FlowerAndCategoryDto> findFlower(Integer pageNo, Integer limit, String name, String status) {
         Pageable pageable = PageRequest.of(pageNo - 1, limit); //索引号=页码-1
         //使用QueryDSL动态查询
         QFlowerCategory qFlowerCategory = QFlowerCategory.flowerCategory;
@@ -153,8 +143,8 @@ public class FlowerManageServiceImpl implements FlowerManageService {
             }
         }
         //基础查询
-        List<FlowerAndCategory> results = jpaQueryFactory
-                .select(Projections.constructor(FlowerAndCategory.class, //投影
+        List<FlowerAndCategoryDto> results = jpaQueryFactory
+                .select(Projections.constructor(FlowerAndCategoryDto.class, //投影
                                 qFlower.id, qFlower.name, qFlower.price, qFlower.description,
                                 qFlower.picture, qFlower.inventory, qFlower.status, qFlower.addTime,
                                 qFlowerCategory.name)
@@ -177,17 +167,6 @@ public class FlowerManageServiceImpl implements FlowerManageService {
                 pageable,
                 () -> queryCount != null ? queryCount : 0L //返回总行数，并处理空指针异常
         );
-    }
-
-    @Override
-    public List<Flower> findFlowerByNameLike(String name) {
-        return flowerRepository.findByNameLike("%"+name+"%");
-    }
-
-    @Override
-    public Page<Flower> findByCategoryName(String categoryName, Integer pageNo, Integer limit) {
-        Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return flowerRepository.findByCategoryName(categoryName, pageable);
     }
 
 }

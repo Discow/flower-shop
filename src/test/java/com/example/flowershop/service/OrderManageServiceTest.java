@@ -26,25 +26,4 @@ class OrderManageServiceTest {
     void findOrder() throws JsonProcessingException {
         System.out.println(objectMapper.writeValueAsString(service.findOrder(1, 10, null, null, null).getContent()));
     }
-
-    @Test
-    void findOrderById() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findOrderById(2,1,10).getContent()));
-    }
-
-    @Test
-    void findOrderByUserName() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findOrderByUserName("test",1,10).getContent()));
-    }
-
-    @Test
-    void findOrderByPhone() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findOrderByPhone("19088889999",1,10).getContent()));
-    }
-
-    // TODO
-    @Test
-    void findOrderByCategory() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findOrderByCategory(2,1,10).getContent()));
-    }
 }

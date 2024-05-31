@@ -4,8 +4,6 @@ import com.example.flowershop.dto.UserInfoAndOrdersDto;
 import com.example.flowershop.entity.QOrder;
 import com.example.flowershop.entity.QUser;
 import com.example.flowershop.repositories.OrderRepository;
-import com.example.flowershop.repositories.UserRepository;
-import com.example.flowershop.repositories.projection.UserInfoAndOrders;
 import com.example.flowershop.service.OrderManageService;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -27,8 +25,6 @@ import java.util.List;
 public class OrderManageServiceImpl implements OrderManageService {
     @Resource
     OrderRepository orderRepository;
-    @Resource
-    UserRepository userRepository;
     @Resource
     JPAQueryFactory jpaQueryFactory;
 
@@ -81,31 +77,6 @@ public class OrderManageServiceImpl implements OrderManageService {
                 .where(qOrder.user.id.eq(qUser.id))
                 .fetchOne();
         return PageableExecutionUtils.getPage(results, pageable, () -> queryCount != null ? queryCount : 0L);
-    }
-
-    @Override
-    public Page<UserInfoAndOrders> findOrderById(Integer id, Integer pageNo, Integer limit) {
-        Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return orderRepository.findOrderById(id, pageable);
-    }
-
-    @Override
-    public Page<UserInfoAndOrders> findOrderByUserName(String username, Integer pageNo, Integer limit) {
-        Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return userRepository.findOrderByUsername(username, pageable);
-    }
-
-    @Override
-    public Page<UserInfoAndOrders> findOrderByPhone(String phone, Integer pageNo, Integer limit) {
-        Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return userRepository.findOrderByPhone(phone, pageable);
-    }
-
-    //TODO
-    @Override
-    public Page<UserInfoAndOrders> findOrderByCategory(Integer category, Integer pageNo, Integer limit) {
-        Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return null;
     }
 
 }

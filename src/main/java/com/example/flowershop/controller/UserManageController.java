@@ -39,11 +39,11 @@ public class UserManageController {
     }
 
     @GetMapping("delete-user")
-    public RestBean<?> deleteUser(String userId) {
-        if ("-1".equals(userId)) {
+    public RestBean<?> deleteUser(Integer userId) {
+        if (userId == -1) {
             return RestBean.failure("系统保留账户禁止删除");
         }
-        if (userManageService.deleteUser(Integer.valueOf(userId))) {
+        if (userManageService.deleteUser(userId)) {
             return RestBean.success("删除用户成功");
         } else {
             return RestBean.failure("删除用户失败");
@@ -56,24 +56,6 @@ public class UserManageController {
                                @RequestParam(required = false) String email,
                                @RequestParam(required = false) String role) {
         Page<User> users = userManageService.findUser(page, limit, username, email, role);
-        return RestBean.success(users.getContent(), (int) users.getTotalElements());
-    }
-
-    @GetMapping("get-user-byPhone")
-    public RestBean<?> getUserByPhone(String phone, String page, String limit) {
-        Page<User> users = userManageService.findByPhone(
-                phone,
-                Integer.valueOf(page),
-                Integer.valueOf(limit));
-        return RestBean.success(users.getContent(), (int) users.getTotalElements());
-    }
-
-    @GetMapping("get-user-byUsername")
-    public RestBean<?> getUserByUsername(String username, String page, String limit) {
-        Page<User> users = userManageService.findByUsername(
-                username,
-                Integer.valueOf(page),
-                Integer.valueOf(limit));
         return RestBean.success(users.getContent(), (int) users.getTotalElements());
     }
 

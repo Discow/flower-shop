@@ -1,6 +1,6 @@
 package com.example.flowershop.controller;
 
-import com.example.flowershop.dto.FlowerAndCategory;
+import com.example.flowershop.dto.FlowerAndCategoryDto;
 import com.example.flowershop.dto.RestBean;
 import com.example.flowershop.entity.Flower;
 import com.example.flowershop.entity.FlowerCategory;
@@ -12,7 +12,6 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Base64;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/")
@@ -21,8 +20,8 @@ public class FlowerManageController {
     FlowerManageService flowerManageService;
 
     @PostMapping("add-flower")
-    public RestBean<?> addFlower(String categoryId, String name, String description,
-                                 String price, String inventory, String status, @RequestParam("image") String image) {
+    public RestBean<?> addFlower(Integer categoryId, String name, String description,
+                                 BigDecimal price, Integer inventory, String status, @RequestParam("image") String image) {
         try {
             Flower flower = saveFlower(null, categoryId, name, description, price, inventory, status, image);
 
@@ -37,8 +36,8 @@ public class FlowerManageController {
     }
 
     @PostMapping("modify-flower")
-    public RestBean<?> modifyFlower(String id, String categoryId, String name, String description,
-                                    String price, String inventory, String status,
+    public RestBean<?> modifyFlower(Integer id, Integer categoryId, String name, String description,
+                                    BigDecimal price, Integer inventory, String status,
                                     @RequestParam(value = "image", required = false) String image) {
         try {
             Flower flower = saveFlower(id, categoryId, name, description, price, inventory, status, image);
@@ -54,8 +53,8 @@ public class FlowerManageController {
     }
 
     @GetMapping("delete-flower")
-    public RestBean<?> deleteFlower(String flowerId) {
-        if (flowerManageService.deleteFlower(Integer.valueOf(flowerId))) {
+    public RestBean<?> deleteFlower(Integer flowerId) {
+        if (flowerManageService.deleteFlower(flowerId)) {
             return RestBean.success("商品删除成功");
         } else {
             return RestBean.failure("商品删除失败");
@@ -66,20 +65,14 @@ public class FlowerManageController {
     public RestBean<?> getFlower(Integer page, Integer limit,
                                  @RequestParam(required = false) String name,
                                  @RequestParam(required = false) String status) {
-        Page<FlowerAndCategory> flowers = flowerManageService.findFlower(page, limit, name, status);
+        Page<FlowerAndCategoryDto> flowers = flowerManageService.findFlower(page, limit, name, status);
         return RestBean.success(flowers.getContent(), (int) flowers.getTotalElements());
     }
 
-    @GetMapping("get-flower-byName")
-    public RestBean<?> getFlowerByName(String name) {
-        List<Flower> flowers = flowerManageService.findFlowerByNameLike(name);
-        return RestBean.success(flowers, flowers.size());
-    }
-
-    private Flower saveFlower(String id, String categoryId, String name, String description,
-                              String price, String inventory, String status, String base64Image) throws IOException {
+    private Flower saveFlower(Integer id, Integer categoryId, String name, String description,
+                              BigDecimal price, Integer inventory, String status, String base64Image) throws IOException {
         FlowerCategory category = FlowerCategory.builder()
-                .id(Integer.valueOf(categoryId))
+                .id(categoryId)
                 .build();
 
         byte[] imageBytes = null;
@@ -90,12 +83,12 @@ public class FlowerManageController {
         }
 
         return Flower.builder()
-                .id(id != null ? Integer.valueOf(id) : null)
+                .id(id)
                 .description(description)
                 .name(name)
                 .picture(imageBytes)
-                .price(BigDecimal.valueOf(Long.parseLong(price)))
-                .inventory(Integer.valueOf(inventory))
+                .price(price)
+                .inventory(inventory)
                 .status(status)
                 .flowerCategory(category) //关联类别
                 .build();

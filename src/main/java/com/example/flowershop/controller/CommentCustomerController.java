@@ -23,8 +23,8 @@ public class CommentCustomerController {
 
     //添加评价
     @PostMapping("add-comment")
-    public RestBean<?> addComment(Authentication authentication, String flowerId, String rating, String content) {
-        if (commentService.addComment(authentication.getName(), Integer.valueOf(flowerId), Integer.valueOf(rating), content)) {
+    public RestBean<?> addComment(Authentication authentication, Integer flowerId, Integer rating, String content) {
+        if (commentService.addComment(authentication.getName(), flowerId, rating, content)) {
             return RestBean.success("评价成功");
         } else {
             return RestBean.failure("评价失败");
@@ -33,8 +33,8 @@ public class CommentCustomerController {
 
     //删除评价
     @GetMapping("remove-comment")
-    public RestBean<?> removeComment(Authentication authentication, String flowerId) {
-        if (commentService.removeComment(authentication.getName(), Integer.valueOf(flowerId))) {
+    public RestBean<?> removeComment(Authentication authentication, Integer flowerId) {
+        if (commentService.removeComment(authentication.getName(), flowerId)) {
             return RestBean.success("删除评价成功");
         } else {
             return RestBean.failure("删除评价失败");
@@ -43,8 +43,8 @@ public class CommentCustomerController {
 
     //获取商品的评价
     @GetMapping("get-comment")
-    public RestBean<?> getComment(String flowerId, String page, String limit) {
-        Page<CommentDetail> comments = commentService.findByFlowerId(Integer.valueOf(flowerId), Integer.valueOf(page), Integer.valueOf(limit));
+    public RestBean<?> getComment(Integer flowerId, Integer page, Integer limit) {
+        Page<CommentDetail> comments = commentService.findByFlowerId(flowerId, page, limit);
         return RestBean.success(comments.getContent(), (int) comments.getTotalElements());
     }
 }

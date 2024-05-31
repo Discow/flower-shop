@@ -13,8 +13,4 @@ public interface DbManageService {
 
     //恢复数据库
     boolean restore(String fileName);
-
-    //删库跑路（doge）
-    boolean destroy();
-
 }

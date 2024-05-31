@@ -1,7 +1,6 @@
 package com.example.flowershop.service;
 
 import com.example.flowershop.dto.UserInfoAndOrdersDto;
-import com.example.flowershop.repositories.projection.UserInfoAndOrders;
 import org.springframework.data.domain.Page;
 
 /**
@@ -13,16 +12,4 @@ public interface OrderManageService {
 
     //动态查询订单
     Page<UserInfoAndOrdersDto> findOrder(Integer pageNo, Integer limit, String receiveType, String status, String phone);
-
-    //根据订单号查询订单
-    Page<UserInfoAndOrders> findOrderById(Integer id, Integer pageNo, Integer limit);
-
-    //根据用户名查询订单
-    Page<UserInfoAndOrders> findOrderByUserName(String username, Integer pageNo, Integer limit);
-
-    //根据用户手机号查询订单
-    Page<UserInfoAndOrders> findOrderByPhone(String phone, Integer pageNo, Integer limit);
-
-    //根据商品类型查询订单
-    Page<UserInfoAndOrders> findOrderByCategory(Integer category, Integer pageNo, Integer limit);
 }
