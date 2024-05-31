@@ -1,7 +1,7 @@
 package com.example.flowershop.controller;
 
 import com.example.flowershop.dto.RestBean;
-import com.example.flowershop.repositories.projection.UserInfoAndOrders;
+import com.example.flowershop.dto.UserInfoAndOrdersDto;
 import com.example.flowershop.service.OrderManageService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -24,34 +24,11 @@ public class OrderManageController {
     }
 
     @GetMapping("get-orders")
-    public RestBean<?> getOrders(@RequestParam(required = false) String type,
-                                 @RequestParam(required = false) String orderId,
-                                 @RequestParam(required = false) String username,
+    public RestBean<?> getOrders(@RequestParam(required = false) String receiveType,
+                                 @RequestParam(required = false) String status,
                                  @RequestParam(required = false) String phone,
-                                 @RequestParam String page, @RequestParam String limit) {
-        Page<UserInfoAndOrders> orders;
-        if ("orderId".equalsIgnoreCase(type)) {
-            orders = orderManageService.findOrderById(
-                    Integer.valueOf(orderId),
-                    Integer.valueOf(page),
-                    Integer.valueOf(limit));
-        } else if ("username".equalsIgnoreCase(type)) {
-            orders = orderManageService.findOrderByUserName(
-                    username,
-                    Integer.valueOf(page),
-                    Integer.valueOf(limit));
-        } else if ("phone".equalsIgnoreCase(type)) {
-            orders = orderManageService.findOrderByPhone(
-                    phone,
-                    Integer.valueOf(page),
-                    Integer.valueOf(limit));
-        } else {
-            orders = orderManageService.findOrderAll(
-                    Integer.valueOf(page),
-                    Integer.valueOf(limit));
-        }
-
+                                 Integer page, Integer limit) {
+        Page<UserInfoAndOrdersDto> orders = orderManageService.findOrder(page, limit, receiveType, status, phone);
         return RestBean.success(orders.getContent(), (int) orders.getTotalElements());
     }
-
 }

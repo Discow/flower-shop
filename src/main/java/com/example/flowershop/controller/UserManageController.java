@@ -50,11 +50,12 @@ public class UserManageController {
         }
     }
 
-    @GetMapping("get-all-user")
-    public RestBean<?> getAllUser(String page, String limit) {
-        Page<User> users = userManageService.findUserAll(
-                Integer.valueOf(page),
-                Integer.valueOf(limit));
+    @GetMapping("get-user")
+    public RestBean<?> getUser(Integer page, Integer limit,
+                               @RequestParam(required = false) String username,
+                               @RequestParam(required = false) String email,
+                               @RequestParam(required = false) String role) {
+        Page<User> users = userManageService.findUser(page, limit, username, email, role);
         return RestBean.success(users.getContent(), (int) users.getTotalElements());
     }
 

@@ -80,7 +80,7 @@
         // 创建渲染实例
         table.render({
             elem: '#test',
-            url: '/api/admin/get-all-category', // 此处为静态模拟数据，实际使用时需换成真实接口
+            url: '/api/admin/get-category', // 此处为静态模拟数据，实际使用时需换成真实接口
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -165,6 +165,23 @@
                     deleteCategory(data)
                 });
             }
+        });
+
+        // 监听搜索按钮的提交事件
+        form.on('submit(search)', function(data){
+            // 获取搜索框的值
+            var searchValue = data.field.name;
+            // 根据搜索值重载表格
+            table.reloadData('test', {
+                where: { // 设定异步数据接口的额外参数
+                    name: searchValue
+                },
+                page: {
+                    curr: 1 // 重新从第 1 页开始
+                }
+            });
+            // 阻止表单跳转
+            return false;
         });
 
         //表单提交按钮

@@ -38,10 +38,10 @@
                 <label for="status" class="layui-form-label">状态</label>
                 <div class="layui-input-inline">
                     <select name="status" id="status">
-                        <option value="全部">全部</option>
+                        <option value="">全部</option>
                         <option value="已上架">已上架</option>
                         <option value="已下架">已下架</option>
-                        <option value="无货">无货</option>
+                        <option value="isOutOfStock">无货</option>
                     </select>
                 </div>
 
@@ -148,7 +148,7 @@
         // 创建渲染实例
         table.render({
             elem: '#test',
-            url: '/api/admin/get-all-flower',
+            url: '/api/admin/get-flower',
             toolbar: '#toolbarDemo',
             defaultToolbar: ['filter', 'exports', 'print', {
                 title: '提示',
@@ -229,6 +229,25 @@
                     }
                 });
             }
+        });
+
+        // 监听搜索按钮的提交事件
+        form.on('submit(search)', function(data){
+            // 获取搜索框的值
+            var searchName = data.field.name;
+            var searchStatus = data.field.status;
+            // 根据搜索值重载表格
+            table.reloadData('test', {
+                where: { // 设定异步数据接口的额外参数
+                    name: searchName,
+                    status: searchStatus
+                },
+                page: {
+                    curr: 1 // 重新从第 1 页开始
+                }
+            });
+            // 阻止表单跳转
+            return false;
         });
 
         // 单元格中的工具事件
@@ -365,7 +384,7 @@
 
         //填充分类下拉框
         function fillCategory() {
-            $.get("/api/admin/get-all-category",{
+            $.get("/api/admin/get-category",{
                 page: 1,
                 limit: 1000,
             }, function (data) {

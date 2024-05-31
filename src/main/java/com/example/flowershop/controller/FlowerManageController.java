@@ -1,9 +1,9 @@
 package com.example.flowershop.controller;
 
+import com.example.flowershop.dto.FlowerAndCategory;
 import com.example.flowershop.dto.RestBean;
 import com.example.flowershop.entity.Flower;
 import com.example.flowershop.entity.FlowerCategory;
-import com.example.flowershop.repositories.projection.FlowerAndCategory;
 import com.example.flowershop.service.FlowerManageService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -62,11 +62,11 @@ public class FlowerManageController {
         }
     }
 
-    @GetMapping("get-all-flower")
-    public RestBean<?> getAllFlower(String page, String limit) {
-        Page<FlowerAndCategory> flowers = flowerManageService.findFlowerAll(
-                Integer.valueOf(page),
-                Integer.valueOf(limit));
+    @GetMapping("get-flower")
+    public RestBean<?> getFlower(Integer page, Integer limit,
+                                 @RequestParam(required = false) String name,
+                                 @RequestParam(required = false) String status) {
+        Page<FlowerAndCategory> flowers = flowerManageService.findFlower(page, limit, name, status);
         return RestBean.success(flowers.getContent(), (int) flowers.getTotalElements());
     }
 

@@ -52,7 +52,7 @@ class FlowerManageServiceTest {
 
     @Test
     void findCategoryAllPage() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findCategoryAll(1, 10)));
+        System.out.println(objectMapper.writeValueAsString(service.findCategory(1, 10, null)));
     }
 
     @Test
@@ -99,7 +99,7 @@ class FlowerManageServiceTest {
 
     @Test
     void findFlowerAllPage() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findFlowerAll(1,10)));
+        System.out.println(objectMapper.writeValueAsString(service.findFlower(1, 10, null, null)));
     }
 
     @Test

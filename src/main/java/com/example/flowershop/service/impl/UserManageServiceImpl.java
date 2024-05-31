@@ -1,10 +1,12 @@
 package com.example.flowershop.service.impl;
 
+import com.example.flowershop.entity.QUser;
 import com.example.flowershop.entity.User;
 import com.example.flowershop.repositories.CommentRepository;
 import com.example.flowershop.repositories.FavoriteRepository;
 import com.example.flowershop.repositories.UserRepository;
 import com.example.flowershop.service.UserManageService;
+import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -73,9 +75,23 @@ public class UserManageServiceImpl implements UserManageService {
     }
 
     @Override
-    public Page<User> findUserAll(Integer pageNo, Integer limit) {
+    public Page<User> findUser(Integer pageNo, Integer limit, String username, String email, String role) {
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return userRepository.findAll(pageable);
+        //使用QueryDSL动态查询
+        QUser qUser = QUser.user;
+        //构建动态查询条件
+        BooleanBuilder builder = new BooleanBuilder();
+        if (username != null && !username.isEmpty()) {
+            builder.and(qUser.username.containsIgnoreCase(username));
+        }
+        if (email != null && !email.isEmpty()) {
+            builder.and(qUser.email.containsIgnoreCase(email));
+        }
+        if (role != null && !role.isEmpty()) {
+            builder.and(qUser.role.eq(User.Role.valueOf(role)));
+        }
+        //单表查询所有字段的动态查询可借助jpa的findAll方法
+        return userRepository.findAll(builder, pageable);
     }
 
     @Override

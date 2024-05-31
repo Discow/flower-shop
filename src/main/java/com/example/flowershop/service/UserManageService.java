@@ -22,7 +22,7 @@ public interface UserManageService {
     List<User> findUserAll();
 
     //支持分页查询所有用户
-    Page<User> findUserAll(Integer pageNo, Integer limit);
+    Page<User> findUser(Integer pageNo, Integer limit, String username, String email, String role);
 
     //根据手机号模糊查询
     Page<User> findByPhone(String phone, Integer pageNo, Integer limit);

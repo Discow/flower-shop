@@ -28,7 +28,7 @@
                 <label for="status" class="layui-form-label" style="padding-left: 5px">收货方式</label>
                 <div class="layui-input-inline">
                     <select name="receiveType" id="receiveType">
-                        <option value="全部">全部</option>
+                        <option value="">全部</option>
                         <option value="到店自取">到店自取</option>
                         <option value="上门配送">上门配送</option>
                     </select>
@@ -37,8 +37,8 @@
                 <label for="status" class="layui-form-label">状态</label>
                 <div class="layui-input-inline">
                     <select name="status" id="status">
-                        <option value="全部">全部</option>
-                        <option value="待处理">待处理</option>
+                        <option value="">全部</option>
+                        <option value="已支付">待处理</option>
                         <option value="已完成">已完成</option>
                     </select>
                 </div>
@@ -110,6 +110,27 @@
             error: function (res, msg) {
                 console.log(res, msg)
             }
+        });
+
+        // 监听搜索按钮的提交事件
+        form.on('submit(search)', function(data){
+            // 获取搜索框的值
+            var sPhone = data.field.phone;
+            var sReceiveType = data.field.receiveType;
+            var sStatus = data.field.status;
+            // 根据搜索值重载表格
+            table.reloadData('test', {
+                where: { // 设定异步数据接口的额外参数
+                    phone: sPhone,
+                    receiveType:sReceiveType,
+                    status: sStatus,
+                },
+                page: {
+                    curr: 1 // 重新从第 1 页开始
+                }
+            });
+            // 阻止表单跳转
+            return false;
         });
 
         // 单元格中的工具事件

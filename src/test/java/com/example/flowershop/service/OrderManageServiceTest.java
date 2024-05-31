@@ -23,8 +23,8 @@ class OrderManageServiceTest {
     }
 
     @Test
-    void findOrderAll() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findOrderAll(1, 10).getContent()));
+    void findOrder() throws JsonProcessingException {
+        System.out.println(objectMapper.writeValueAsString(service.findOrder(1, 10, null, null, null).getContent()));
     }
 
     @Test

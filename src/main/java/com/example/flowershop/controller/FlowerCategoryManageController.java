@@ -4,10 +4,7 @@ import com.example.flowershop.dto.RestBean;
 import com.example.flowershop.entity.FlowerCategory;
 import com.example.flowershop.service.FlowerManageService;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -51,11 +48,9 @@ public class FlowerCategoryManageController {
         }
     }
 
-    @GetMapping("get-all-category")
-    public RestBean<?> getAllCategory(String page, String limit) {
-        Page<FlowerCategory> categories = flowerManageService.findCategoryAll(
-                Integer.valueOf(page),
-                Integer.valueOf(limit));
+    @GetMapping("get-category")
+    public RestBean<?> getCategory(Integer page, Integer limit, @RequestParam(required = false) String name) {
+        Page<FlowerCategory> categories = flowerManageService.findCategory(page, limit, name);
         return RestBean.success(categories.getContent(), (int) categories.getTotalElements());
     }
 }
