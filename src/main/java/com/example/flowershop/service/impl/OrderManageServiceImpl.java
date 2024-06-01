@@ -59,7 +59,7 @@ public class OrderManageServiceImpl implements OrderManageService {
         //基础查询
         List<UserInfoAndOrdersDto> results = jpaQueryFactory
                 .select(Projections.constructor(UserInfoAndOrdersDto.class,
-                        qUser.id, qUser.email, qUser.username, qUser.phone,
+                        qOrder.id, qUser.email, qUser.username, qUser.phone,
                         new CaseBuilder()
                                 .when(qOrder.status.in("paid_deleted", "unpaid_deleted"))
                                 .then("由用户删除")
