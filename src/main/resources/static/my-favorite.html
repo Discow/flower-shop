@@ -60,50 +60,47 @@
   <h2 class="mb-4">我的收藏夹</h2>
   <div class="row">
     <!-- 商品项 -->
-    <div class="col-md-3 mb-3">
-      <div class="card">
-        <img src="/res/img/9012578.jpg" class="card-img-top" alt="商品图片">
-        <div class="card-body">
-          <h5 class="card-title">商品标题</h5>
-          <p class="card-text">¥199.00</p>
-          <button type="button" class="btn btn-danger btn-sm">移除</button>
-        </div>
-      </div>
-    </div>
-    <!-- 更多商品项 -->
-    <div class="col-md-3 mb-3">
-      <div class="card">
-        <img src="/res/img/9012578.jpg" class="card-img-top" alt="商品图片">
-        <div class="card-body">
-          <h5 class="card-title">商品标题</h5>
-          <p class="card-text">¥199.00</p>
-          <button type="button" class="btn btn-danger btn-sm">移除</button>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3 mb-3">
-      <div class="card">
-        <img src="/res/img/9012578.jpg" class="card-img-top" alt="商品图片">
-        <div class="card-body">
-          <h5 class="card-title">商品标题</h5>
-          <p class="card-text">¥199.00</p>
-          <button type="button" class="btn btn-danger btn-sm">移除</button>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-3 mb-3">
-      <div class="card">
-        <img src="/res/img/9012578.jpg" class="card-img-top" alt="商品图片">
-        <div class="card-body">
-          <h5 class="card-title">商品标题</h5>
-          <p class="card-text">¥199.00</p>
-          <button type="button" class="btn btn-danger btn-sm">移除</button>
-        </div>
-      </div>
-    </div>
+<!--    <div class="col-md-3 mb-3">-->
+<!--      <div class="card">-->
+<!--        <img src="/res/img/9012578.jpg" class="card-img-top" alt="商品图片">-->
+<!--        <div class="card-body">-->
+<!--          <h5 class="card-title">商品标题</h5>-->
+<!--          <p class="card-text">¥199.00</p>-->
+<!--          <button type="button" class="btn btn-danger btn-sm">移除</button>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </div>
 <!-- 引入Bootstrap JS -->
+<script src="/res/js/jquery-3.7.1.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $.get('/api/customer/get-favorite',{page:1,limit:1000},function (res) {
+      $.each(res.data,function (index, item) {
+        var favoriteHtml = "<div class=\"col-md-3 mb-3\">\n" +
+                "      <div class=\"card\">\n" +
+                "      <a href=\"product.html?id="+item.id+"\">\n" +
+                "        <img src=\""+"data:image/jpeg;base64,"+item.picture+"\" class=\"card-img-top\" alt=\"商品图片\">\n" +
+                "      </a>\n" +
+                "        <div class=\"card-body\">\n" +
+                "          <h5 class=\"card-title\">"+item.name+"</h5>\n" +
+                "          <p class=\"card-text\">¥"+item.price+"</p>\n" +
+                "          <button type=\"button\" onclick='cancel("+item.id+")' class=\"btn btn-danger btn-sm\">移除</button>\n" +
+                "        </div>\n" +
+                "      </div>\n" +
+                "    </div>";
+        $('.row').append(favoriteHtml)
+      })
+    })
+  })
+  function cancel(id) {
+    $.get('/api/customer/add-or-rm-favorite',{flowerId:id},function (data) {
+      alert(data.msg)
+      location.reload()
+    })
+  }
+</script>
 </body>
 </html>

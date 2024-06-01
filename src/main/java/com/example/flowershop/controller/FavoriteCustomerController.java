@@ -20,24 +20,11 @@ public class FavoriteCustomerController {
     @Resource
     FavoriteService favoriteService;
 
-    //添加收藏
-    @GetMapping("add-favorite")
-    public RestBean<?> addFavorite(Authentication authentication, Integer flowerId) {
-        if (favoriteService.addFavorite(authentication.getName(), flowerId)) {
-            return RestBean.success();
-        } else {
-            return RestBean.failure("添加收藏失败");
-        }
-    }
-
-    //取消收藏
-    @GetMapping("remove-favorite")
-    public RestBean<?> removeFavorite(Authentication authentication, Integer flowerId) {
-        if (favoriteService.removeFavorite(authentication.getName(), flowerId)) {
-            return RestBean.success();
-        } else {
-            return RestBean.failure("取消收藏失败");
-        }
+    //添加与移除收藏
+    @GetMapping("add-or-rm-favorite")
+    public RestBean<?> addOrRmFavorite(Authentication authentication, Integer flowerId) {
+        String s = favoriteService.addOrRmFavorite(authentication.getName(), flowerId);
+        return RestBean.success(s);
     }
 
     //查看我的收藏

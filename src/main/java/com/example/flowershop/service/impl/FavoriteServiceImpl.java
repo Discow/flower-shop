@@ -35,8 +35,9 @@ public class FavoriteServiceImpl implements FavoriteService {
     JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public boolean addFavorite(String email, Integer flowerId) {
+    public String addOrRmFavorite(String email, Integer flowerId) {
         //TODO 用户邮箱在controller层从spring security获取
+        //如果没有收藏则添加，否则取消
         User user = userRepository.findByEmail(email).orElse(null);
 
         try {
@@ -47,40 +48,22 @@ public class FavoriteServiceImpl implements FavoriteService {
                 favoritePK.setFlowerId(flowerId);
                 Favorite favorite = new Favorite();
                 favorite.setId(favoritePK);
+                //检查是否已收藏
+                boolean exists = favoriteRepository.existsById(favoritePK);
                 //持久化操作
-                favoriteRepository.save(favorite);
-                return true;
+                if (exists) {
+                    favoriteRepository.delete(favorite);
+                    return "已取消收藏";
+                } else {
+                    favoriteRepository.save(favorite);
+                    return "已添加收藏";
+                }
             } else {
-                return false;
+                throw new RuntimeException("用户不存在！");
             }
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return false;
-        }
-    }
-
-    @Override
-    public boolean removeFavorite(String email, Integer flowerId) {
-        //TODO 用户邮箱在controller层从spring security获取
-        User user = userRepository.findByEmail(email).orElse(null);
-
-        try {
-            if (user != null) {
-                //设置联合主键
-                Favorite.FavoritePK favoritePK = new Favorite.FavoritePK();
-                favoritePK.setUserId(user.getId());
-                favoritePK.setFlowerId(flowerId);
-                Favorite favorite = new Favorite();
-                favorite.setId(favoritePK);
-                //持久化操作
-                favoriteRepository.delete(favorite);
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return false;
+            throw new RuntimeException();
         }
     }
 
@@ -96,7 +79,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         QFlower qFlower = QFlower.flower;
         List<FavoriteDetailDto> results = jpaQueryFactory
                 .select(Projections.constructor(FavoriteDetailDto.class,
-                        qFlower.name, qFlower.price))
+                        qFlower.id, qFlower.name, qFlower.price, qFlower.picture))
                 .from(qFavorite, qFlower)
                 .where(qFavorite.id.flowerId.eq(qFlower.id), qFavorite.id.userId.eq(user.getId()))
                 .fetch();

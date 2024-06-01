@@ -105,7 +105,7 @@
       <div class="product-info">
         <div class="product-title line">
           <h1 id="name" style="font-family: 'Microsoft Sans Serif'"></h1>
-          <a href=""><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+          <a onclick="favorite(productId)"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
         </div>
 
         <div class="other-options line">
@@ -215,6 +215,7 @@
       </form>
   </script>
 
+  <script src="/res/js/jquery-3.7.1.js"></script>
   <script src="/res/layui/layui.js"></script>
   <script>
       layui.use(['layer','flow', 'rate','util','jquery','form','laydate'], function(){
@@ -227,7 +228,7 @@
           var $ = layui.jquery;
 
           var params = new URLSearchParams(window.location.search);
-          var productId = params.get('id');
+          window.productId = params.get('id');
 
           util.on('lay-on', {
               page: function(){
@@ -392,7 +393,6 @@
                   $.each(res.data,function (index, items) {
                       var iRelated=index+1
                       var relatedProduct = "<div class=\"related"+iRelated+" related\">\n" +
-                          "                  <a href=\"\"><i class=\"fa fa-heart-o like\" aria-hidden=\"true\"></i></a>\n" +
                           "                  <div class=\"img-frame\">\n" +
                           "                      <a href=\"product.html?id="+items.id+"\">\n" +
                           "                          <img src=\""+"data:image/jpeg;base64,"+items.picture+"\" alt=\"\">\n" +
@@ -407,6 +407,13 @@
           })
       });
 
+      //商品详情页的收藏按钮动作
+      function favorite(flowerId) {
+          $.get('/api/customer/add-or-rm-favorite',{flowerId:flowerId},function (data) {
+              alert(data.msg)
+          })
+          return false
+      }
   </script>
 </body>
 </html>

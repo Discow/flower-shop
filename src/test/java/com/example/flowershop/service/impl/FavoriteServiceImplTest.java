@@ -16,12 +16,7 @@ class FavoriteServiceImplTest {
     FavoriteService service;
 
     @Test
-    void addFavorite() {
-        service.addFavorite(String.valueOf(3),1);
-    }
-
-    @Test
-    void removeFavorite() {
-        service.removeFavorite(String.valueOf(3), 1);
+    void addOrRmFavorite() {
+        service.addOrRmFavorite(String.valueOf(3),1);
     }
 }
