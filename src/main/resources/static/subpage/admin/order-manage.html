@@ -39,6 +39,8 @@
                     <select name="status" id="status">
                         <option value="">全部</option>
                         <option value="已支付">待处理</option>
+                        <option value="待收货">待收货</option>
+                        <option value="已发货">已发货</option>
                         <option value="已完成">已完成</option>
                     </select>
                 </div>
@@ -162,15 +164,61 @@
                 layer.open({
                     title: '订单详情 - id:' + data.id,
                     type: 1,
-                    content: '',
+                    shadeClose: true,
+                    area:['600px','500px'],
+                    content: $('#order-details').html(),
                     success: function () {
-
+                        //订单详情表格
+                        table.render({
+                            elem: '#order-details-table',
+                            url: '/api/admin/get-order-detail?orderId='+data.id, // 此处为静态模拟数据，实际使用时需换成真实接口
+                            lineStyle: 'height: 100px;',
+                            cols: [[
+                                {field: 'id',width: 90, title: '商品编号'},
+                                {field: 'name', title: '商品名'},
+                                {field: 'price',width: 90, title: '单价'},
+                                {field: 'picture', title: '图片', align: 'center', templet: function(d){
+                                        if (d.picture !== null) {
+                                            return '<img src="data:image/jpeg;base64,' + d.picture + '">';
+                                        } else {
+                                            return '请添加图片';
+                                        }
+                                    }},
+                                {field: 'quantity', width: 90, title: '购买数量'},
+                            ]],
+                        });
                     }
                 });
             }
         });
 
+        //点击图片预览动作
+        $(document).on('click', '.layui-table td[data-field="picture"] img', function(){
+            var src = $(this).attr('src');
+            // 使用layer.photos弹出图片预览
+            layer.photos({
+                photos: {
+                    "title": "Photos Demo",
+                    "start": 0,
+                    "data": [
+                        {
+                            "alt": "图片浏览",
+                            "pid": 5,
+                            "src": src,
+                        }
+                    ]
+                },
+                footer: false // 是否显示底部栏 --- 2.8.16+
+            });
+        });
+
     });
+</script>
+<!--订单详情-->
+<script type="text/html" id="order-details">
+    <div style="padding: 10px">
+        <table class="layui-hide" id="order-details-table" lay-filter="order-details-table"></table>
+    </div>
 </script>
 </body>
 </html>

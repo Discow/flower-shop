@@ -1,7 +1,10 @@
 package com.example.flowershop.service.impl;
 
+import com.example.flowershop.dto.OrderDetailDto;
 import com.example.flowershop.dto.UserInfoAndOrdersDto;
+import com.example.flowershop.entity.QFlower;
 import com.example.flowershop.entity.QOrder;
+import com.example.flowershop.entity.QOrderDetail;
 import com.example.flowershop.entity.QUser;
 import com.example.flowershop.repositories.OrderRepository;
 import com.example.flowershop.service.OrderManageService;
@@ -79,4 +82,16 @@ public class OrderManageServiceImpl implements OrderManageService {
         return PageableExecutionUtils.getPage(results, pageable, () -> queryCount != null ? queryCount : 0L);
     }
 
+    @Override
+    public List<OrderDetailDto> findOrderDetail(Integer orderId) {
+        //使用QueryDSL查询订单详情
+        QOrderDetail qOrderDetail = QOrderDetail.orderDetail;
+        QFlower qFlower = QFlower.flower;
+        return jpaQueryFactory
+                .select(Projections.constructor(OrderDetailDto.class,
+                        qFlower.id, qFlower.name, qFlower.price, qFlower.picture, qOrderDetail.quantity))
+                .from(qOrderDetail, qFlower)
+                .where(qOrderDetail.id.flowerId.eq(qFlower.id), qOrderDetail.id.orderId.eq(orderId))
+                .fetch();
+    }
 }
