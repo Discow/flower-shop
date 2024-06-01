@@ -1,6 +1,6 @@
 package com.example.flowershop.service;
 
-import com.example.flowershop.repositories.projection.FavoriteDetail;
+import com.example.flowershop.dto.FavoriteDetailDto;
 import org.springframework.data.domain.Page;
 
 /**
@@ -14,5 +14,5 @@ public interface FavoriteService {
     boolean removeFavorite(String email, Integer flowerId);
 
     //查询我的收藏
-    Page<FavoriteDetail> findMyFavorite(String email, Integer pageNo, Integer limit);
+    Page<FavoriteDetailDto> findMyFavorite(String email, Integer pageNo, Integer limit);
 }

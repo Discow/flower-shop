@@ -27,7 +27,6 @@ public class MainPageController {
     public RestBean<?> getFlower(@RequestParam(required = false) Integer id,
                                  @RequestParam(required = false) Integer page,
                                  @RequestParam(required = false) Integer limit) {
-        //TODO 改用QueryDSL
         if (id != null) {
             return RestBean.success(mainPageService.findById(id), 1);
         } else {

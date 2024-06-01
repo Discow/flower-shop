@@ -2,7 +2,7 @@ package com.example.flowershop.controller;
 
 import com.example.flowershop.dto.OrderItemDto;
 import com.example.flowershop.dto.RestBean;
-import com.example.flowershop.repositories.projection.OrdersOnly;
+import com.example.flowershop.entity.Order;
 import com.example.flowershop.service.CustomerOrderService;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -37,8 +37,7 @@ public class OrderCustomerController {
     public RestBean<?> getOrder(Authentication authentication, @RequestParam(required = false) String status,
                                 Integer page, Integer limit) {
         String email = authentication.getName();
-        //TODO 改用QueryDSL
-        Page<OrdersOnly> orders = customerOrderService.findOrderAll(email, status, page, limit);
+        Page<Order> orders = customerOrderService.findOrder(email, status, page, limit);
         return RestBean.success(orders.getContent(), (int) orders.getTotalElements());
     }
 

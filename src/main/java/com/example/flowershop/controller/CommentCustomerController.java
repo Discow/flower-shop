@@ -1,7 +1,7 @@
 package com.example.flowershop.controller;
 
+import com.example.flowershop.dto.CommentDetailDto;
 import com.example.flowershop.dto.RestBean;
-import com.example.flowershop.repositories.projection.CommentDetail;
 import com.example.flowershop.service.CommentService;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -44,7 +44,7 @@ public class CommentCustomerController {
     //获取商品的评价
     @GetMapping("get-comment")
     public RestBean<?> getComment(Integer flowerId, Integer page, Integer limit) {
-        Page<CommentDetail> comments = commentService.findByFlowerId(flowerId, page, limit);
+        Page<CommentDetailDto> comments = commentService.findByFlowerId(flowerId, page, limit);
         return RestBean.success(comments.getContent(), (int) comments.getTotalElements());
     }
 }

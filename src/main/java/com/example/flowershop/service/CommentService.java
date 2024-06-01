@@ -1,6 +1,6 @@
 package com.example.flowershop.service;
 
-import com.example.flowershop.repositories.projection.CommentDetail;
+import com.example.flowershop.dto.CommentDetailDto;
 import org.springframework.data.domain.Page;
 
 public interface CommentService {
@@ -18,5 +18,5 @@ public interface CommentService {
     boolean removeComment(String email, Integer flowerId);
 
     //根据商品编号查询评论
-    Page<CommentDetail> findByFlowerId(Integer flowerId, Integer pageNo, Integer limit);
+    Page<CommentDetailDto> findByFlowerId(Integer flowerId, Integer pageNo, Integer limit);
 }

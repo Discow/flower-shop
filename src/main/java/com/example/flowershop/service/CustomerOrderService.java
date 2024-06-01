@@ -1,7 +1,7 @@
 package com.example.flowershop.service;
 
 import com.example.flowershop.dto.OrderItemDto;
-import com.example.flowershop.repositories.projection.OrdersOnly;
+import com.example.flowershop.entity.Order;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -23,6 +23,6 @@ public interface CustomerOrderService {
     boolean confirmReceipt(String email, Integer orderId);
 
     //查询当前用户的全部订单（仅获取订单集合）
-    Page<OrdersOnly> findOrderAll(String email, String status, Integer pageNo, Integer limit);
+    Page<Order> findOrder(String email, String status, Integer pageNo, Integer limit);
 
 }

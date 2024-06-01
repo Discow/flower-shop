@@ -37,7 +37,7 @@ class CustomerOrderServiceTest {
     }
 
     @Test
-    void findOrderAll() throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(service.findOrderAll("test@qq.com", "已支付",1, 10).getContent()));
+    void findOrder() throws JsonProcessingException {
+        System.out.println(objectMapper.writeValueAsString(service.findOrder("test@qq.com", "已支付",1, 10).getContent()));
     }
 }

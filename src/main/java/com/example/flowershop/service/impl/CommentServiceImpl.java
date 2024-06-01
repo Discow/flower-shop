@@ -1,20 +1,26 @@
 package com.example.flowershop.service.impl;
 
+import com.example.flowershop.dto.CommentDetailDto;
 import com.example.flowershop.entity.Comment;
+import com.example.flowershop.entity.QComment;
+import com.example.flowershop.entity.QUser;
 import com.example.flowershop.entity.User;
 import com.example.flowershop.repositories.CommentRepository;
 import com.example.flowershop.repositories.UserRepository;
-import com.example.flowershop.repositories.projection.CommentDetail;
 import com.example.flowershop.service.CommentService;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 @Transactional
 @Service
@@ -23,6 +29,8 @@ public class CommentServiceImpl implements CommentService {
     UserRepository userRepository;
     @Resource
     CommentRepository commentRepository;
+    @Resource
+    JPAQueryFactory jpaQueryFactory;
 
     @Override
     public boolean addComment(String email, Integer flowerId, Integer rating, String content) {
@@ -76,9 +84,25 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    //根据商品id获取评价
     @Override
-    public Page<CommentDetail> findByFlowerId(Integer flowerId, Integer pageNo, Integer limit) {
+    public Page<CommentDetailDto> findByFlowerId(Integer flowerId, Integer pageNo, Integer limit) {
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        return commentRepository.findByFlowerId(flowerId, pageable);
+        //使用QueryDSL查询
+        QComment qComment = QComment.comment;
+        QUser qUser = QUser.user;
+        //构建查询语句
+        List<CommentDetailDto> results = jpaQueryFactory
+                .select(Projections.constructor(CommentDetailDto.class,
+                        qComment.content, qComment.rating, qComment.time, qUser.username))
+                .from(qComment, qUser)
+                .where(qComment.user.id.eq(qUser.id), qComment.flower.id.eq(flowerId))
+                .fetch();
+        //查询总记录数
+        Long queryCount = jpaQueryFactory.select(qComment.count())
+                .from(qComment, qUser)
+                .where(qComment.user.id.eq(qUser.id))
+                .fetchOne();
+        return PageableExecutionUtils.getPage(results, pageable, () -> queryCount != null ? queryCount : 0L);
     }
 }

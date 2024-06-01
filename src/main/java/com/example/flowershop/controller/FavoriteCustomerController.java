@@ -1,7 +1,7 @@
 package com.example.flowershop.controller;
 
+import com.example.flowershop.dto.FavoriteDetailDto;
 import com.example.flowershop.dto.RestBean;
-import com.example.flowershop.repositories.projection.FavoriteDetail;
 import com.example.flowershop.service.FavoriteService;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
@@ -43,7 +43,7 @@ public class FavoriteCustomerController {
     //查看我的收藏
     @GetMapping("get-favorite")
     public RestBean<?> getFavorite(Authentication authentication, Integer page, Integer limit) {
-        Page<FavoriteDetail> myFavorite = favoriteService.findMyFavorite(authentication.getName(), page, limit);
+        Page<FavoriteDetailDto> myFavorite = favoriteService.findMyFavorite(authentication.getName(), page, limit);
         return RestBean.success(myFavorite.getContent(), (int) myFavorite.getTotalElements());
     }
 }

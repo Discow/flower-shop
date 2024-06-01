@@ -1,6 +1,7 @@
 package com.example.flowershop.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,10 +35,12 @@ public class Order {
     //建立关联
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     //多对一双向关联，多方维护，一方放弃维护（被维护）
     //级联删除 删除订单时删除与商品的关联（order_detail）
     @OneToMany(mappedBy = "order", cascade = CascadeType.REMOVE)
+    @JsonIgnore
     List<OrderDetail> orderDetails;
 }

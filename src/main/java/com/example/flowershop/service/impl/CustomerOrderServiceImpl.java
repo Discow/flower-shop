@@ -1,16 +1,13 @@
 package com.example.flowershop.service.impl;
 
 import com.example.flowershop.dto.OrderItemDto;
-import com.example.flowershop.entity.Flower;
-import com.example.flowershop.entity.Order;
-import com.example.flowershop.entity.OrderDetail;
-import com.example.flowershop.entity.User;
+import com.example.flowershop.entity.*;
 import com.example.flowershop.repositories.FlowerRepository;
 import com.example.flowershop.repositories.OrderDetailRepository;
 import com.example.flowershop.repositories.OrderRepository;
 import com.example.flowershop.repositories.UserRepository;
-import com.example.flowershop.repositories.projection.OrdersOnly;
 import com.example.flowershop.service.CustomerOrderService;
+import com.querydsl.core.BooleanBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +17,10 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 @Transactional
 @Service
@@ -151,13 +151,25 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     }
 
     @Override
-    public Page<OrdersOnly> findOrderAll(String email, String status, Integer pageNo, Integer limit) {
+    public Page<Order> findOrder(String email, String status, Integer pageNo, Integer limit) {
         //TODO 在controller层从spring security获取当前用户
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
-        if (status != null && !"".equals(status)) {
-            return orderRepository.findOrderByEmailAndStatus(email, status, pageable);
+        //获取用户id
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            throw new RuntimeException("用户不存在！");
         }
-        return userRepository.findOrderByEmailExcludeDeleted(email, pageable);
+        //使用QueryDSL动态查询
+        QOrder qOrder = QOrder.order;
+        //构建动态查询语句
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(qOrder.user.id.eq(user.getId()));
+        if (status != null && !status.isEmpty()) {
+            builder.and(qOrder.status.eq(status));
+        } else {
+            builder.and(qOrder.status.notIn(PAID_DELETED_STATUS, UNPAID_DELETED_STATUS));
+        }
+        return orderRepository.findAll(builder, pageable);
     }
 
     //计算订单总金额
