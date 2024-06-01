@@ -1,5 +1,6 @@
 package com.example.flowershop.controller;
 
+import com.example.flowershop.dto.OrderDetailDto;
 import com.example.flowershop.dto.OrderItemDto;
 import com.example.flowershop.dto.RestBean;
 import com.example.flowershop.entity.Order;
@@ -69,5 +70,11 @@ public class OrderCustomerController {
         } else {
             return RestBean.failure("确认收货失败：当前订单已取消");
         }
+    }
+
+    @GetMapping("get-order-detail")
+    public RestBean<?> getOrderDetail(Authentication authentication, Integer orderId) {
+        List<OrderDetailDto> orderDetail = customerOrderService.findOrderDetail(authentication.getName(), orderId);
+        return RestBean.success(orderDetail, orderDetail.size());
     }
 }

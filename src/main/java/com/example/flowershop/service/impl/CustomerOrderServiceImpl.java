@@ -1,5 +1,6 @@
 package com.example.flowershop.service.impl;
 
+import com.example.flowershop.dto.OrderDetailDto;
 import com.example.flowershop.dto.OrderItemDto;
 import com.example.flowershop.entity.*;
 import com.example.flowershop.repositories.FlowerRepository;
@@ -8,6 +9,8 @@ import com.example.flowershop.repositories.OrderRepository;
 import com.example.flowershop.repositories.UserRepository;
 import com.example.flowershop.service.CustomerOrderService;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +36,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     UserRepository userRepository;
     @Resource
     FlowerRepository flowerRepository;
+    @Resource
+    JPAQueryFactory jpaQueryFactory;
 
     private static final String PAID_STATUS = "已支付";
     private static final String CANCEL_STATUS = "已取消";
@@ -170,6 +175,27 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             builder.and(qOrder.status.notIn(PAID_DELETED_STATUS, UNPAID_DELETED_STATUS));
         }
         return orderRepository.findAll(builder, pageable);
+    }
+
+    @Override
+    public List<OrderDetailDto> findOrderDetail(String email, Integer orderId) {
+        //获取用户id，防止顾客查询其他用户的订单
+        User user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            throw new RuntimeException("找不到用户！");
+        }
+        //使用QueryDsl查询
+        QOrderDetail qOrderDetail = QOrderDetail.orderDetail;
+        QFlower qFlower = QFlower.flower;
+        QOrder qOrder = QOrder.order;
+        //构建查询语句
+        return jpaQueryFactory.select(Projections.constructor(OrderDetailDto.class,
+                        qFlower.id, qFlower.name, qFlower.price, qFlower.picture, qOrderDetail.quantity
+                ))
+                .from(qOrderDetail, qFlower, qOrder)
+                .where(qOrderDetail.id.flowerId.eq(qFlower.id), qOrderDetail.id.orderId.eq(qOrder.id), //连接三个表
+                        qOrder.user.id.eq(user.getId()), qOrderDetail.id.orderId.eq(orderId)) //通过订单号查询指定用户的订单
+                .fetch();
     }
 
     //计算订单总金额

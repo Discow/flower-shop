@@ -1,5 +1,6 @@
 package com.example.flowershop.service;
 
+import com.example.flowershop.dto.OrderDetailDto;
 import com.example.flowershop.dto.OrderItemDto;
 import com.example.flowershop.entity.Order;
 import org.springframework.data.domain.Page;
@@ -25,4 +26,6 @@ public interface CustomerOrderService {
     //查询当前用户的全部订单（仅获取订单集合）
     Page<Order> findOrder(String email, String status, Integer pageNo, Integer limit);
 
+    //查看订单详情
+    List<OrderDetailDto> findOrderDetail(String email, Integer orderId);
 }
