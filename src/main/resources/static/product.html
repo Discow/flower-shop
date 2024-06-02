@@ -124,7 +124,7 @@
             </div>
             <div class="" style="margin-bottom: 20px;">
                 <span style="font-family: 'Microsoft Himalaya'">已售：</span>
-                <span>100 件（模拟数据）</span>
+                <span id="sales-volume">100 件（模拟数据）</span>
             </div>
           </div>
 
@@ -387,6 +387,11 @@
                   $('#addTime').text(response.data.addTime)
                   $('#picture').html("<img src=\""+'data:image/jpeg;base64,'+response.data.picture+"\" alt=\"\">")
               });
+
+              //获取销量
+              $.get('/api/customer/mainPage/get-sales-volume',{flowerId:productId},function (data) {
+                  $('#sales-volume').text(data.data+' 件')
+              })
 
               //填充相关推荐
               $.get('/api/customer/mainPage/get-random-three', function (res) {

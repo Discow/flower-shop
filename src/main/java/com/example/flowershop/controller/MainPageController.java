@@ -41,4 +41,11 @@ public class MainPageController {
         List<Flower> flowers = mainPageService.getRandomThree();
         return RestBean.success(flowers, flowers.size());
     }
+
+    //获取商品的销量
+    @GetMapping("get-sales-volume")
+    public RestBean<?> getSalesVolume(Integer flowerId) {
+        Integer salesVolume = mainPageService.findSalesVolume(flowerId);
+        return RestBean.success(salesVolume, null);
+    }
 }

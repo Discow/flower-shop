@@ -13,4 +13,6 @@ public interface MainPageService {
     Flower findById(Integer id);
     //支持分页查询全部分类（页码，每页行数）
     Page<FlowerCategory> findCategoryAll(Integer pageNo, Integer limit);
+    //获取商品的销量
+    Integer findSalesVolume(Integer flowerId);
 }
