@@ -188,12 +188,16 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         QOrderDetail qOrderDetail = QOrderDetail.orderDetail;
         QFlower qFlower = QFlower.flower;
         QOrder qOrder = QOrder.order;
+        QComment qComment = QComment.comment;
         //构建查询语句
         return jpaQueryFactory.select(Projections.constructor(OrderDetailDto.class,
-                        qFlower.id, qFlower.name, qFlower.price, qFlower.picture, qOrderDetail.quantity
+                        qFlower.id, qFlower.name, qFlower.price, qFlower.picture, qOrderDetail.quantity,
+                        qComment.rating, qComment.content
                 ))
                 .from(qOrderDetail, qFlower, qOrder)
-                .where(qOrderDetail.id.flowerId.eq(qFlower.id), qOrderDetail.id.orderId.eq(qOrder.id), //连接三个表
+                .leftJoin(qComment)
+                .on(qComment.id.flowerId.eq(qFlower.id), qComment.id.userId.eq(qOrder.user.id))
+                .where(qOrderDetail.id.flowerId.eq(qFlower.id), qOrderDetail.id.orderId.eq(qOrder.id), //连接四个表
                         qOrder.user.id.eq(user.getId()), qOrderDetail.id.orderId.eq(orderId)) //通过订单号查询指定用户的订单
                 .fetch();
     }

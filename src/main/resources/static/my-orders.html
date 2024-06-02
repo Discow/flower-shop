@@ -90,29 +90,62 @@
     <a class="layui-btn layui-btn-radius layui-btn-primary layui-btn-xs" lay-event="details">查看详情</a>
     <a class="layui-btn layui-btn-radius layui-btn-primary layui-btn-xs" lay-event="delete">删除订单</a>
     {{# } else if(d.status === '待收货'){ }}
+      {{#  if(d.receiveType === '上门配送'){ }}
     <a class="layui-btn layui-btn-radius layui-btn-primary layui-btn-xs" lay-event="logistics">查看物流</a>
+      {{#  } }}
     <a class="layui-btn layui-btn-radius layui-btn-primary layui-btn-xs" lay-event="details">查看详情</a>
     <a class="layui-btn layui-btn-radius layui-btn-primary layui-btn-xs" lay-event="confirm">确认收货</a>
     {{#  } else { }}
+      {{#  if(d.receiveType === '上门配送'){ }}
     <a class="layui-btn layui-btn-radius layui-btn-primary layui-btn-xs" lay-event="logistics">查看物流</a>
+      {{#  } }}
     <a class="layui-btn layui-btn-radius layui-btn-primary layui-btn-xs" lay-event="details">查看详情</a>
     <a class="layui-btn layui-btn-radius layui-btn-primary layui-btn-xs" lay-event="cancel">取消订单</a>
     {{#  } }}
   </div>
 </script>
+<!--评价操作按钮-->
+<script type="text/html" id="comment">
+  <div class="layui-clear-space">
+    <a class="layui-btn layui-btn-radius layui-btn-primary layui-btn-xs" lay-event="add-comment">添加评价</a>
+    <a class="layui-btn layui-btn-radius layui-btn-primary layui-btn-xs" lay-event="del-comment">删除评价</a>
+  </div>
+</script>
+<!--弹出的评价编辑框-->
+<script type="text/html" id="commentEditForm">
+  <div style="padding: 16px;">
+    <form class="layui-form layui-form-pane" lay-filter="editFormFilter">
+      <div class="layui-form-item">
+        <label class="layui-form-label">评分</label>
+        <div class="layui-input-block">
+          <div id="rating" style="padding: 0 10px"></div>
+        </div>
+      </div>
+
+      <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">评价内容</label>
+        <div class="layui-input-block">
+          <textarea placeholder="请输入评价内容" name="content" class="layui-textarea"></textarea>
+        </div>
+      </div>
+      <input name="rating" value="5" id="ratingInput" hidden>
+    </form>
+  </div>
+</script>
 <script>
-  layui.use(['table', 'dropdown', 'form'], function () {
+  layui.use(['table', 'dropdown', 'form', 'rate'], function () {
     var $ = layui.$;
     var table = layui.table;
     var dropdown = layui.dropdown;
-    var form=layui.form
+    var form = layui.form;
+    var rate = layui.rate;
 
     // 创建渲染实例
     table.render({
       elem: '#test',
       url: '/api/customer/get-order', // 此处为静态模拟数据，实际使用时需换成真实接口
       toolbar: '#toolbarDemo',
-      defaultToolbar: [ {
+      defaultToolbar: [{
         title: '提示',
         layEvent: 'LAYTABLE_TIPS',
         icon: 'layui-icon-tips'
@@ -151,9 +184,9 @@
       var data = obj.data; // 获得当前行数据
       if (obj.event === 'logistics') {
         layer.msg("暂未实现")
-      }else if (obj.event === 'cancel') {
-        layer.confirm('确认取消订单？', {icon: 3}, function(){
-          $.get('/api/customer/cancel-order',{orderId:data.id},function (data) {
+      } else if (obj.event === 'cancel') {
+        layer.confirm('确认取消订单？', {icon: 3}, function () {
+          $.get('/api/customer/cancel-order', {orderId: data.id}, function (data) {
             if (data.code === 200) {
               layer.alert(data.msg, {icon: 1});
               table.reloadData('test')
@@ -162,9 +195,9 @@
             }
           })
         });
-      }else if (obj.event === 'confirm') {
-        layer.confirm('确认收货？<br><span style="color: red">请确保收到货之后再确认收货！</span>', {icon: 3}, function(){
-          $.get('/api/customer/confirm-receipt',{orderId:data.id},function (data) {
+      } else if (obj.event === 'confirm') {
+        layer.confirm('确认收货？<br><span style="color: red">请确保收到货之后再确认收货！</span>', {icon: 3}, function () {
+          $.get('/api/customer/confirm-receipt', {orderId: data.id}, function (data) {
             if (data.code === 200) {
               layer.alert(data.msg, {icon: 1});
               table.reloadData('test')
@@ -173,9 +206,9 @@
             }
           })
         });
-      }else if (obj.event === 'delete') {
-        layer.confirm('确认删除订单？<br><span style="color: red">删除之后将无法找回！</span>', {icon: 3}, function(){
-          $.get('/api/customer/delete-order',{orderId:data.id},function (data) {
+      } else if (obj.event === 'delete') {
+        layer.confirm('确认删除订单？<br><span style="color: red">删除之后将无法找回！</span>', {icon: 3}, function () {
+          $.get('/api/customer/delete-order', {orderId: data.id}, function (data) {
             if (data.code === 200) {
               layer.alert(data.msg, {icon: 1});
               table.reloadData('test')
@@ -184,32 +217,63 @@
             }
           })
         });
-      }else if (obj.event === 'review') {
-        layer.msg("评价")
-      }else if (obj.event === 'details') {
+      } else if (obj.event === 'review') {
         layer.open({
-          title: '订单详情 - id:' + data.id,
+          title: '添加评价 - id:' + data.id,
           type: 1,
           shadeClose: true,
-          area:['600px','500px'],
+          area: ['800px', '600px'],
           content: $('#order-details').html(),
           success: function () {
-            //订单详情表格
             table.render({
               elem: '#order-details-table',
-              url: '/api/customer/get-order-detail?orderId='+data.id, // 此处为静态模拟数据，实际使用时需换成真实接口
+              url: '/api/customer/get-order-detail?orderId=' + data.id, // 此处为静态模拟数据，实际使用时需换成真实接口
               lineStyle: 'height: 100px;',
               cols: [[
-                {field: 'id',width: 90, title: '商品编号'},
                 {field: 'name', title: '商品名'},
-                {field: 'price',width: 90, title: '单价'},
-                {field: 'picture', title: '图片', align: 'center', templet: function(d){
+                {field: 'price', width: 90, title: '单价'},
+                {
+                  field: 'picture', title: '图片', align: 'center', templet: function (d) {
                     if (d.picture !== null) {
                       return '<img src="data:image/jpeg;base64,' + d.picture + '">';
                     } else {
                       return '请添加图片';
                     }
-                  }},
+                  }
+                },
+                {field: 'rating', title: '评分'},
+                {field: 'content', title: '评价内容'},
+                {fixed: 'right', title: '操作', width: 155, toolbar: '#comment'}
+              ]],
+            });
+          }
+        });
+      } else if (obj.event === 'details') {
+        layer.open({
+          title: '订单详情 - id:' + data.id,
+          type: 1,
+          shadeClose: true,
+          area: ['600px', '500px'],
+          content: $('#order-details').html(),
+          success: function () {
+            //订单详情表格
+            table.render({
+              elem: '#order-details-table',
+              url: '/api/customer/get-order-detail?orderId=' + data.id, // 此处为静态模拟数据，实际使用时需换成真实接口
+              lineStyle: 'height: 100px;',
+              cols: [[
+                {field: 'id', width: 90, title: '商品编号'},
+                {field: 'name', title: '商品名'},
+                {field: 'price', width: 90, title: '单价'},
+                {
+                  field: 'picture', title: '图片', align: 'center', templet: function (d) {
+                    if (d.picture !== null) {
+                      return '<img src="data:image/jpeg;base64,' + d.picture + '">';
+                    } else {
+                      return '请添加图片';
+                    }
+                  }
+                },
                 {field: 'quantity', width: 90, title: '购买数量'},
               ]],
             });
@@ -218,33 +282,72 @@
       }
     });
 
-    //点击图片预览动作
-    $(document).on('click', '.layui-table td[data-field="picture"] img', function(){
-      var src = $(this).attr('src');
-      // 使用layer.photos弹出图片预览
-      layer.photos({
-        photos: {
-          "title": "Photos Demo",
-          "start": 0,
-          "data": [
-            {
-              "alt": "图片浏览",
-              "pid": 5,
-              "src": src,
+    //评价表格按钮点击事件
+    table.on('tool(order-details-table)', function (obj) {
+      var data = obj.data; // 获得当前行数据
+      if (obj.event === 'add-comment') {
+        layer.open({
+          title: '添加/修改评价',
+          type: 1,
+          content: $('#commentEditForm').html(),
+          maxmin: true,
+          shadeClose: true,
+          btn: ['确认', '取消'],
+          success: function () {
+            //渲染评分组件
+            rate.render({
+              elem: '#rating',
+              value: 5, // 初始值
+              text: true, // 开启文本
+              choose: function (value) {
+                $('#ratingInput').val(value) // 获得选中的评分值
+              }
+            });
+            form.render()
+          },
+          yes: function (index, layero) {
+            var isValid = form.validate('.layui-input');  // 主动触发验证，v2.7.0 新增
+            if (!isValid) {
+              return false
             }
-          ]
-        },
-        footer: false // 是否显示底部栏 --- 2.8.16+
+            //提交表单
+            var field = form.val("editFormFilter");
+            field.flowerId=data.id //设置商品编号
+            $.post('/api/customer/add-comment',field,function (data) {
+              table.reloadData('order-details-table')
+              layer.msg(data.msg)
+            })
+            layer.close(index);
+          }
+        });
+      } else if (obj.event === 'del-comment') {
+        layer.confirm('确认删除评价？', function (index) {
+          // 向服务端发送删除指令
+          $.get('/api/customer/remove-comment',{flowerId:data.id},function (data) {
+            table.reloadData('order-details-table')
+            layer.msg(data.msg)
+          })
+          layer.close(index);
+        });
+      }
+    })
+
+    // 行单击事件，点击图片跳转到商品详情页
+    table.on('row(order-details-table)', function(obj){
+      var data=obj.data
+      url='/product.html?id='+data.id
+      $(document).on('click', '.layui-table td[data-field="picture"] img', function () {
+        window.open(url)
       });
     });
 
     //查询条件的下拉框事件
-    form.on('select(orderStatusFilter)', function(data){
+    form.on('select(orderStatusFilter)', function (data) {
       // data.value 包含选中的值
       var status = data.value;
 
       // 根据选中的值刷新表格数据
-      table.reloadData('test',{
+      table.reloadData('test', {
         where: { // 设定异步数据接口的额外参数
           status: status
         },

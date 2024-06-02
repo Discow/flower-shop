@@ -5,10 +5,7 @@ import com.example.flowershop.dto.RestBean;
 import com.example.flowershop.service.CommentService;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -23,7 +20,8 @@ public class CommentCustomerController {
 
     //添加评价
     @PostMapping("add-comment")
-    public RestBean<?> addComment(Authentication authentication, Integer flowerId, Integer rating, String content) {
+    public RestBean<?> addComment(Authentication authentication, Integer flowerId, Integer rating,
+                                  @RequestParam(required = false) String content) {
         if (commentService.addComment(authentication.getName(), flowerId, rating, content)) {
             return RestBean.success("评价成功");
         } else {
