@@ -50,12 +50,12 @@
             <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
                 <div class="layui-card">
                     <div class="layui-card-body">
-                        <p style="font-size:14px;color: rgba(0,0,0,.45);">总订单金额
+                        <p style="font-size:14px;color: rgba(0,0,0,.45);">总营业额
                             <span class="pull-right">
                                     <i class="ri-exchange-cny-fill ri-xl" style="vertical-align: -0.3em;"></i>
                                 </span>
                         </p>
-                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥&nbsp;</span>85,84787
+                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥&nbsp;</span><span id="turnover">0</span>
                         </p>
                     </div>
                 </div>
@@ -63,12 +63,12 @@
             <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
                 <div class="layui-card">
                     <div class="layui-card-body">
-                        <p style="font-size:14px;color: rgba(0,0,0,.45);">访问量
+                        <p style="font-size:14px;color: rgba(0,0,0,.45);">总订单数
                             <span class="pull-right">
                                     <i class="ri-funds-line ri-xl" style="vertical-align: -0.3em;"></i>
                                 </span>
                         </p>
-                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;"></span>92,648
+                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;"></span><span id="totalOrders">0</span>
                         </p>
                     </div>
                 </div>
@@ -76,12 +76,12 @@
             <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
                 <div class="layui-card">
                     <div class="layui-card-body">
-                        <p style="font-size:14px;color: rgba(0,0,0,.45);">活跃用户
+                        <p style="font-size:14px;color: rgba(0,0,0,.45);">总商品数量
                             <span class="pull-right">
                                     <i class="ri-ghost-2-line ri-xl" style="vertical-align: -0.3em;"></i>
                                 </span>
                         </p>
-                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;"></span>12684
+                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;"></span><span id="totalFlower">0</span>
                         </p>
                     </div>
                 </div>
@@ -89,12 +89,12 @@
             <div class="layui-col-xs12 layui-col-sm6 layui-col-md3">
                 <div class="layui-card">
                     <div class="layui-card-body">
-                        <p style="font-size:14px;color: rgba(0,0,0,.45);">总支出金额
+                        <p style="font-size:14px;color: rgba(0,0,0,.45);">待处理订单数
                             <span class="pull-right">
                                     <i class="ri-hand-coin-line ri-xl" style="vertical-align: -0.3em;"></i>
                                 </span>
                         </p>
-                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;">¥&nbsp;</span>4675217
+                        <p class="lay-big-font"><span style="font-size: 26px;line-height: 1;"></span><span id="pendingOrders">0</span>
                         </p>
                     </div>
                 </div>
@@ -107,14 +107,14 @@
                     <div class="layui-card-header">登录日志</div>
                     <div class="layui-card-body">
                         <table class="layui-table"
-                               lay-data="{height:384, url:'/data/user/loginlog.json', page:true, limit: 10 ,skin: 'line', even: true,size: 'sm'}"
+                               lay-data="{height:384, url:'/api/admin/getAll-login-record', page:true, limit: 10 ,skin: 'line', even: true,size: 'sm'}"
                                lay-filter="test">
                             <thead>
                             <tr>
-                                <th lay-data="{field:'userName'}">用户名</th>
-                                <th lay-data="{field:'IP'}">IP</th>
+                                <th lay-data="{field:'username'}">用户名</th>
+                                <th lay-data="{field:'ip'}">IP</th>
                                 <th lay-data="{field:'status'}">状态</th>
-                                <th lay-data="{field:'creationTime', sort: true}">登陆时间</th>
+                                <th lay-data="{field:'time', sort: true}">登陆时间</th>
                             </tr>
                             </thead>
                         </table>
@@ -125,13 +125,13 @@
                 <div class="layui-card">
                     <div class="layui-card-header">系统状态</div>
                     <div class="layui-card-body layadmin-takerates">
-                        <div class="layui-progress" lay-showpercent="yes">
+                        <div class="layui-progress" lay-showpercent="yes" lay-filter="cpu">
                             <h3>CPU 使用率</h3>
-                            <div class="layui-progress-bar" lay-percent="58%" style="width: 58%;"><span class="layui-progress-text">58%</span></div>
+                            <div id="cpuBar" class="layui-progress-bar" lay-percent="0%" style="width: 0;"><span class="layui-progress-text">0%</span></div>
                         </div>
-                        <div class="layui-progress" lay-showpercent="yes">
+                        <div class="layui-progress" lay-showpercent="yes" lay-filter="memory">
                             <h3>内存占用率</h3>
-                            <div class="layui-progress-bar layui-bg-red" lay-percent="90%" style="width: 90%;"><span class="layui-progress-text">90%</span></div>
+                            <div id="memBar" class="layui-progress-bar" lay-percent="0%" style="width: 0;"><span class="layui-progress-text">0%</span></div>
                         </div>
                     </div>
                 </div>
@@ -146,17 +146,15 @@
                             <tbody>
                             <tr>
                                 <td>操作系统</td>
-                                <td>
-                                    Windows
-                                </td>
+                                <td id="os"></td>
                             </tr>
                             <tr>
                                 <td>Spring Boot版本</td>
-                                <td>v2.6.15</td>
+                                <td id="springVersion"></td>
                             </tr>
                             <tr>
                                 <td>MySQL版本</td>
-                                <td>v8.0</td>
+                                <td id="dbVersion"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -168,8 +166,54 @@
 </div>
 
 <script>
-    layui.use('table', function () {
+    layui.use(['table','element'], function () {
         var table = layui.table;
+        var element = layui.element;
+        var $ = layui.$;
+
+        setInterval(function () {
+            $.get('/api/admin/get-cpuMemInfo',function (res) {
+                element.progress('cpu', res.data.cpu + '%');
+                element.progress('memory', res.data.memory + '%');
+                // 获取进度条元素
+                var cpuBar = $('#cpuBar');
+                var memBar = $('#memBar');
+
+                // 根据进度条的百分比值添加或移除红色类
+                if (res.data.cpu > 80) {
+                    cpuBar.addClass('layui-bg-red');
+                    element.render('progress', 'cpu');
+                } else {
+                    cpuBar.removeClass('layui-bg-red');
+                    element.render('progress', 'cpu');
+                }
+
+                if (res.data.memory > 80) {
+                    memBar.addClass('layui-bg-red');
+                    element.render('progress', 'memory');
+                } else {
+                    memBar.removeClass('layui-bg-red');
+                    element.render('progress', 'memory');
+                }
+            })
+        }, 2000);
+    })
+</script>
+<script src="/res/js/jquery-3.7.1.js"></script>
+<script>
+    // 填充销售数据
+    $(document).ready(function () {
+        $.get('/api/admin/get-saleInfo',function (res) {
+            $('#turnover').html(res.data.turnover)
+            $('#totalOrders').text(res.data.totalOrders)
+            $('#totalFlower').text(res.data.totalFlower)
+            $('#pendingOrders').text(res.data.pendingOrders)
+        })
+        $.get('/api/admin/get-sysEnv',function (res) {
+            $('#os').text(res.data.os);
+            $('#springVersion').text(res.data.springVersion);
+            $('#dbVersion').text(res.data.dbVersion);
+        })
     })
 </script>
 
