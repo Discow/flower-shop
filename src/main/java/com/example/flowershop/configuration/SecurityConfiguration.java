@@ -59,7 +59,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .tokenValiditySeconds(86400 * 7)
                 .tokenRepository(persistentTokenRepository())
                 .and()
-                .csrf().disable();
+                .csrf().disable()
+                .headers()
+                .frameOptions().sameOrigin();
     }
 
     @Override
