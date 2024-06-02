@@ -151,7 +151,7 @@
                       "    </div>\n" +
                       "    <span>"+flower.name+"</span>\n" +
                       "    <span class=\"price-span\">￥"+flower.price+"\n" +
-                      "      <a href=\"\"><i class=\"fa fa-shopping-cart\" aria-hidden=\"true\"></i></a>\n" +
+                      "      <a onclick='addCart("+flower.id+")'><i class=\"fa fa-shopping-cart\" aria-hidden=\"true\"></i></a>\n" +
                       "    </span>\n" +
                       "  </div>");
             });
@@ -171,6 +171,10 @@
     })
 
   });
+  function addCart(id) {
+      alert('暂未实现')
+      console.log(id)
+  }
 </script>
 </body>
 </html>

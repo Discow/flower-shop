@@ -399,7 +399,7 @@
                           "                      </a>\n" +
                           "                  </div>\n" +
                           "                  <span>"+items.name+"</span>\n" +
-                          "                  <span class=\"price-span\">"+"￥"+items.price+" <a href=\"\"><i class=\"fa fa-shopping-cart\" aria-hidden=\"true\"></i></a></span>\n" +
+                          "                  <span class=\"price-span\">"+"￥"+items.price+" <a onclick='addCart("+items.id+")'><i class=\"fa fa-shopping-cart\" aria-hidden=\"true\"></i></a></span>\n" +
                           "              </div>";
                       $('.related-box').append(relatedProduct)
                   })
@@ -413,6 +413,10 @@
               alert(data.msg)
           })
           return false
+      }
+      function addCart(id) {
+          alert('暂未实现')
+          console.log(id)
       }
   </script>
 </body>
