@@ -71,6 +71,7 @@ public class OrderManageServiceImpl implements OrderManageService {
                 ))
                 .from(qOrder, qUser)
                 .where(qOrder.user.id.eq(qUser.id), builder)
+                .orderBy(qOrder.time.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();

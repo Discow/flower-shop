@@ -50,6 +50,8 @@ public class MonitorInfoServiceImpl implements MonitorInfoService {
                 .from(qLoginRecord, qUser)
                 .where(qLoginRecord.user.id.eq(qUser.id))
                 .orderBy(qLoginRecord.time.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
         //查询总行数
         Long queryCount = jpaQueryFactory.select(qLoginRecord.count())

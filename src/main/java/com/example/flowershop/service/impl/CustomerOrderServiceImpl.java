@@ -14,6 +14,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -174,7 +175,9 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
         } else {
             builder.and(qOrder.status.notIn(PAID_DELETED_STATUS, UNPAID_DELETED_STATUS));
         }
-        return orderRepository.findAll(builder, pageable);
+        Pageable pageableWithSort = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+                Sort.by(Sort.Direction.DESC, "time")); //重新按照时间降序排序
+        return orderRepository.findAll(builder, pageableWithSort);
     }
 
     @Override

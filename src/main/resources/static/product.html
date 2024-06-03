@@ -390,7 +390,7 @@
 
               //获取销量
               $.get('/api/customer/mainPage/get-sales-volume',{flowerId:productId},function (data) {
-                  $('#sales-volume').text(data.data+' 件')
+                  $('#sales-volume').text(data.data !== null ? data.data : 0 + ' 件');
               })
 
               //填充相关推荐
