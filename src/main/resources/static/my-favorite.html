@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的商品收藏</title>
   <!-- 引入Bootstrap CSS -->
-  <link rel="stylesheet" href="/res/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/res/bootstrap/css/bootstrap.min.css">
   <style>
     header {
       height: 3rem;
@@ -74,7 +74,7 @@
 </div>
 <!-- 引入Bootstrap JS -->
 <script src="/res/js/jquery-3.7.1.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/res/bootstrap/js/bootstrap.min.js"></script>
 <script>
   $(document).ready(function () {
     $.get('/api/customer/get-favorite',{page:1,limit:1000},function (res) {

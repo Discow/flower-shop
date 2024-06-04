@@ -89,7 +89,7 @@ public class OrderManageServiceImpl implements OrderManageService {
         QOrderDetail qOrderDetail = QOrderDetail.orderDetail;
         QFlower qFlower = QFlower.flower;
         return jpaQueryFactory
-                .select(Projections.constructor(OrderDetailDto.class,
+                .select(Projections.fields(OrderDetailDto.class,
                         qFlower.id, qFlower.name, qFlower.price, qFlower.picture, qOrderDetail.quantity))
                 .from(qOrderDetail, qFlower)
                 .where(qOrderDetail.id.flowerId.eq(qFlower.id), qOrderDetail.id.orderId.eq(orderId))
