@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface OrderManageService {
     //修改订单状态
-    boolean modifyOrderStatus(Integer orderId, String status);
+    void modifyOrderStatus(Integer orderId, String status);
 
     //动态查询订单
     Page<UserInfoAndOrdersDto> findOrder(Integer pageNo, Integer limit, String receiveType, String status, String phone);

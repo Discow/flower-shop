@@ -26,11 +26,8 @@ public class OrderCustomerController {
     public RestBean<?> addOrder(Authentication authentication, String paymentType, String receiveType,
                                 @RequestParam(required = false) String note, @RequestBody List<OrderItemDto> items) {
         String email = authentication.getName(); //从security上下文获取当前登录的用户名
-        if (customerOrderService.addOrder(email, paymentType, receiveType, note, items)) {
-            return RestBean.success("下单成功");
-        } else {
-            return RestBean.failure("下单失败");
-        }
+        customerOrderService.addOrder(email, paymentType, receiveType, note, items);
+        return RestBean.success("下单成功");
     }
 
     //查看订单
@@ -45,31 +42,22 @@ public class OrderCustomerController {
     //取消订单
     @GetMapping("cancel-order")
     public RestBean<?> cancelOrder(Authentication authentication, Integer orderId) {
-        if (customerOrderService.cancelOrder(authentication.getName(), orderId)) {
-            return RestBean.success("订单取消成功");
-        } else {
-            return RestBean.failure("订单取消失败");
-        }
+        customerOrderService.cancelOrder(authentication.getName(), orderId);
+        return RestBean.success("订单取消成功");
     }
 
     //删除订单
     @GetMapping("delete-order")
     public RestBean<?> deleteOrder(Authentication authentication, Integer orderId) {
-        if (customerOrderService.deleteOrder(authentication.getName(), orderId)) {
-            return RestBean.success("订单删除成功");
-        } else {
-            return RestBean.failure("订单删除失败");
-        }
+        customerOrderService.deleteOrder(authentication.getName(), orderId);
+        return RestBean.success("订单删除成功");
     }
 
     //确认收货
     @GetMapping("confirm-receipt")
     public RestBean<?> confirmReceipt(Authentication authentication, Integer orderId) {
-        if (customerOrderService.confirmReceipt(authentication.getName(), orderId)) {
-            return RestBean.success("确认收货成功");
-        } else {
-            return RestBean.failure("确认收货失败：当前订单已取消");
-        }
+        customerOrderService.confirmReceipt(authentication.getName(), orderId);
+        return RestBean.success("确认收货成功");
     }
 
     @GetMapping("get-order-detail")

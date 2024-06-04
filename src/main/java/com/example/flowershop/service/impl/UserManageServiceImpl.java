@@ -2,6 +2,7 @@ package com.example.flowershop.service.impl;
 
 import com.example.flowershop.entity.QUser;
 import com.example.flowershop.entity.User;
+import com.example.flowershop.exception.GeneralException;
 import com.example.flowershop.repositories.CommentRepository;
 import com.example.flowershop.repositories.FavoriteRepository;
 import com.example.flowershop.repositories.UserRepository;
@@ -12,7 +13,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 
@@ -30,42 +30,33 @@ public class UserManageServiceImpl implements UserManageService {
     private static final Integer DELETED_USER_ID = -1;
 
     @Override
-    public boolean addUser(User user) {
+    public void addUser(User user) {
         if (!userRepository.existsByEmail(user.getEmail())) {
             userRepository.save(user);
-            return true;
         } else {
-            return false;
+            throw new GeneralException("该用户已存在！");
         }
     }
 
     @Override
-    public boolean modifyUser(User newUser) {
+    public void modifyUser(User newUser) {
         User user = userRepository.findByEmail(newUser.getEmail()).orElse(null);
         if (user != null) {
             newUser.setId(user.getId());
             newUser.setPassword(user.getPassword());
             userRepository.save(newUser);
-            return true;
         } else {
-            return false;
+            throw new GeneralException("无法修改：该用户不存在！");
         }
     }
 
     @Override
-    public boolean deleteUser(Integer userId) {
+    public void deleteUser(Integer userId) {
         //先转移收藏和评论记录到专用的“已删除用户”
         transferRecordToDeletedAccount(userId);
 
         //级联删除该用户关联的订单和登录记录
-        try {
-            userRepository.deleteById(userId);
-            return true;
-        } catch (Exception e) {
-            //出现异常执行回滚操作
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return false;
-        }
+        userRepository.deleteById(userId);
     }
 
     @Override

@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Base64;
 
@@ -22,43 +21,24 @@ public class FlowerManageController {
     @PostMapping("add-flower")
     public RestBean<?> addFlower(Integer categoryId, String name, String description,
                                  BigDecimal price, Integer inventory, String status, @RequestParam("image") String image) {
-        try {
-            Flower flower = saveFlower(null, categoryId, name, description, price, inventory, status, image);
-
-            if (flowerManageService.addFlower(flower)) {
-                return RestBean.success("商品添加成功");
-            } else {
-                return RestBean.failure("商品添加失败");
-            }
-        } catch (IOException e) {
-            return RestBean.failure("图片上传失败");
-        }
+        Flower flower = saveFlower(null, categoryId, name, description, price, inventory, status, image);
+        flowerManageService.addFlower(flower);
+        return RestBean.success("商品添加成功");
     }
 
     @PostMapping("modify-flower")
     public RestBean<?> modifyFlower(Integer id, Integer categoryId, String name, String description,
                                     BigDecimal price, Integer inventory, String status,
                                     @RequestParam(value = "image", required = false) String image) {
-        try {
-            Flower flower = saveFlower(id, categoryId, name, description, price, inventory, status, image);
-
-            if (flowerManageService.modifyFlower(flower)) {
-                return RestBean.success("商品修改成功");
-            } else {
-                return RestBean.failure("商品修改失败");
-            }
-        } catch (IOException e) {
-            return RestBean.failure("图片上传失败");
-        }
+        Flower flower = saveFlower(id, categoryId, name, description, price, inventory, status, image);
+        flowerManageService.modifyFlower(flower);
+        return RestBean.success("商品修改成功");
     }
 
     @GetMapping("delete-flower")
     public RestBean<?> deleteFlower(Integer flowerId) {
-        if (flowerManageService.deleteFlower(flowerId)) {
-            return RestBean.success("商品删除成功");
-        } else {
-            return RestBean.failure("商品删除失败");
-        }
+        flowerManageService.deleteFlower(flowerId);
+        return RestBean.success("商品删除成功");
     }
 
     @GetMapping("get-flower")
@@ -70,7 +50,7 @@ public class FlowerManageController {
     }
 
     private Flower saveFlower(Integer id, Integer categoryId, String name, String description,
-                              BigDecimal price, Integer inventory, String status, String base64Image) throws IOException {
+                              BigDecimal price, Integer inventory, String status, String base64Image) {
         FlowerCategory category = FlowerCategory.builder()
                 .id(categoryId)
                 .build();

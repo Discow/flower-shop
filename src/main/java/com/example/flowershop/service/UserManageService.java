@@ -8,13 +8,13 @@ import org.springframework.data.domain.Page;
  */
 public interface UserManageService {
     //新增用户
-    boolean addUser(User user);
+    void addUser(User user);
 
     //修改用户信息
-    boolean modifyUser(User newUser);
+    void modifyUser(User newUser);
 
     //删除用户
-    boolean deleteUser(Integer userId);
+    void deleteUser(Integer userId);
 
     //支持分页动态查询用户
     Page<User> findUser(Integer pageNo, Integer limit, String username, String email, String role);

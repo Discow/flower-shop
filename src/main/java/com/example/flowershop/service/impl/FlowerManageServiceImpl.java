@@ -5,6 +5,7 @@ import com.example.flowershop.entity.Flower;
 import com.example.flowershop.entity.FlowerCategory;
 import com.example.flowershop.entity.QFlower;
 import com.example.flowershop.entity.QFlowerCategory;
+import com.example.flowershop.exception.GeneralException;
 import com.example.flowershop.repositories.FlowerCategoryRepository;
 import com.example.flowershop.repositories.FlowerRepository;
 import com.example.flowershop.service.FlowerManageService;
@@ -18,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -38,36 +38,28 @@ public class FlowerManageServiceImpl implements FlowerManageService {
     JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public boolean addCategory(FlowerCategory flowerCategory) {
+    public void addCategory(FlowerCategory flowerCategory) {
+        //如果分类不存在则添加，否则返回“该分类已存在！”提示
         if (!flowerCategoryRepository.existsByName(flowerCategory.getName())) {
             flowerCategoryRepository.save(flowerCategory);
-            return true;
         } else {
-            return false;
+            throw new GeneralException("该分类已存在！");
         }
     }
 
     @Override
-    public boolean modifyCategory(FlowerCategory newFlowerCategory) {
+    public void modifyCategory(FlowerCategory newFlowerCategory) {
         FlowerCategory category = flowerCategoryRepository.findById(newFlowerCategory.getId()).orElse(null);
         if (category != null) {
             flowerCategoryRepository.save(newFlowerCategory);
-            return true;
         } else {
-            return false;
+            throw new GeneralException("无法修改：该分类不存在，请选择正确的分类！");
         }
     }
 
     @Override
-    public boolean deleteCategory(Integer categoryId) {
-        try {
-            flowerCategoryRepository.deleteById(categoryId);
-            return true;
-        } catch (Exception e) {
-            //出现异常执行回滚操作
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return false;
-        }
+    public void deleteCategory(Integer categoryId) {
+        flowerCategoryRepository.deleteById(categoryId);
     }
 
     @Override
@@ -85,18 +77,18 @@ public class FlowerManageServiceImpl implements FlowerManageService {
     }
 
     @Override
-    public boolean addFlower(Flower flower) {
+    public void addFlower(Flower flower) {
+        //如果商品不存在则添加商品，否则提示“该商品已存在！”
         flower.setAddTime(new Date());
         if (!flowerRepository.existsByName(flower.getName())) {
             flowerRepository.save(flower);
-            return true;
         } else {
-            return false;
+            throw new GeneralException("该商品已存在！");
         }
     }
 
     @Override
-    public boolean modifyFlower(Flower newFlower) {
+    public void modifyFlower(Flower newFlower) {
         newFlower.setAddTime(new Date()); //设置修改时间
         //修改之前查询商品是否存在
         Flower flower = flowerRepository.findById(newFlower.getId()).orElse(null);
@@ -107,21 +99,14 @@ public class FlowerManageServiceImpl implements FlowerManageService {
                 newFlower.setPicture(flower.getPicture());
             }
             flowerRepository.save(newFlower);
-            return true;
         } else {
-            return false;
+            throw new GeneralException("无法修改：该商品不存在，请选择正确的商品！");
         }
     }
 
     @Override
-    public boolean deleteFlower(Integer flowerId) {
-        try {
-            flowerRepository.deleteById(flowerId);
-            return true;
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return false;
-        }
+    public void deleteFlower(Integer flowerId) {
+        flowerRepository.deleteById(flowerId);
     }
 
     @Override

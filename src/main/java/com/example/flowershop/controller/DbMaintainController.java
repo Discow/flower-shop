@@ -21,29 +21,19 @@ public class DbMaintainController {
 
     @GetMapping("backup-database")
     public RestBean<?> backupDatabase() {
-        if (dbManageService.manualBackup()) {
-            return RestBean.success("数据库备份成功");
-        } else {
-            return RestBean.failure("数据库备份失败");
-        }
+        dbManageService.manualBackup();
+        return RestBean.success("数据库备份成功");
     }
 
     @GetMapping("get-maintain-logs")
     public RestBean<?> getMaintainLogs() {
         List<DbMaintainLog> maintainLogs = dbManageService.getMaintainLogs();
-        if (maintainLogs != null) {
-            return RestBean.success(maintainLogs, maintainLogs.size());
-        } else {
-            return RestBean.failure("数据库维护日志查询失败");
-        }
+        return RestBean.success(maintainLogs, maintainLogs.size());
     }
 
     @GetMapping("restore-database")
     public RestBean<?> restoreDatabase(@RequestParam String fileName) {
-        if (dbManageService.restore(fileName)) {
-            return RestBean.success("数据库恢复成功，已恢复到：" + fileName);
-        } else {
-            return RestBean.failure("数据库恢复失败");
-        }
+        dbManageService.restoreDB(fileName);
+        return RestBean.success("数据库恢复成功，已恢复到：" + fileName);
     }
 }

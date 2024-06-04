@@ -19,7 +19,7 @@ class OrderManageServiceTest {
 
     @Test
     void modifyOrderStatus() {
-        System.out.println(service.modifyOrderStatus(2, "已发货"));
+        service.modifyOrderStatus(2, "已发货");
     }
 
     @Test

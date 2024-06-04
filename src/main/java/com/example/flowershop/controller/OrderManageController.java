@@ -18,11 +18,8 @@ public class OrderManageController {
 
     @PostMapping("modify-order-status")
     public RestBean<?> modifyOrderStatus(Integer orderId, String status) {
-        if (orderManageService.modifyOrderStatus(orderId, status)) {
-            return RestBean.success("订单状态修改成功");
-        } else {
-            return RestBean.failure("订单状态修改失败");
-        }
+        orderManageService.modifyOrderStatus(orderId, status);
+        return RestBean.success("订单状态修改成功");
     }
 
     @GetMapping("get-orders")

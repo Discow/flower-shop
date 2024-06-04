@@ -5,6 +5,7 @@ import cn.hutool.captcha.ShearCaptcha;
 import cn.hutool.core.codec.Base64;
 import com.example.flowershop.entity.LoginRecord;
 import com.example.flowershop.entity.User;
+import com.example.flowershop.exception.GeneralException;
 import com.example.flowershop.repositories.LoginRecordRepository;
 import com.example.flowershop.repositories.UserRepository;
 import com.example.flowershop.service.AuthService;
@@ -168,7 +169,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(String email, String password, String username, String phone) {
+    public void doRegister(String email, String password, String username, String phone) {
         User user = User.builder()
                 .email(email)
                 .username(username)
@@ -179,10 +180,9 @@ public class AuthServiceImpl implements AuthService {
 
         if (!userRepository.existsByEmail(user.getEmail())) {
             userRepository.save(user);
-            return true;
         } else {
             // 处理用户已存在的情况
-            return false;
+            throw new GeneralException("注册失败：该用户已存在，请直接登录或点击【忘记密码】");
         }
     }
 

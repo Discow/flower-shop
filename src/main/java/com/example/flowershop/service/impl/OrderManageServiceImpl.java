@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -32,14 +31,8 @@ public class OrderManageServiceImpl implements OrderManageService {
     JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public boolean modifyOrderStatus(Integer orderId, String status) {
-        try {
-            orderRepository.modifyOrderStatus(orderId, status);
-            return true;
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return false;
-        }
+    public void modifyOrderStatus(Integer orderId, String status) {
+        orderRepository.modifyOrderStatus(orderId, status);
     }
 
     @Override

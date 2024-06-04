@@ -20,22 +20,16 @@ public class UserManageController {
     public RestBean<?> addUser(String email, String username, String password,
                                String phone, String role) {
         User user = saveUser(email, username, password, phone, role);
-        if (userManageService.addUser(user)) {
-            return RestBean.success("添加用户成功");
-        } else {
-            return RestBean.failure("添加用户失败");
-        }
+        userManageService.addUser(user);
+        return RestBean.success("添加用户成功");
     }
 
     @PostMapping("modify-user")
     public RestBean<?> modifyUser(String email, String username, @RequestParam(required = false) String password,
                                   String phone, String role) {
         User user = saveUser(email, username, password, phone, role);
-        if (userManageService.modifyUser(user)) {
-            return RestBean.success("修改用户成功");
-        } else {
-            return RestBean.failure("修改用户失败");
-        }
+        userManageService.modifyUser(user);
+        return RestBean.success("修改用户成功");
     }
 
     @GetMapping("delete-user")
@@ -43,11 +37,8 @@ public class UserManageController {
         if (userId == -1) {
             return RestBean.failure("系统保留账户禁止删除");
         }
-        if (userManageService.deleteUser(userId)) {
-            return RestBean.success("删除用户成功");
-        } else {
-            return RestBean.failure("删除用户失败");
-        }
+        userManageService.deleteUser(userId);
+        return RestBean.success("删除用户成功");
     }
 
     @GetMapping("get-user")

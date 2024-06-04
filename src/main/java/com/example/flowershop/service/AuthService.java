@@ -21,7 +21,7 @@ public interface AuthService extends UserDetailsService {
     //用户忘记密码
     boolean forgotPassword(String newPassword, String email);
     //用户注册
-    boolean register(String email, String password, String username, String phone);
+    void doRegister(String email, String password, String username, String phone);
     //获取当前的用户信息（返回值类型为User或Admin）
     User getProfile(String email);
     //记录登录历史

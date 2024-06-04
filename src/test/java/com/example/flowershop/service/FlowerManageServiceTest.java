@@ -27,7 +27,7 @@ class FlowerManageServiceTest {
                 .name("分类3")
                 .description("分类2的描述")
                 .build();
-        System.out.println(service.addCategory(category));
+        service.addCategory(category);
     }
 
     @Test
@@ -36,12 +36,12 @@ class FlowerManageServiceTest {
                 .name("分类1")
                 .description("分类1的描述-修改")
                 .build();
-        System.out.println(service.modifyCategory(category));
+        service.modifyCategory(category);
     }
 
     @Test
     void deleteCategory() {
-        System.out.println(service.deleteCategory(2));
+        service.deleteCategory(2);
     }
 
     @Test
@@ -62,7 +62,7 @@ class FlowerManageServiceTest {
                 .status("已上架")
                 .flowerCategory(category) //关联类别
                 .build();
-        System.out.println(service.addFlower(flower));
+        service.addFlower(flower);
     }
 
     @Test
@@ -78,12 +78,12 @@ class FlowerManageServiceTest {
                 .status("已上架")
                 .flowerCategory(category) //关联类别
                 .build();
-        System.out.println(service.modifyFlower(flower));
+        service.modifyFlower(flower);
     }
 
     @Test
     void deleteFlower() {
-        System.out.println(service.deleteFlower(2));
+        service.deleteFlower(2);
     }
 
     @Test

@@ -22,21 +22,15 @@ public class CommentCustomerController {
     @PostMapping("add-comment")
     public RestBean<?> addComment(Authentication authentication, Integer flowerId, Integer rating,
                                   @RequestParam(required = false) String content) {
-        if (commentService.addComment(authentication.getName(), flowerId, rating, content)) {
-            return RestBean.success("评价成功");
-        } else {
-            return RestBean.failure("评价失败");
-        }
+        commentService.addComment(authentication.getName(), flowerId, rating, content);
+        return RestBean.success("评价成功");
     }
 
     //删除评价
     @GetMapping("remove-comment")
     public RestBean<?> removeComment(Authentication authentication, Integer flowerId) {
-        if (commentService.removeComment(authentication.getName(), flowerId)) {
-            return RestBean.success("删除评价成功");
-        } else {
-            return RestBean.failure("删除评价失败");
-        }
+        commentService.removeComment(authentication.getName(), flowerId);
+        return RestBean.success("删除评价成功");
     }
 
     //获取商品的评价

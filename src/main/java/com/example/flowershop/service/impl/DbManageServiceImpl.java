@@ -1,6 +1,7 @@
 package com.example.flowershop.service.impl;
 
 import com.example.flowershop.entity.DbMaintainLog;
+import com.example.flowershop.exception.GeneralException;
 import com.example.flowershop.service.DbManageService;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
@@ -51,7 +52,7 @@ public class DbManageServiceImpl implements DbManageService {
 
 
     @Override
-    public boolean manualBackup() {
+    public void manualBackup() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentTime = dateFormat.format(new Date());
         // 调用系统命令执行数据库备份
@@ -68,11 +69,10 @@ public class DbManageServiceImpl implements DbManageService {
         if (exitCode == 0) {
             maintainLog.setStatus("备份成功");
             redisTemplate.opsForList().rightPush("log", maintainLog);
-            return true;
         } else {
             maintainLog.setStatus("备份失败");
             redisTemplate.opsForList().rightPush("log", maintainLog);
-            return false;
+            throw new GeneralException("数据库备份失败！");
         }
     }
 
@@ -83,7 +83,7 @@ public class DbManageServiceImpl implements DbManageService {
     }
 
     @Override
-    public boolean restore(String fileName) {
+    public void restoreDB(String fileName) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentTime = dateFormat.format(new Date());
         // 调用系统命令执行数据库恢复
@@ -99,11 +99,10 @@ public class DbManageServiceImpl implements DbManageService {
         if (exitCode == 0) {
             maintainLog.setStatus("恢复成功");
             redisTemplate.opsForList().rightPush("log", maintainLog);
-            return true;
         } else {
             maintainLog.setStatus("恢复失败");
             redisTemplate.opsForList().rightPush("log", maintainLog);
-            return false;
+            throw new GeneralException("数据库恢复失败！");
         }
     }
 

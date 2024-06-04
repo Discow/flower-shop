@@ -23,17 +23,17 @@ class CustomerOrderServiceTest {
         ArrayList<OrderItemDto> items = new ArrayList<>();
         items.add(new OrderItemDto(1, 1));
         items.add(new OrderItemDto(2, 1));
-        System.out.println(service.addOrder("test@qq.com", "支付宝", "同城速递", "测试备注", items));
+        service.addOrder("test@qq.com", "支付宝", "同城速递", "测试备注", items);
     }
 
     @Test
     void deleteOrder() {
-        System.out.println(service.deleteOrder("test@qq.com",2));
+        service.deleteOrder("test@qq.com", 2);
     }
 
     @Test
     void cancelOrder() {
-        System.out.println(service.cancelOrder("test@qq.com",1));
+        service.cancelOrder("test@qq.com", 1);
     }
 
     @Test

@@ -10,20 +10,20 @@ import org.springframework.data.domain.Page;
  */
 public interface FlowerManageService {
     //添加分类
-    boolean addCategory(FlowerCategory flowerCategory);
+    void addCategory(FlowerCategory flowerCategory);
     //修改分类
-    boolean modifyCategory(FlowerCategory flowerCategory);
+    void modifyCategory(FlowerCategory flowerCategory);
     //删除分类
-    boolean deleteCategory(Integer categoryId);
+    void deleteCategory(Integer categoryId);
     //支持分页动态查询分类（页码，每页行数）
     Page<FlowerCategory> findCategory(Integer pageNo, Integer limit, String name);
 
     //添加商品
-    boolean addFlower(Flower flower);
+    void addFlower(Flower flower);
     //修改商品信息
-    boolean modifyFlower(Flower flower);
+    void modifyFlower(Flower flower);
     //删除商品
-    boolean deleteFlower(Integer flowerId);
+    void deleteFlower(Integer flowerId);
     //支持分页动态查询商品（页码，每页行数）
     Page<FlowerAndCategoryDto> findFlower(Integer pageNo, Integer limit, String name, String status);
 }

@@ -19,11 +19,8 @@ public class FlowerCategoryManageController {
         FlowerCategory category = new FlowerCategory();
         category.setName(name);
         category.setDescription(description);
-        if (flowerManageService.addCategory(category)) {
-            return RestBean.success("分类添加成功");
-        } else {
-            return RestBean.failure("分类添加失败");
-        }
+        flowerManageService.addCategory(category);
+        return RestBean.success("分类添加成功");
     }
 
     @PostMapping("modify-category")
@@ -32,20 +29,14 @@ public class FlowerCategoryManageController {
         category.setId(id);
         category.setName(name);
         category.setDescription(description);
-        if (flowerManageService.modifyCategory(category)) {
-            return RestBean.success("分类修改成功");
-        } else {
-            return RestBean.failure("分类修改失败");
-        }
+        flowerManageService.modifyCategory(category);
+        return RestBean.success("分类修改成功");
     }
 
     @GetMapping("delete-category")
     public RestBean<?> deleteCategory(Integer categoryId) {
-        if (flowerManageService.deleteCategory(categoryId)) {
-            return RestBean.success("分类删除成功");
-        } else {
-            return RestBean.failure("分类删除失败");
-        }
+        flowerManageService.deleteCategory(categoryId);
+        return RestBean.success("分类删除成功");
     }
 
     @GetMapping("get-category")

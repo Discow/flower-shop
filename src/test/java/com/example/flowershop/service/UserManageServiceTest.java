@@ -31,7 +31,7 @@ class UserManageServiceTest {
                 .phone("19088889999")
                 .role(User.Role.USER)
                 .build();
-        System.out.println(service.addUser(user));
+        service.addUser(user);
 
     }
 
@@ -44,12 +44,12 @@ class UserManageServiceTest {
                 .phone("19088889999")
                 .role(User.Role.USER)
                 .build();
-        System.out.println(service.modifyUser(user));
+        service.modifyUser(user);
     }
 
     @Test
     void deleteUser() {
-        assertTrue(service.deleteUser(3));
+        service.deleteUser(3);
     }
 
     @Test

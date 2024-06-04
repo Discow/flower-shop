@@ -43,11 +43,8 @@ public class AuthController {
                                   String username, String phone, String codeKey,
                                   String captcha) {
         if (authService.checkMailVerifyCode(email, verifyCode) && authService.checkShearCaptcha(codeKey, captcha)) {
-            if (authService.register(email, password, username, phone)) {
-                return RestBean.success("注册成功");
-            } else {
-                return RestBean.failure("注册失败");
-            }
+            authService.doRegister(email, password, username, phone);
+            return RestBean.success("注册成功");
         } else return RestBean.failure("注册失败：验证码错误");
     }
 

@@ -5,6 +5,7 @@ import com.example.flowershop.entity.Favorite;
 import com.example.flowershop.entity.QFavorite;
 import com.example.flowershop.entity.QFlower;
 import com.example.flowershop.entity.User;
+import com.example.flowershop.exception.GeneralException;
 import com.example.flowershop.repositories.FavoriteRepository;
 import com.example.flowershop.repositories.UserRepository;
 import com.example.flowershop.service.FavoriteService;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -40,30 +40,25 @@ public class FavoriteServiceImpl implements FavoriteService {
         //如果没有收藏则添加，否则取消
         User user = userRepository.findByEmail(email).orElse(null);
 
-        try {
-            if (user != null) {
-                //设置联合主键
-                Favorite.FavoritePK favoritePK = new Favorite.FavoritePK();
-                favoritePK.setUserId(user.getId());
-                favoritePK.setFlowerId(flowerId);
-                Favorite favorite = new Favorite();
-                favorite.setId(favoritePK);
-                //检查是否已收藏
-                boolean exists = favoriteRepository.existsById(favoritePK);
-                //持久化操作
-                if (exists) {
-                    favoriteRepository.delete(favorite);
-                    return "已取消收藏";
-                } else {
-                    favoriteRepository.save(favorite);
-                    return "已添加收藏";
-                }
+        if (user != null) {
+            //设置联合主键
+            Favorite.FavoritePK favoritePK = new Favorite.FavoritePK();
+            favoritePK.setUserId(user.getId());
+            favoritePK.setFlowerId(flowerId);
+            Favorite favorite = new Favorite();
+            favorite.setId(favoritePK);
+            //检查是否已收藏
+            boolean exists = favoriteRepository.existsById(favoritePK);
+            //持久化操作
+            if (exists) {
+                favoriteRepository.delete(favorite);
+                return "已取消收藏";
             } else {
-                throw new RuntimeException("用户不存在！");
+                favoriteRepository.save(favorite);
+                return "已添加收藏";
             }
-        } catch (Exception e) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            throw new RuntimeException();
+        } else {
+            throw new GeneralException("用户不存在！");
         }
     }
 
@@ -72,7 +67,7 @@ public class FavoriteServiceImpl implements FavoriteService {
         User user = userRepository.findByEmail(email).orElse(null);
         Pageable pageable = PageRequest.of(pageNo - 1, limit);
         if (user == null) {
-            throw new RuntimeException("用户不存在！");
+            throw new GeneralException("用户不存在！");
         }
         //使用QueryDSL查询
         QFavorite qFavorite = QFavorite.favorite;

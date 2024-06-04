@@ -12,10 +12,10 @@ public interface CommentService {
      * @param rating   评价等级
      * @param content  评价内容
      */
-    boolean addComment(String email, Integer flowerId, Integer rating, String content);
+    void addComment(String email, Integer flowerId, Integer rating, String content);
 
     //删除商品评论
-    boolean removeComment(String email, Integer flowerId);
+    void removeComment(String email, Integer flowerId);
 
     //根据商品编号查询评论
     Page<CommentDetailDto> findByFlowerId(Integer flowerId, Integer pageNo, Integer limit);
