@@ -14,4 +14,5 @@ public class SysEnvDto {
     private String os; //操作系统
     private String springVersion; //spring boot版本
     private String dbVersion; //数据库版本
+    private String backendVersion; //当前项目版本
 }

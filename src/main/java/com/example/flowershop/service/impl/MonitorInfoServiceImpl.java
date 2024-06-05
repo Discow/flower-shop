@@ -12,6 +12,7 @@ import com.example.flowershop.service.MonitorInfoService;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringBootVersion;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,8 @@ public class MonitorInfoServiceImpl implements MonitorInfoService {
     JPAQueryFactory jpaQueryFactory;
     @PersistenceContext
     private EntityManager entityManager;
+    @Value("${spring.application.version}")
+    private String projectVersion;
 
 
     @Override
@@ -117,6 +120,6 @@ public class MonitorInfoServiceImpl implements MonitorInfoService {
         String dbVersion = (String) entityManager.createNativeQuery("SELECT VERSION()").getSingleResult();
         //操作系统
         String os = System.getProperty("os.name");
-        return new SysEnvDto(os, springBootVersion, dbVersion);
+        return new SysEnvDto(os, springBootVersion, dbVersion, this.projectVersion);
     }
 }

@@ -156,6 +156,10 @@
                                 <td>MySQL版本</td>
                                 <td id="dbVersion"></td>
                             </tr>
+                            <tr>
+                                <td>后端应用程序版本</td>
+                                <td id="backendVersion"></td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -213,6 +217,7 @@
             $('#os').text(res.data.os);
             $('#springVersion').text(res.data.springVersion);
             $('#dbVersion').text(res.data.dbVersion);
+            $('#backendVersion').text(res.data.backendVersion);
         })
     })
 </script>

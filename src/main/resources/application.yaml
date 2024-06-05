@@ -1,6 +1,7 @@
 spring:
   application:
     name: FlowerShop
+    version: '@project.version@'
 
   datasource:
     url: jdbc:mysql://localhost:3306/flower_shop_web
