@@ -57,7 +57,7 @@ public class DbManageServiceImpl implements DbManageService {
         String currentTime = dateFormat.format(new Date());
         // 调用系统命令执行数据库备份
         String fileName = backupPath + "backup_" + currentTime + ".sql";
-        String command = "cmd /c \"" + installPath + "mysqldump\" -u" + username + " -p" + password + " --add-drop-database --databases " + database + " > " + fileName;
+        String command = "cmd /c \"" + installPath + "mysqldump\" -u" + username + " -p" + password + " --add-drop-database --databases --hex-blob " + database + " > " + fileName;
         int exitCode = execCommand(command);
 
         //将操作记录保存到redis
