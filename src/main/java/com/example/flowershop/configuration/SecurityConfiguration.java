@@ -39,7 +39,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/login.html", "/register.html", "/forgot-password.html", "/api/auth/**").permitAll() //放行登录验证相关的页面和api
                 .antMatchers("/api/customer/mainPage/**", "/index.html").permitAll() //放行首页
-                .antMatchers("/res/**", "/favicon.ico").permitAll() //放行静态资源
+                .antMatchers("/res/**", "/subpage/**", "/favicon.ico").permitAll() //放行静态资源
                 .regexMatchers("/admin[\\w\\-.]*").hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated()
                 .and()

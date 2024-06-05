@@ -170,13 +170,13 @@
 </div>
 
 <script>
-    layui.use(['table','element'], function () {
+    layui.use(['table', 'element'], function () {
         var table = layui.table;
         var element = layui.element;
         var $ = layui.$;
 
-        setInterval(function () {
-            $.get('/api/admin/get-cpuMemInfo',function (res) {
+        function getSysInfo() {
+            $.get('/api/admin/get-cpuMemInfo', function (res) {
                 element.progress('cpu', res.data.cpu + '%');
                 element.progress('memory', res.data.memory + '%');
                 // 获取进度条元素
@@ -200,8 +200,29 @@
                     element.render('progress', 'memory');
                 }
             })
-        }, 2000);
-    })
+        }
+
+        var myInterval = setInterval(getSysInfo, 2000);
+
+        //当页面可见时开启定时器
+        function handleVisibilityChange() {
+            if (document.hidden) {
+                // 页面不可见时的逻辑
+                console.log('页面不可见');
+                // 可以在这里清除定时器
+                clearInterval(myInterval);
+            } else {
+                // 页面可见时的逻辑
+                console.log('页面可见');
+                // 可以在这里重新设置定时器
+                myInterval = setInterval(getSysInfo, 2000);
+            }
+        }
+
+        // 添加事件监听器
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    });
 </script>
 <script src="/res/js/jquery-3.7.1.js"></script>
 <script>
