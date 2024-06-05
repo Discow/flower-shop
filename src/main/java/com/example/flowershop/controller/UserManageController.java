@@ -19,15 +19,15 @@ public class UserManageController {
     @PostMapping("add-user")
     public RestBean<?> addUser(String email, String username, String password,
                                String phone, String role) {
-        User user = saveUser(email, username, password, phone, role);
+        User user = saveUser(null, email, username, password, phone, role);
         userManageService.addUser(user);
         return RestBean.success("添加用户成功");
     }
 
     @PostMapping("modify-user")
-    public RestBean<?> modifyUser(String email, String username, @RequestParam(required = false) String password,
+    public RestBean<?> modifyUser(Integer id, String email, String username, @RequestParam(required = false) String password,
                                   String phone, String role) {
-        User user = saveUser(email, username, password, phone, role);
+        User user = saveUser(id, email, username, password, phone, role);
         userManageService.modifyUser(user);
         return RestBean.success("修改用户成功");
     }
@@ -50,7 +50,7 @@ public class UserManageController {
         return RestBean.success(users.getContent(), (int) users.getTotalElements());
     }
 
-    private User saveUser(String email, String username, String password,
+    private User saveUser(Integer id, String email, String username, String password,
                           String phone, String role) {
         User.Role roleEnum = null;
         if ("user".equalsIgnoreCase(role)) {
@@ -62,6 +62,7 @@ public class UserManageController {
             password = encoder.encode(password);
         }
         return User.builder()
+                .id(id)
                 .email(email)
                 .username(username)
                 .password(password)

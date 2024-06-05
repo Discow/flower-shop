@@ -40,10 +40,12 @@ public class UserManageServiceImpl implements UserManageService {
 
     @Override
     public void modifyUser(User newUser) {
-        User user = userRepository.findByEmail(newUser.getEmail()).orElse(null);
+        User user = userRepository.findById(newUser.getId()).orElse(null);
         if (user != null) {
-            newUser.setId(user.getId());
-            newUser.setPassword(user.getPassword());
+            //如果不设置新密码，则使用原来的密码
+            if (newUser.getPassword() == null || newUser.getPassword().isEmpty()) {
+                newUser.setPassword(user.getPassword());
+            }
             userRepository.save(newUser);
         } else {
             throw new GeneralException("无法修改：该用户不存在！");
