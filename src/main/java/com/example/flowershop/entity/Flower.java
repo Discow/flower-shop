@@ -2,11 +2,13 @@ package com.example.flowershop.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Builder
 @Getter
@@ -35,4 +37,15 @@ public class Flower {
     @JoinColumn(name = "category_id")
     @JsonBackReference
     private FlowerCategory flowerCategory;
+
+    //反向关联收藏 一对多
+    @OneToMany(mappedBy = "flower", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Favorite> favorite;
+
+    //反向关联评价 一对多
+    @OneToMany(mappedBy = "flower", cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Comment> comments;
+
 }

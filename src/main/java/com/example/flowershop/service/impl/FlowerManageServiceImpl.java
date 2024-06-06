@@ -1,10 +1,7 @@
 package com.example.flowershop.service.impl;
 
 import com.example.flowershop.dto.FlowerAndCategoryDto;
-import com.example.flowershop.entity.Flower;
-import com.example.flowershop.entity.FlowerCategory;
-import com.example.flowershop.entity.QFlower;
-import com.example.flowershop.entity.QFlowerCategory;
+import com.example.flowershop.entity.*;
 import com.example.flowershop.exception.GeneralException;
 import com.example.flowershop.repositories.FlowerCategoryRepository;
 import com.example.flowershop.repositories.FlowerRepository;
@@ -106,6 +103,14 @@ public class FlowerManageServiceImpl implements FlowerManageService {
 
     @Override
     public void deleteFlower(Integer flowerId) {
+        QOrderDetail qOrderDetail = QOrderDetail.orderDetail;
+        Long queryCount = jpaQueryFactory.select(qOrderDetail.count())
+                .from(qOrderDetail)
+                .where(qOrderDetail.flower.id.eq(flowerId))
+                .fetchOne();
+        if (queryCount != null && queryCount > 0L) {
+            throw new GeneralException("无法删除：此商品已被购买");
+        }
         flowerRepository.deleteById(flowerId);
     }
 
