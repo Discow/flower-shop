@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>结算</title>
+    <link rel="stylesheet" href="/res/layui/css/layui.css">
+    <script src="/res/layui/layui.js"></script>
+</head>
+<body>
+<form class="layui-form" style="margin: 100px 500px;">
+    <div class="layui-form-item">
+        <label class="layui-form-label">支付方式</label>
+        <div class="layui-input-block">
+            <input type="radio" name="paymentType" value="支付宝" title="支付宝" checked>
+            <input type="radio" name="paymentType" value="微信支付" title="微信支付">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">订单备注</label>
+        <div class="layui-input-block">
+            <textarea id="note" name="note" placeholder="请输入订单备注" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">收货方式</label>
+        <div class="layui-input-block">
+            <input type="radio" name="receiveType" value="到店自取" title="到店自取" lay-filter="deliveryType" checked>
+            <input type="radio" name="receiveType" value="上门配送" title="上门配送" lay-filter="deliveryType">
+        </div>
+    </div>
+    <div class="delivery-info" style="display: none;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">收件人</label>
+            <div class="layui-input-block">
+                <input type="text" name="receiver" id="receiver" placeholder="请输入收件人姓名"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收货地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="address" id="address" placeholder="请输入收货地址"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">送达时间</label>
+            <div class="layui-input-block">
+                <input type="text" name="deliveryTime" id="deliveryTime" placeholder="请输入预计送达时间"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item" style="padding-left: 30px">
+        <span id="total-amount">总金额：0 元</span>
+    </div>
+    <!--结算按钮-->
+    <div class="layui-form-item">
+        <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="pay-btn-demo">立即支付</button>
+    </div>
+
+</form>
+
+<script>
+    layui.use(['layer','jquery','form','laydate'], function(){
+        var layer = layui.layer;
+        var form=layui.form;
+        var laydate = layui.laydate;
+        var $ = layui.jquery;
+
+
+        // 监听收货方式选择
+        form.on('radio(deliveryType)', function (data) {
+            if (data.value === '上门配送') {
+                $('.delivery-info').show();
+                $('#receiver').attr('lay-verify','required')
+                $('#address').attr('lay-verify','required')
+                $('#deliveryTime').attr('lay-verify','required')
+            } else {
+                $('.delivery-info').hide();
+                $('#receiver').removeAttr('lay-verify')
+                $('#address').removeAttr('lay-verify')
+                $('#deliveryTime').removeAttr('lay-verify')
+            }
+        });
+
+        // 监听预计送达时间输入框
+        laydate.render({
+            elem: '#deliveryTime', //指定元素
+            type: 'datetime', //日期时间选择器
+            min: 0 //设置最小可选时间为当前时间
+        });
+
+        //支付按钮事件
+        form.on('submit(pay-btn-demo)', function(data){
+            var field = data.field; // 获取表单字段值
+            //校验表单输入
+            var isValid = form.validate('.layui-input');  // 主动触发验证，v2.7.0 新增
+            if(!isValid){
+                return false
+            }
+            console.log(field)
+            $.post('/api/customer/settle-cart', {paymentType:field.paymentType,
+                receiveType: field.receiveType , note: field.note},function (res) {
+                if (res.code === 200) {
+                    layer.alert('模拟支付成功', function () {
+                        location.href = '/my-orders.html';
+                    });
+                } else {
+                    layer.alert(res.msg,{icon: 5});
+                }
+            })
+            return false;
+        })
+
+        $(document).ready(function () {
+            //获取购物车总金额
+            $.get('/api/customer/total-amount-cart',function (res) {
+                $('#total-amount').text("总金额："+res.data+" 元");
+            })
+        })
+    });
+
+</script>
+</body>
+</html>

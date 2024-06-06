@@ -31,7 +31,7 @@
             <ul class="menu">
               <li><a href="/my-orders.html">我的订单</a></li>
               <li><a href="/my-favorite.html">我的收藏</a></li>
-              <li><a href="">购物车</a></li>
+              <li><a href="/cart.html">购物车</a></li>
                 <li><a href="#" id="username" style="font-size: medium"></a></li>
 
             </ul>
@@ -172,8 +172,9 @@
 
   });
   function addCart(id) {
-      alert('暂未实现')
-      console.log(id)
+      $.post('/api/customer/add-cart',{flowerId:id, quantity: 1},function (res) {
+          alert('加购成功')
+      })
   }
 </script>
 </body>

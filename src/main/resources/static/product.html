@@ -70,7 +70,7 @@
         <li><a href="/index.html">首页</a> </li>
         <li><a href="/my-orders.html">我的订单</a> </li>
         <li><a href="/my-favorite.html">我的收藏</a> </li>
-        <li><a href="#">购物车</a> </li>
+        <li><a href="/cart.html">购物车</a> </li>
       </ul>
     </nav>
   </header>
@@ -105,7 +105,10 @@
       <div class="product-info">
         <div class="product-title line">
           <h1 id="name" style="font-family: 'Microsoft Sans Serif'"></h1>
-          <a onclick="favorite(productId)"><i class="fa fa-heart-o" aria-hidden="true"></i></a>
+            <a>
+                <i onclick="addCart(productId)"  class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp&nbsp
+                <i onclick="favorite(productId)" class="fa fa-heart-o" aria-hidden="true"></i>
+            </a>
         </div>
 
         <div class="other-options line">
@@ -163,7 +166,6 @@
               <div class="layui-input-block">
                   <input type="radio" name="payment" value="支付宝" title="支付宝" checked>
                   <input type="radio" name="payment" value="微信支付" title="微信支付">
-                  <input type="radio" name="payment" value="银行卡" title="银行卡">
               </div>
           </div>
           <div class="layui-form-item layui-form-text">
@@ -420,8 +422,9 @@
           return false
       }
       function addCart(id) {
-          alert('暂未实现')
-          console.log(id)
+          $.post('/api/customer/add-cart',{flowerId:id, quantity: 1},function (res) {
+              alert('加购成功')
+          })
       }
   </script>
 </body>

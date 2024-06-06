@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的商品收藏</title>
+    <!-- 引入Bootstrap CSS -->
+    <link rel="stylesheet" href="/res/bootstrap/css/bootstrap.min.css">
+    <style>
+        header {
+            height: 3rem;
+            background-image: url("/res/img/greenbg.png");
+            background-size: auto;
+            background-position: -20rem -20rem;
+            padding-top: 0.5rem;
+        }
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            width: 85%;
+            margin: 0 auto;
+        }
+        .nav-bar span {
+            margin-right: auto;
+        }
+        .menu {
+            display: block;
+        }
+        .menu li {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        a {
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+        }
+        a:hover {
+            color: mistyrose;
+            text-shadow: 1px 1px magenta;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="nav-bar">
+        <!--      <img src="/res/img/rose-logo.png" alt="logo">-->
+        <span><a class="title" href="#"></a></span>
+        <ul class="menu">
+            <li><a href="/index.html">首页</a> </li>
+            <li><a href="/my-orders.html">我的订单</a> </li>
+            <li><a href="/my-favorite.html">我的收藏</a> </li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container mt-5">
+    <h2 class="mb-4">购物车</h2>
+    <button class="btn btn-light" style="margin-bottom: 10px" onclick="pay()">立即购买</button>
+    <div class="row">
+        <!-- 商品项 -->
+        <!--    <div class="col-md-3 mb-3">-->
+        <!--      <div class="card">-->
+        <!--        <img src="/res/img/9012578.jpg" class="card-img-top" alt="商品图片">-->
+        <!--        <div class="card-body">-->
+        <!--          <h5 class="card-title">商品标题</h5>-->
+        <!--          <p class="card-text">¥199.00</p>-->
+        <!--          <button type="button" class="btn btn-danger btn-sm">移除</button>-->
+        <!--        </div>-->
+        <!--      </div>-->
+        <!--    </div>-->
+    </div>
+</div>
+<!-- 引入Bootstrap JS -->
+<script src="/res/js/jquery-3.7.1.js"></script>
+<script src="/res/bootstrap/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.get('/api/customer/get-cart',function (res) {
+            $.each(res.data,function (index, item) {
+                var favoriteHtml = "<div class=\"col-md-3 mb-3\">\n" +
+                    "      <div class=\"card\">\n" +
+                    "      <a href=\"product.html?id="+item.flowerId+"\">\n" +
+                    "        <img src=\""+"data:image/jpeg;base64,"+item.picture+"\" class=\"card-img-top\" alt=\"商品图片\">\n" +
+                    "      </a>\n" +
+                    "        <div class=\"card-body\">\n" +
+                    "          <h5 class=\"card-title\">"+item.flowerName+"</h5>\n" +
+                    "          <p class=\"card-text\">¥"+item.price+"&nbsp购买数量: "+item.quantity+"&nbsp库存: "+item.inventory+"</p>\n" +
+                    "          <button type=\"button\" onclick='add("+item.flowerId+","+item.quantity+","+item.inventory+")' class=\"btn btn-danger btn-sm\">增加</button>\n" +
+                    "          <button type=\"button\" onclick='decrease("+item.flowerId+","+item.quantity+")' class=\"btn btn-danger btn-sm\">减少</button>\n" +
+                    "          <button type=\"button\" onclick='cancel("+item.flowerId+")' class=\"btn btn-danger btn-sm\">移除</button>\n" +
+                    "        </div>\n" +
+                    "      </div>\n" +
+                    "    </div>";
+                $('.row').append(favoriteHtml)
+            })
+        })
+    })
+    function cancel(id) {
+        $.get('/api/customer/del-cart',{flowerId:id},function (data) {
+            alert(data.msg)
+            location.reload()
+        })
+    }
+
+    function add(id, quantity, inventory) {
+        if (inventory<=quantity) {
+            return false;
+        }
+        $.post('/api/customer/update-cart', {flowerId: id, quantity: quantity + 1}, function (data) {
+            location.reload()
+        });
+    }
+    function decrease(id, quantity) {
+        if (quantity === 1) {
+            return false
+        }
+        $.post('/api/customer/update-cart', {flowerId: id, quantity: quantity - 1}, function (data) {
+            location.reload()
+        })
+    }
+    function pay() {
+        location.href='/settle-cart.html'
+    }
+</script>
+</body>
+</html>

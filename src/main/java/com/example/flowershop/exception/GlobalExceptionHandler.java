@@ -17,6 +17,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public RestBean<?> ExceptionHandler(Exception e) {
+        e.printStackTrace();
         return RestBean.failure("未知异常");
     }
 }
