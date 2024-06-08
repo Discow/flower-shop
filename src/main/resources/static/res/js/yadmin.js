@@ -183,7 +183,7 @@ layui.define(["element", "layer"], function (exports) {
                 closeBtn: 1,
                 resize:false,
                 scrollbar: false,
-                area: ['480px', '537px'],
+                area: ['480px', '335px'],
                 shadeClose: true,
                 content: '/subpage/nav/userInfo.html'
             });
