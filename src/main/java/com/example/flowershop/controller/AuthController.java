@@ -71,12 +71,9 @@ public class AuthController {
                                       @RequestParam String vercode, @RequestParam String codeKey,
                                       @RequestParam String captcha) {
         if (authService.checkMailVerifyCode(email, vercode) && authService.checkShearCaptcha(codeKey, captcha)) {
-            if (authService.forgotPassword(password, email)) {
-                return RestBean.success("密码重置成功");
-            } else {
-                return RestBean.failure(400, "密码重置失败");
-            }
-        } else return RestBean.failure(400, "验证码校验失败");
+            authService.forgotPassword(password, email);
+            return RestBean.success("密码重置成功");
+        } else return RestBean.failure(500, "验证码校验失败");
     }
 
     //获取当前登录的用户信息
@@ -94,15 +91,13 @@ public class AuthController {
     //修改密码
     @PreAuthorize("isAuthenticated()")
     @PostMapping("modify-password")
-    public RestBean<?> modifyPassword(String email, String password, String newPassword) {
-        if (newPassword.equals(password)) {
+    public RestBean<?> modifyPassword(Authentication authentication, String oldPassword, String password) {
+        String email = authentication.getName();
+        if (oldPassword.equals(password)) {
             return RestBean.failure("新密码不能和原密码相同！");
         }
-        if (authService.modifyPassword(email, password, newPassword)) {
-            return RestBean.success("密码修改成功");
-        } else {
-            return RestBean.failure("密码修改失败，请检查原密码是否正确");
-        }
+        authService.modifyPassword(email, oldPassword, password);
+        return RestBean.success("密码修改成功");
     }
 
     //查询登录历史（不能由前端传来账号进行查询，以防隐私泄露）

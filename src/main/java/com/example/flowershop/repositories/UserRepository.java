@@ -21,5 +21,5 @@ public interface UserRepository extends JpaRepository<User, Integer>,
 
     @Modifying
     @Query(value = "update user set password=:newPwd where email=:email", nativeQuery = true)
-    boolean updatePwdByEmail(@Param("newPwd") String encodedNewPassword, @Param("email") String email);
+    void updatePwdByEmail(@Param("newPwd") String encodedNewPassword, @Param("email") String email);
 }

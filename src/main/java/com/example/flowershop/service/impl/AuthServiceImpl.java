@@ -145,10 +145,9 @@ public class AuthServiceImpl implements AuthService {
      * @param email 邮箱
      * @param password 原密码
      * @param newPassword 新密码
-     * @return 修改密码结果
      */
     @Override
-    public boolean modifyPassword(String email, String password, String newPassword) {
+    public void modifyPassword(String email, String password, String newPassword) {
         String encodedNewPassword = passwordEncoder.encode(newPassword);
         //获取用户组
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -156,16 +155,19 @@ public class AuthServiceImpl implements AuthService {
             //校验原密码是否正确，哈希加盐不能直接比较
             User user = userRepository.findByEmail(email).orElse(null);
             if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-                return userRepository.updatePwdByEmail(encodedNewPassword, email);
+                userRepository.updatePwdByEmail(encodedNewPassword, email);
+            } else {
+                throw new GeneralException("密码修改失败，请检查原密码是否正确！");
             }
+        } else {
+            throw new GeneralException("用户未验证！");
         }
-        return false;
     }
 
     @Override
-    public boolean forgotPassword(String newPassword, String email) {
+    public void forgotPassword(String newPassword, String email) {
         String encodedNewPassword = passwordEncoder.encode(newPassword);
-        return userRepository.updatePwdByEmail(encodedNewPassword, email);
+        userRepository.updatePwdByEmail(encodedNewPassword, email);
     }
 
     @Override

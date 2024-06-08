@@ -17,9 +17,9 @@ public interface AuthService extends UserDetailsService {
     //校验邮件验证码
     boolean checkMailVerifyCode(String mail,String userInputVerifyCode);
     //修改密码
-    boolean modifyPassword(String email, String password, String newPassword);
+    void modifyPassword(String email, String password, String newPassword);
     //用户忘记密码
-    boolean forgotPassword(String newPassword, String email);
+    void forgotPassword(String newPassword, String email);
     //用户注册
     void doRegister(String email, String password, String username, String phone);
     //获取当前的用户信息（返回值类型为User或Admin）

@@ -196,7 +196,7 @@ layui.define(["element", "layer"], function (exports) {
                 closeBtn: 1,
                 // resize:false,
                 scrollbar: false,
-                area: ['470px', '342px'],
+                area: ['470px', '298px'],
                 shadeClose: true,
                 content: '/subpage/nav/editPwd.html'
             });

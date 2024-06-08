@@ -259,7 +259,7 @@ layui.use(function(){
             data: field,
             success: function(response) {
                 // 请求成功时的回调函数
-                if (response.code === 400) {
+                if (response.code === 500) {
                     layer.msg(response.msg, {icon: 0});
                 }else {
                     layer.alert('密码重置成功，即将跳转到登录页面', {
