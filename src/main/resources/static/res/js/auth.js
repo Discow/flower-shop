@@ -179,7 +179,7 @@ layui.use(function(){
             success: function(response) {
                 // 请求成功时的回调函数
                 if (response.code === 500) {
-                    layer.msg("注册失败，请检查验证码是否填写正确", {icon: 0});
+                    layer.msg(response.msg, {icon: 0});
                 }else {
                     layer.alert('注册成功，即将跳转到登录页面', {
                         time: 5*1000,

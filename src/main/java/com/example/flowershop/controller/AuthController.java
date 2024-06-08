@@ -42,10 +42,14 @@ public class AuthController {
     public RestBean<?> doRegister(String email, @RequestParam("vercode") String verifyCode, String password,
                                   String username, String phone, String codeKey,
                                   String captcha) {
-        if (authService.checkMailVerifyCode(email, verifyCode) && authService.checkShearCaptcha(codeKey, captcha)) {
-            authService.doRegister(email, password, username, phone);
-            return RestBean.success("注册成功");
-        } else return RestBean.failure("注册失败：验证码错误");
+        if (!authService.checkShearCaptcha(codeKey, captcha)) {
+            return RestBean.failure("注册失败：图形验证码错误");
+        }
+        if (!authService.checkMailVerifyCode(email, verifyCode)) {
+            return RestBean.failure("注册失败：邮件验证码错误");
+        }
+        authService.doRegister(email, password, username, phone);
+        return RestBean.success("注册成功");
     }
 
     //登录验证已由Spring Security接管
