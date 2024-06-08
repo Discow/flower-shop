@@ -1,6 +1,7 @@
 package com.example.flowershop.exception;
 
 import com.example.flowershop.dto.RestBean;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -13,6 +14,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(GeneralException.class)
     public RestBean<?> generalExceptionHandler(GeneralException e) {
         return RestBean.failure(e.getMessage());
+    }
+
+    //未验证
+    @ExceptionHandler(AccessDeniedException.class)
+    public RestBean<?> accessDeniedHandler(AccessDeniedException e) {
+        return RestBean.failure("未验证！");
     }
 
     @ExceptionHandler(Exception.class)
