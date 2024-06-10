@@ -4,6 +4,7 @@ import com.example.flowershop.dto.CartDto;
 import com.example.flowershop.dto.OrderItemDto;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 public interface CartService {
@@ -20,7 +21,7 @@ public interface CartService {
     List<CartDto> findAll(String email);
 
     //购物车结算
-    void buy(String email, String paymentType, String receiveType, String note);
+    void buy(String email, String paymentType, String receiveType, String note, String receiver, String address, Date deliveryTime);
 
     //获取购物车总金额
     BigDecimal getTotalAmount(String email);

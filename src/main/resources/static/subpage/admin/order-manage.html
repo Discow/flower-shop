@@ -58,13 +58,57 @@
         {{#  if(d.status === '已支付' && d.receiveType === '上门配送'){ }}
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="details">详情</a>
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="deliver">发货</a>
-        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="reminder">提醒收货</a>
+        {{# } else if(d.status === '已发货' && d.receiveType === '上门配送'){ }}
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="details">详情</a>
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="logistics">物流</a>
+        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="reminder">提醒取货</a>
         {{# } else if(d.status === '已发货' || d.status === '已支付' && d.receiveType === '到店自取'){ }}
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="details">详情</a>
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="reminder">提醒取货</a>
         {{#  } else { }}
         <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="details">详情</a>
         {{#  } }}
+    </div>
+</script>
+<!--发货单-->
+<script type="text/html" id="editForm">
+    <div style="padding: 16px;">
+        <form class="layui-form layui-form-pane" lay-filter="editFormFilter">
+            <div class="layui-form-item">
+                <label class="layui-form-label">配送公司</label>
+                <div class="layui-input-block">
+                    <input type="text" lay-verify="required" name="company" id="company" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">发货人</label>
+                <div class="layui-input-block">
+                    <input type="text" lay-verify="required" name="consignor" id="consignor" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">收货人</label>
+                <div class="layui-input-block">
+                    <input type="text" lay-verify="required" name="receiver" id="receiver" autocomplete="off" readonly class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">收货地址</label>
+                <div class="layui-input-block">
+                    <input type="text" lay-verify="required" name="address" id="address" autocomplete="off" readonly class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">送达时间</label>
+                <div class="layui-input-block">
+                    <input type="text" lay-verify="required" name="estimatedTime" id="estimatedTime" autocomplete="off" readonly class="layui-input">
+                </div>
+            </div>
+        </form>
     </div>
 </script>
 
@@ -150,15 +194,39 @@
                     })
                 });
             }else if (obj.event === 'deliver') {
-                layer.confirm('确认发货？', {icon: 3}, function(){
-                    $.post('/api/admin/modify-order-status',{orderId:data.id,status:'已发货'},function (data) {
-                        if (data.code === 200) {
-                            layer.alert(data.msg, {icon: 1});
-                            table.reloadData('test')
-                        } else {
-                            layer.alert(data.msg, {icon: 5});
+                layer.open({
+                    title: '发货',
+                    type: 1,
+                    maxmin: true,
+                    shadeClose: true,
+                    content: $('#editForm').html(),
+                    btn: ['确认', '取消'],
+                    success: function () {
+                        //填充物流信息
+                        $.get('/api/admin/get-logistics',{orderId:data.id},function (res) {
+                            form.val('editFormFilter', {
+                                receiver: res.data.receiver,
+                                address: res.data.address,
+                                estimatedTime: res.data.estimated_time,
+                            });
+                        })
+                    },
+                    yes: function (index, layero) {
+                        var isValid = form.validate('.layui-input');  // 主动触发验证，v2.7.0 新增
+                        if(!isValid){
+                            return false
                         }
-                    })
+                        // 提交发货请求
+                        $.post('/api/admin/do-delivery',{orderId: data.id,company:$('#company').val(), consignor:$('#consignor').val()},function (res) {
+                            if (res.code === 200) {
+                                layer.msg(res.msg, {icon: 1});
+                                table.reloadData('test')
+                            } else {
+                                layer.msg(res.msg, {icon: 5});
+                            }
+                        })
+                        layer.close(index);
+                    }
                 });
             }else if (obj.event === 'details') {
                 layer.open({
@@ -189,6 +257,8 @@
                         });
                     }
                 });
+            }else if (obj.event === 'logistics') {
+                layer.msg("暂未实现")
             }
         });
 

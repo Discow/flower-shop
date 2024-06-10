@@ -3,6 +3,7 @@ package com.example.flowershop.controller;
 import com.example.flowershop.dto.OrderDetailDto;
 import com.example.flowershop.dto.RestBean;
 import com.example.flowershop.dto.UserInfoAndOrdersDto;
+import com.example.flowershop.entity.Logistics;
 import com.example.flowershop.service.OrderManageService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -36,5 +37,19 @@ public class OrderManageController {
     public RestBean<?> getOrderDetail(Integer orderId) {
         List<OrderDetailDto> orderDetail = orderManageService.findOrderDetail(orderId);
         return RestBean.success(orderDetail, orderDetail.size());
+    }
+
+    //发货
+    @PostMapping("do-delivery")
+    public RestBean<?> doDelivery(Integer orderId, String company, String consignor) {
+        orderManageService.doDelivery(orderId, company, consignor);
+        return RestBean.success("发货成功");
+    }
+
+    //获取物流信息
+    @GetMapping("get-logistics")
+    public RestBean<?> getLogistics(Integer orderId) {
+        Logistics logistics = orderManageService.findLogisticsByOrderId(orderId);
+        return RestBean.success(logistics, null);
     }
 }

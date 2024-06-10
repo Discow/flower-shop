@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -81,10 +82,10 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void buy(String email, String paymentType, String receiveType, String note) {
+    public void buy(String email, String paymentType, String receiveType, String note, String receiver, String address, Date deliveryTime) {
         String key = CART_KEY_PREFIX + email;
         //提交订单
-        customerOrderService.addOrder(email, paymentType, receiveType, note, getCartBaseInfo(key));
+        customerOrderService.addOrder(email, paymentType, receiveType, note, getCartBaseInfo(key), receiver, address, deliveryTime);
         //清空购物车
         redisTemplate.delete(key);
     }

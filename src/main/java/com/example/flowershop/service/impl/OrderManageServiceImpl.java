@@ -2,10 +2,9 @@ package com.example.flowershop.service.impl;
 
 import com.example.flowershop.dto.OrderDetailDto;
 import com.example.flowershop.dto.UserInfoAndOrdersDto;
-import com.example.flowershop.entity.QFlower;
-import com.example.flowershop.entity.QOrder;
-import com.example.flowershop.entity.QOrderDetail;
-import com.example.flowershop.entity.QUser;
+import com.example.flowershop.entity.*;
+import com.example.flowershop.exception.GeneralException;
+import com.example.flowershop.repositories.LogisticsRepository;
 import com.example.flowershop.repositories.OrderRepository;
 import com.example.flowershop.service.OrderManageService;
 import com.querydsl.core.BooleanBuilder;
@@ -28,7 +27,10 @@ public class OrderManageServiceImpl implements OrderManageService {
     @Resource
     OrderRepository orderRepository;
     @Resource
+    LogisticsRepository logisticsRepository;
+    @Resource
     JPAQueryFactory jpaQueryFactory;
+    private static final String DELIVERY_STATUS = "已发货";
 
     @Override
     public void modifyOrderStatus(Integer orderId, String status) {
@@ -87,5 +89,33 @@ public class OrderManageServiceImpl implements OrderManageService {
                 .from(qOrderDetail, qFlower)
                 .where(qOrderDetail.id.flowerId.eq(qFlower.id), qOrderDetail.id.orderId.eq(orderId))
                 .fetch();
+    }
+
+    @Override
+    public void doDelivery(Integer orderId, String company, String consignor) {
+        QLogistics qLogistics = QLogistics.logistics;
+        Logistics logistics = jpaQueryFactory
+                .select(qLogistics)
+                .from(qLogistics)
+                .where(qLogistics.order.id.eq(orderId))
+                .fetchOne();
+        if (logistics != null) {
+            logistics.setCompany(company);
+            logistics.setConsignor(consignor);
+            logisticsRepository.save(logistics);
+            //更新订单状态为已发货
+            orderRepository.modifyOrderStatus(orderId, DELIVERY_STATUS);
+        } else {
+            throw new GeneralException("该订单不存在！");
+        }
+    }
+
+    @Override
+    public Logistics findLogisticsByOrderId(Integer orderId) {
+        Logistics logistics = logisticsRepository.findByOrderId(orderId);
+        if (logistics == null) {
+            throw new GeneralException("物流信息不存在！");
+        }
+        return logistics;
     }
 }

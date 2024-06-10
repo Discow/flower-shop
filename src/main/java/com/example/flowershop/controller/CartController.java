@@ -4,6 +4,7 @@ import com.example.flowershop.dto.CartDto;
 import com.example.flowershop.dto.OrderItemDto;
 import com.example.flowershop.dto.RestBean;
 import com.example.flowershop.service.CartService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -54,8 +56,9 @@ public class CartController {
     }
 
     @PostMapping("settle-cart")
-    public RestBean<?> settleCart(Authentication authentication, String paymentType, String receiveType, String note) {
-        cartService.buy(authentication.getName(), paymentType, receiveType, note);
+    public RestBean<?> settleCart(Authentication authentication, String paymentType, String receiveType, String note,
+                                  String receiver, String address, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date deliveryTime) {
+        cartService.buy(authentication.getName(), paymentType, receiveType, note, receiver, address, deliveryTime);
         return RestBean.success("购买成功");
     }
 

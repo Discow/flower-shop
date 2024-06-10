@@ -6,10 +6,12 @@ import com.example.flowershop.dto.RestBean;
 import com.example.flowershop.entity.Order;
 import com.example.flowershop.service.CustomerOrderService;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,9 +26,10 @@ public class OrderCustomerController {
     //下单
     @PostMapping("add-order")
     public RestBean<?> addOrder(Authentication authentication, String paymentType, String receiveType,
-                                @RequestParam(required = false) String note, @RequestBody List<OrderItemDto> items) {
+                                @RequestParam(required = false) String note, @RequestBody List<OrderItemDto> items,
+                                String receiver, String address, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date deliveryTime) {
         String email = authentication.getName(); //从security上下文获取当前登录的用户名
-        customerOrderService.addOrder(email, paymentType, receiveType, note, items);
+        customerOrderService.addOrder(email, paymentType, receiveType, note, items, receiver, address, deliveryTime);
         return RestBean.success("下单成功");
     }
 

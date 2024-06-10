@@ -79,6 +79,7 @@ public class MonitorInfoServiceImpl implements MonitorInfoService {
                 .from(qOrder)
                 .where(qOrder.status.notIn("已取消", "unpaid_deleted"))
                 .fetchOne();
+        turnover = turnover != null ? turnover : BigDecimal.ZERO;
 
         Long totalFlower = jpaQueryFactory.select(qFlower.count())
                 .from(qFlower)

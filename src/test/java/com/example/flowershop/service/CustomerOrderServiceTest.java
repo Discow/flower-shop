@@ -23,7 +23,7 @@ class CustomerOrderServiceTest {
         ArrayList<OrderItemDto> items = new ArrayList<>();
         items.add(new OrderItemDto(1, 1));
         items.add(new OrderItemDto(2, 1));
-        service.addOrder("test@qq.com", "支付宝", "同城速递", "测试备注", items);
+        service.addOrder("test@qq.com", "支付宝", "同城速递", "测试备注", items, null, null, null);
     }
 
     @Test

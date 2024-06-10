@@ -4,10 +4,7 @@ import com.example.flowershop.dto.OrderDetailDto;
 import com.example.flowershop.dto.OrderItemDto;
 import com.example.flowershop.entity.*;
 import com.example.flowershop.exception.GeneralException;
-import com.example.flowershop.repositories.FlowerRepository;
-import com.example.flowershop.repositories.OrderDetailRepository;
-import com.example.flowershop.repositories.OrderRepository;
-import com.example.flowershop.repositories.UserRepository;
+import com.example.flowershop.repositories.*;
 import com.example.flowershop.service.CustomerOrderService;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -38,6 +35,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     @Resource
     FlowerRepository flowerRepository;
     @Resource
+    LogisticsRepository logisticsRepository;
+    @Resource
     JPAQueryFactory jpaQueryFactory;
 
     private static final String PAID_STATUS = "已支付";
@@ -47,7 +46,8 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
     private static final String UNPAID_DELETED_STATUS = "unpaid_deleted";
 
     @Override
-    public void addOrder(String email, String paymentType, String receiveType, String note, List<OrderItemDto> items) {
+    public void addOrder(String email, String paymentType, String receiveType, String note, List<OrderItemDto> items,
+                         String receiver, String address, Date deliveryTime) {
         //TODO 用户邮箱在controller层从spring security获取，想办法构建items列表
         User user = userRepository.findByEmail(email).orElse(null);
 
@@ -87,6 +87,16 @@ public class CustomerOrderServiceImpl implements CustomerOrderService {
             orderDetails.add(orderDetail);
         }
         orderDetailRepository.saveAll(orderDetails);
+
+        //如果选择配送则添加配送信息
+        if (receiver != null) {
+            Logistics logistics = new Logistics();
+            logistics.setReceiver(receiver);
+            logistics.setAddress(address);
+            logistics.setEstimated_time(deliveryTime);
+            logistics.setOrder(Order.builder().id(orderId).build()); //关联订单
+            logisticsRepository.save(logistics);
+        }
     }
 
     @Override

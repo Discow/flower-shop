@@ -2,6 +2,7 @@ package com.example.flowershop.service;
 
 import com.example.flowershop.dto.OrderDetailDto;
 import com.example.flowershop.dto.UserInfoAndOrdersDto;
+import com.example.flowershop.entity.Logistics;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -18,4 +19,10 @@ public interface OrderManageService {
 
     //获取订单详情
     List<OrderDetailDto> findOrderDetail(Integer orderId);
+
+    //发货
+    void doDelivery(Integer orderId, String company, String consignor);
+
+    //查询物流信息
+    Logistics findLogisticsByOrderId(Integer orderId);
 }

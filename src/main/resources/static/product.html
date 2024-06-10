@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>商品详情</title>
-  <link rel="stylesheet" href="/res/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商品详情</title>
+    <link rel="stylesheet" href="/res/css/bootstrap.min.css">
     <link rel="stylesheet" href="/res/layui/css/layui.css">
     <link rel="stylesheet" href="/res/css/font-awesome.min.css">
-  <link rel="stylesheet" href="/res/css/reset.css">
-  <link rel="stylesheet" href="/res/css/product.css">
-<!--  <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond&display=swap" rel="stylesheet">-->
+    <link rel="stylesheet" href="/res/css/reset.css">
+    <link rel="stylesheet" href="/res/css/product.css">
+    <!--  <link href="https://fonts.googleapis.com/css?family=Cormorant+Garamond&display=swap" rel="stylesheet">-->
 
     <style>
         .container{
@@ -60,372 +60,375 @@
 </head>
 <body>
 
-  <!-- header of the page-->
-  
-  <header>
+<!-- header of the page-->
+
+<header>
     <nav class="nav-bar">
-<!--      <img src="/res/img/rose-logo.png" alt="logo">-->
-      <span><a class="title" href="#"></a></span>
-      <ul class="menu">
-        <li><a href="/index.html">首页</a> </li>
-        <li><a href="/my-orders.html">我的订单</a> </li>
-        <li><a href="/my-favorite.html">我的收藏</a> </li>
-        <li><a href="/cart.html">购物车</a> </li>
-      </ul>
+        <!--      <img src="/res/img/rose-logo.png" alt="logo">-->
+        <span><a class="title" href="#"></a></span>
+        <ul class="menu">
+            <li><a href="/index.html">首页</a> </li>
+            <li><a href="/my-orders.html">我的订单</a> </li>
+            <li><a href="/my-favorite.html">我的收藏</a> </li>
+            <li><a href="/cart.html">购物车</a> </li>
+        </ul>
     </nav>
-  </header>
+</header>
 
-  <!-- main container -->
+<!-- main container -->
 
-  <main class="main-container">
+<main class="main-container">
     <div class="selected-product">
-      <div class="product-img">
-        <div class="upper-elements">
-<!--          <div class="pagination">-->
-<!--            <div class="ball ball1"></div>-->
-<!--            <div class="ball"></div>-->
-<!--            <div class="ball"></div>-->
-<!--            <div class="ball"></div>-->
-<!--          </div>-->
-<!--          <div class="discount">-->
-<!--            -50%-->
-<!--          </div>-->
+        <div class="product-img">
+            <div class="upper-elements">
+                <!--          <div class="pagination">-->
+                <!--            <div class="ball ball1"></div>-->
+                <!--            <div class="ball"></div>-->
+                <!--            <div class="ball"></div>-->
+                <!--            <div class="ball"></div>-->
+                <!--          </div>-->
+                <!--          <div class="discount">-->
+                <!--            -50%-->
+                <!--          </div>-->
+            </div>
+            <div class="lower-elements">
+                <div class="arrows">
+                    <i class="fa fa-angle-left" aria-hidden="true"></i>&nbsp;
+                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                </div>
+                <!--          <span>h 40cm x w 40cm</span>-->
+            </div>
+            <div class="main-img-frame" id="picture">
+                <img src="" alt="">
+            </div>
         </div>
-        <div class="lower-elements">
-          <div class="arrows">
-            <i class="fa fa-angle-left" aria-hidden="true"></i>&nbsp;
-            <i class="fa fa-angle-right" aria-hidden="true"></i>
-          </div>
-<!--          <span>h 40cm x w 40cm</span>-->
-        </div>
-        <div class="main-img-frame" id="picture">
-          <img src="" alt="">
-        </div>
-      </div>
-      <div class="product-info">
-        <div class="product-title line">
-          <h1 id="name" style="font-family: 'Microsoft Sans Serif'"></h1>
-            <a>
-                <i onclick="addCart(productId)"  class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp&nbsp
-                <i onclick="favorite(productId)" class="fa fa-heart-o" aria-hidden="true"></i>
-            </a>
-        </div>
+        <div class="product-info">
+            <div class="product-title line">
+                <h1 id="name" style="font-family: 'Microsoft Sans Serif'"></h1>
+                <a>
+                    <i onclick="addCart(productId)"  class="fa fa-shopping-cart" aria-hidden="true"></i>&nbsp&nbsp
+                    <i onclick="favorite(productId)" class="fa fa-heart-o" aria-hidden="true"></i>
+                </a>
+            </div>
 
-        <div class="other-options line">
-          <div>
-            <div class="color-picker" style="margin-bottom: 20px;">
-                <span style="font-family: 'Microsoft Himalaya'">花语：</span>
-                <span class="huayu-content" id="description"></span>
-            </div>
-            <div class="" style="margin-bottom: 20px;" >
-                <span style="font-family: 'Microsoft Himalaya'">上架时间：</span>
-                <span id="addTime"></span>
-            </div>
-            <div class="" style="margin-bottom: 20px;">
-                <span style="font-family: 'Microsoft Himalaya'">库存数量：</span>
-                <span id="inventory"></span>
-            </div>
-            <div class="" style="margin-bottom: 20px;">
-                <span style="font-family: 'Microsoft Himalaya'">已售：</span>
-                <span id="sales-volume">100 件（模拟数据）</span>
-            </div>
-          </div>
+            <div class="other-options line">
+                <div>
+                    <div class="color-picker" style="margin-bottom: 20px;">
+                        <span style="font-family: 'Microsoft Himalaya'">花语：</span>
+                        <span class="huayu-content" id="description"></span>
+                    </div>
+                    <div class="" style="margin-bottom: 20px;" >
+                        <span style="font-family: 'Microsoft Himalaya'">上架时间：</span>
+                        <span id="addTime"></span>
+                    </div>
+                    <div class="" style="margin-bottom: 20px;">
+                        <span style="font-family: 'Microsoft Himalaya'">库存数量：</span>
+                        <span id="inventory"></span>
+                    </div>
+                    <div class="" style="margin-bottom: 20px;">
+                        <span style="font-family: 'Microsoft Himalaya'">已售：</span>
+                        <span id="sales-volume">100 件（模拟数据）</span>
+                    </div>
+                </div>
 
+            </div>
+            <div class="total line">
+                <!--          <span class="old-price">$89</span>-->
+                <span class="new-price" style="color: #ff6200" id="price">￥49</span>
+                <div class="buy-btn">立即购买</div>
+                &nbsp;&nbsp;
+                <span><a href="#" style="color:unset;text-shadow:unset;font-size: small" lay-on="page">查看评价</a></span>
+            </div>
         </div>
-        <div class="total line">
-<!--          <span class="old-price">$89</span>-->
-          <span class="new-price" style="color: #ff6200" id="price">￥49</span>
-          <div class="buy-btn">立即购买</div>
-            &nbsp;&nbsp;
-            <span><a href="#" style="color:unset;text-shadow:unset;font-size: small" lay-on="page">查看评价</a></span>
-        </div>
-      </div>
     </div>
 
     <!-- related products section -->
 
-      <div class="related-products">
-          <nav class="related-products-bar">
-              <h2 class="title">相关推荐</h2>
-              <div class="related-arrows">
-                  <i class="fa fa-angle-left" aria-hidden="true"></i>
-                  &nbsp;
-                  <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-          </nav>
-          <div class="related-box">
-          </div>
-      </div>
+    <div class="related-products">
+        <nav class="related-products-bar">
+            <h2 class="title">相关推荐</h2>
+            <div class="related-arrows">
+                <i class="fa fa-angle-left" aria-hidden="true"></i>
+                &nbsp;
+                <i class="fa fa-angle-right" aria-hidden="true"></i>
+            </div>
+        </nav>
+        <div class="related-box">
+        </div>
+    </div>
 
-  </main>
+</main>
 
-  <script type="text/html" id="orderForm">
-      <form class="layui-form" style="padding-right: 20px;">
-          <div class="layui-form-item">
-              <label class="layui-form-label">支付方式</label>
-              <div class="layui-input-block">
-                  <input type="radio" name="payment" value="支付宝" title="支付宝" checked>
-                  <input type="radio" name="payment" value="微信支付" title="微信支付">
-              </div>
-          </div>
-          <div class="layui-form-item layui-form-text">
-              <label class="layui-form-label">订单备注</label>
-              <div class="layui-input-block">
-                  <textarea id="note" name="remark" placeholder="请输入订单备注" class="layui-textarea"></textarea>
-              </div>
-          </div>
-          <div class="layui-form-item">
-              <label class="layui-form-label">购买数量</label>
-              <div class="layui-input-block">
-                  <input type="number" lay-verify="required" id="quantity" name="quantity" value="1" placeholder="请输入数量" autocomplete="off" class="layui-input" min="1" step="1" max="99" oninput="validity.valid||(value='');" lay-affix="number">
-              </div>
-          </div>
-          <div class="layui-form-item">
-              <label class="layui-form-label">收货方式</label>
-              <div class="layui-input-block">
-                  <input type="radio" name="delivery" value="到店自取" title="到店自取" lay-filter="deliveryType" checked>
-                  <input type="radio" name="delivery" value="上门配送" title="上门配送" lay-filter="deliveryType">
-              </div>
-          </div>
-          <div class="delivery-info" style="display: none;">
-              <div class="layui-form-item">
-                  <label class="layui-form-label">收件人</label>
-                  <div class="layui-input-block">
-                      <input type="text" name="receiver" id="receiver" placeholder="请输入收件人姓名"
-                             autocomplete="off" class="layui-input">
-                  </div>
-              </div>
-              <div class="layui-form-item">
-                  <label class="layui-form-label">收货地址</label>
-                  <div class="layui-input-block">
-                      <input type="text" name="address" id="address" placeholder="请输入收货地址"
-                             autocomplete="off" class="layui-input">
-                  </div>
-              </div>
-              <div class="layui-form-item">
-                  <label class="layui-form-label">送达时间</label>
-                  <div class="layui-input-block">
-                      <input type="text" name="deliveryTime" id="deliveryTime" placeholder="请输入预计送达时间"
-                             autocomplete="off" class="layui-input">
-                  </div>
-              </div>
-          </div>
+<script type="text/html" id="orderForm">
+    <form class="layui-form" style="padding-right: 20px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付方式</label>
+            <div class="layui-input-block">
+                <input type="radio" name="payment" value="支付宝" title="支付宝" checked>
+                <input type="radio" name="payment" value="微信支付" title="微信支付">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">订单备注</label>
+            <div class="layui-input-block">
+                <textarea id="note" name="remark" placeholder="请输入订单备注" class="layui-textarea"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">购买数量</label>
+            <div class="layui-input-block">
+                <input type="number" lay-verify="required" id="quantity" name="quantity" value="1" placeholder="请输入数量" autocomplete="off" class="layui-input" min="1" step="1" max="99" oninput="validity.valid||(value='');" lay-affix="number">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">收货方式</label>
+            <div class="layui-input-block">
+                <input type="radio" name="delivery" value="到店自取" title="到店自取" lay-filter="deliveryType" checked>
+                <input type="radio" name="delivery" value="上门配送" title="上门配送" lay-filter="deliveryType">
+            </div>
+        </div>
+        <div class="delivery-info" style="display: none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">收件人</label>
+                <div class="layui-input-block">
+                    <input type="text" name="receiver" id="receiver" placeholder="请输入收件人姓名"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">收货地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="address" id="address" placeholder="请输入收货地址"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">送达时间</label>
+                <div class="layui-input-block">
+                    <input type="text" name="deliveryTime" id="deliveryTime" placeholder="请输入预计送达时间"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
 
-          <div class="layui-form-item" style="padding-left: 30px">
-              <span id="total-amount">总金额：0 元</span>
-          </div>
-      </form>
-  </script>
+        <div class="layui-form-item" style="padding-left: 30px">
+            <span id="total-amount">总金额：0 元</span>
+        </div>
+    </form>
+</script>
 
-  <script src="/res/js/jquery-3.7.1.js"></script>
-  <script src="/res/layui/layui.js"></script>
-  <script>
-      layui.use(['layer','flow', 'rate','util','jquery','form','laydate'], function(){
-          var layer = layui.layer;
-          var form=layui.form;
-          var util = layui.util;
-          var flow = layui.flow;
-          var rate = layui.rate;
-          var laydate = layui.laydate;
-          var $ = layui.jquery;
+<script src="/res/js/jquery-3.7.1.js"></script>
+<script src="/res/layui/layui.js"></script>
+<script>
+    layui.use(['layer','flow', 'rate','util','jquery','form','laydate'], function(){
+        var layer = layui.layer;
+        var form=layui.form;
+        var util = layui.util;
+        var flow = layui.flow;
+        var rate = layui.rate;
+        var laydate = layui.laydate;
+        var $ = layui.jquery;
 
-          var params = new URLSearchParams(window.location.search);
-          window.productId = params.get('id');
+        var params = new URLSearchParams(window.location.search);
+        window.productId = params.get('id');
 
-          util.on('lay-on', {
-              page: function(){
-                  // 页面层
-                  layer.open({
-                      type: 1,
-                      title:'商品评价',
-                      area: ['800px', '600px'], // 宽高
-                      content: '<div style="padding: 20px" id="commentArea"></div>',
-                      success:function () {
-                          // 使用流加载评论
-                          flow.load({
-                              elem: '#commentArea', // 指定列表容器的选择器
-                              done: function(page, next){ // 执行下一页的回调
-                                  // 模拟向后端请求数据
-                                  var lis = [];
-                                  $.get('/api/customer/get-comment', {
-                                      flowerId: productId, // 您需要传递的flowerId
-                                      page: page, // 当前页码
-                                      limit: 10 // 每页显示的数量
-                                  }, function(res){
-                                      // 使用layui的each方法遍历返回的数据
-                                      layui.each(res.data, function(index, item){
-                                          var rateId = 'rate-demo-' + index;
-                                          var li="<div class=\"media user-review\">\n" +
-                                              "                  <img src=\"/res/img/avatar.png\" alt=\"用户头像\" class=\"align-self-start mr-3 user-avatar\">\n" +
-                                              "                  <div class=\"media-body\">\n" +
-                                              "                      <h5 class=\"mt-0 username\" style='margin-bottom: 10px'>"+item.username+"</h5>\n" +
-                                              "                      <p class=\"review-time\">"+item.time+"</p>\n" +
-                                              "                      <div id=\""+rateId +"\"></div>\n" +
-                                              "                      <p>"+item.content+"</p>\n" +
-                                              "                  </div>\n" +
-                                              "              </div>"
+        util.on('lay-on', {
+            page: function(){
+                // 页面层
+                layer.open({
+                    type: 1,
+                    title:'商品评价',
+                    area: ['800px', '600px'], // 宽高
+                    content: '<div style="padding: 20px" id="commentArea"></div>',
+                    success:function () {
+                        // 使用流加载评论
+                        flow.load({
+                            elem: '#commentArea', // 指定列表容器的选择器
+                            done: function(page, next){ // 执行下一页的回调
+                                // 模拟向后端请求数据
+                                var lis = [];
+                                $.get('/api/customer/get-comment', {
+                                    flowerId: productId, // 您需要传递的flowerId
+                                    page: page, // 当前页码
+                                    limit: 10 // 每页显示的数量
+                                }, function(res){
+                                    // 使用layui的each方法遍历返回的数据
+                                    layui.each(res.data, function(index, item){
+                                        var rateId = 'rate-demo-' + index;
+                                        var li="<div class=\"media user-review\">\n" +
+                                            "                  <img src=\"/res/img/avatar.png\" alt=\"用户头像\" class=\"align-self-start mr-3 user-avatar\">\n" +
+                                            "                  <div class=\"media-body\">\n" +
+                                            "                      <h5 class=\"mt-0 username\" style='margin-bottom: 10px'>"+item.username+"</h5>\n" +
+                                            "                      <p class=\"review-time\">"+item.time+"</p>\n" +
+                                            "                      <div id=\""+rateId +"\"></div>\n" +
+                                            "                      <p>"+item.content+"</p>\n" +
+                                            "                  </div>\n" +
+                                            "              </div>"
 
-                                          lis.push(li)
-                                      });
+                                        lis.push(li)
+                                    });
 
-                                      // 执行下一页的回调
-                                      next(lis.join(''), page*10 < res.count);
+                                    // 执行下一页的回调
+                                    next(lis.join(''), page*10 < res.count);
 
-                                      // 初始化评分组件
-                                      layui.each(res.data, function(index, item){
-                                          rate.render({
-                                              elem: '#rate-demo-' + index, // 使用生成的唯一ID
-                                              value: item.rating, // 初始值
-                                              readonly: true // 只读，不允许修改
-                                          });
-                                      });
-                                  });
-                              }
-                          });
-                      }
-                  });
-              },
-          });
+                                    // 初始化评分组件
+                                    layui.each(res.data, function(index, item){
+                                        rate.render({
+                                            elem: '#rate-demo-' + index, // 使用生成的唯一ID
+                                            value: item.rating, // 初始值
+                                            readonly: true // 只读，不允许修改
+                                        });
+                                    });
+                                });
+                            }
+                        });
+                    }
+                });
+            },
+        });
 
-          // 下单支付按钮点击事件
-          $('.buy-btn').on('click', function () {
-              layer.open({
-                  type: 1,
-                  title: '下单支付',
-                  content: $('#orderForm').html(),
-                  // area: ['500px', '300px'], // 设置弹出层大小
-                  btn: ['提交订单', '取消'],
-                  success: function () {
-                      laydate.render({
-                          elem: '#deliveryTime', //指定元素
-                          type: 'datetime', //日期时间选择器
-                          min: 0 //设置最小可选时间为当前时间
-                      });
-                      // 在按钮容器的左侧添加显示总金额的元素
-                      function calculateTotalAmount() {
-                          var quantity = Number($('#quantity').val());
-                          var totalAmount = quantity * unitPrice;
-                          $('#total-amount').text('总金额：'+totalAmount+' 元');
-                      }
-                      setInterval(calculateTotalAmount, 200);
-                      form.render()
-                  },
-                  yes: function (index, layero) {
-                      //校验表单输入
-                      var isValid = form.validate('.layui-input');  // 主动触发验证，v2.7.0 新增
-                      if(!isValid){
-                          return false
-                      }
+        // 下单支付按钮点击事件
+        $('.buy-btn').on('click', function () {
+            layer.open({
+                type: 1,
+                title: '下单支付',
+                content: $('#orderForm').html(),
+                // area: ['500px', '300px'], // 设置弹出层大小
+                btn: ['提交订单', '取消'],
+                success: function () {
+                    laydate.render({
+                        elem: '#deliveryTime', //指定元素
+                        type: 'datetime', //日期时间选择器
+                        min: 0 //设置最小可选时间为当前时间
+                    });
+                    // 在按钮容器的左侧添加显示总金额的元素
+                    function calculateTotalAmount() {
+                        var quantity = Number($('#quantity').val());
+                        var totalAmount = quantity * unitPrice;
+                        $('#total-amount').text('总金额：'+totalAmount+' 元');
+                    }
+                    setInterval(calculateTotalAmount, 200);
+                    form.render()
+                },
+                yes: function (index, layero) {
+                    //校验表单输入
+                    var isValid = form.validate('.layui-input');  // 主动触发验证，v2.7.0 新增
+                    if(!isValid){
+                        return false
+                    }
 
-                      // 提交订单的逻辑处理
-                      var queryString = "paymentType="+$('input[name="payment"]:checked').val()
-                          +"&receiveType="+$('input[name="delivery"]:checked').val()+""
-                          +"&note="+$('#note').val()+"";
+                    // 提交订单的逻辑处理
+                    var queryString = "paymentType="+$('input[name="payment"]:checked').val()
+                        +"&receiveType="+$('input[name="delivery"]:checked').val()+""
+                        +"&note="+$('#note').val()+""
+                        +"&receiver="+$('#receiver').val()+""
+                        +"&address="+$('#address').val()+""
+                        +"&deliveryTime="+$('#deliveryTime').val()+"";
 
-                      var payload = [
-                          {
-                              "flowerId": productId,
-                              "quantity": $('#quantity').val()
-                          }
-                      ];
+                    var payload = [
+                        {
+                            "flowerId": productId,
+                            "quantity": $('#quantity').val()
+                        }
+                    ];
 
-                      $.ajax({
-                          url: '/api/customer/add-order?'+queryString,
-                          type: 'POST',
-                          contentType: 'application/json', // 设置Content-Type为application/json
-                          data:JSON.stringify(payload),
-                          success: function(data) {
-                              if (data.code === 200) {
-                                  layer.alert(data.msg, {icon: 1},function () {
-                                      window.location.href='/my-orders.html'
-                                  });
-                              } else {
-                                  layer.alert(data.msg, {icon: 5});
-                              }
-                          },
-                      })
+                    $.ajax({
+                        url: '/api/customer/add-order?'+queryString,
+                        type: 'POST',
+                        contentType: 'application/json', // 设置Content-Type为application/json
+                        data:JSON.stringify(payload),
+                        success: function(data) {
+                            if (data.code === 200) {
+                                layer.alert(data.msg, {icon: 1},function () {
+                                    window.location.href='/my-orders.html'
+                                });
+                            } else {
+                                layer.alert(data.msg, {icon: 5});
+                            }
+                        },
+                    })
 
-                      layer.close(index); // 如果设定了yes回调，需进行手工关闭
-                  }
-              });
-          });
+                    layer.close(index); // 如果设定了yes回调，需进行手工关闭
+                }
+            });
+        });
 
 
-          // 监听收货方式选择
-          form.on('radio(deliveryType)', function (data) {
-              if (data.value === '上门配送') {
-                  $('.delivery-info').show();
-                  $('#receiver').attr('lay-verify','required')
-                  $('#address').attr('lay-verify','required')
-                  $('#deliveryTime').attr('lay-verify','required')
-              } else {
-                  $('.delivery-info').hide();
-                  $('#receiver').removeAttr('lay-verify')
-                  $('#address').removeAttr('lay-verify')
-                  $('#deliveryTime').removeAttr('lay-verify')
-              }
-          });
+        // 监听收货方式选择
+        form.on('radio(deliveryType)', function (data) {
+            if (data.value === '上门配送') {
+                $('.delivery-info').show();
+                $('#receiver').attr('lay-verify','required')
+                $('#address').attr('lay-verify','required')
+                $('#deliveryTime').attr('lay-verify','required')
+            } else {
+                $('.delivery-info').hide();
+                $('#receiver').removeAttr('lay-verify')
+                $('#address').removeAttr('lay-verify')
+                $('#deliveryTime').removeAttr('lay-verify')
+            }
+        });
 
-          //填充商品详情页
-          $(document).ready(function () {
-              if (productId === null || productId === '' || productId === 'undefined') {
-                  window.location.href='/index.html'
-                  return
-              }
+        //填充商品详情页
+        $(document).ready(function () {
+            if (productId === null || productId === '' || productId === 'undefined') {
+                window.location.href='/index.html'
+                return
+            }
 
-              $.get('/api/customer/mainPage/get-flower',{id:productId}, function (response) {
-                  //设置单价全局变量
-                  window.unitPrice = response.data.price;
+            $.get('/api/customer/mainPage/get-flower',{id:productId}, function (response) {
+                //设置单价全局变量
+                window.unitPrice = response.data.price;
 
-                  if (response.data.status === '已下架') {
-                      $('.buy-btn').replaceWith("<span style='color: hotpink;margin-left: 5px'>此商品已下架</span>")
-                  }else if (response.data.inventory === 0) {
-                      $('.buy-btn').replaceWith("<span style='color: hotpink;margin-left: 5px'>此商品已售罄</span>")
-                  }
-                  $('#name').text(response.data.name);
-                  $('#price').text('￥'+response.data.price)
-                  $('#description').text(response.data.description)
-                  $('#inventory').text(response.data.inventory)
-                  $('#addTime').text(response.data.addTime)
-                  $('#picture').html("<img src=\""+'data:image/jpeg;base64,'+response.data.picture+"\" alt=\"\">")
-              });
+                if (response.data.status === '已下架') {
+                    $('.buy-btn').replaceWith("<span style='color: hotpink;margin-left: 5px'>此商品已下架</span>")
+                }else if (response.data.inventory === 0) {
+                    $('.buy-btn').replaceWith("<span style='color: hotpink;margin-left: 5px'>此商品已售罄</span>")
+                }
+                $('#name').text(response.data.name);
+                $('#price').text('￥'+response.data.price)
+                $('#description').text(response.data.description)
+                $('#inventory').text(response.data.inventory)
+                $('#addTime').text(response.data.addTime)
+                $('#picture').html("<img src=\""+'data:image/jpeg;base64,'+response.data.picture+"\" alt=\"\">")
+            });
 
-              //获取销量
-              $.get('/api/customer/mainPage/get-sales-volume',{flowerId:productId},function (data) {
-                  $('#sales-volume').text(data.data !== null ? data.data : 0 + ' 件');
-              })
+            //获取销量
+            $.get('/api/customer/mainPage/get-sales-volume',{flowerId:productId},function (data) {
+                $('#sales-volume').text(data.data !== null ? data.data : 0 + ' 件');
+            })
 
-              //填充相关推荐
-              $.get('/api/customer/mainPage/get-random-three', function (res) {
-                  $.each(res.data,function (index, items) {
-                      var iRelated=index+1
-                      var relatedProduct = "<div class=\"related"+iRelated+" related\">\n" +
-                          "                  <div class=\"img-frame\">\n" +
-                          "                      <a href=\"product.html?id="+items.id+"\">\n" +
-                          "                          <img src=\""+"data:image/jpeg;base64,"+items.picture+"\" alt=\"\">\n" +
-                          "                      </a>\n" +
-                          "                  </div>\n" +
-                          "                  <span>"+items.name+"</span>\n" +
-                          "                  <span class=\"price-span\">"+"￥"+items.price+" <a onclick='addCart("+items.id+")'><i class=\"fa fa-shopping-cart\" aria-hidden=\"true\"></i></a></span>\n" +
-                          "              </div>";
-                      $('.related-box').append(relatedProduct)
-                  })
-              });
-          })
-      });
+            //填充相关推荐
+            $.get('/api/customer/mainPage/get-random-three', function (res) {
+                $.each(res.data,function (index, items) {
+                    var iRelated=index+1
+                    var relatedProduct = "<div class=\"related"+iRelated+" related\">\n" +
+                        "                  <div class=\"img-frame\">\n" +
+                        "                      <a href=\"product.html?id="+items.id+"\">\n" +
+                        "                          <img src=\""+"data:image/jpeg;base64,"+items.picture+"\" alt=\"\">\n" +
+                        "                      </a>\n" +
+                        "                  </div>\n" +
+                        "                  <span>"+items.name+"</span>\n" +
+                        "                  <span class=\"price-span\">"+"￥"+items.price+" <a onclick='addCart("+items.id+")'><i class=\"fa fa-shopping-cart\" aria-hidden=\"true\"></i></a></span>\n" +
+                        "              </div>";
+                    $('.related-box').append(relatedProduct)
+                })
+            });
+        })
+    });
 
-      //商品详情页的收藏按钮动作
-      function favorite(flowerId) {
-          $.get('/api/customer/add-or-rm-favorite',{flowerId:flowerId},function (data) {
-              alert(data.msg)
-          })
-          return false
-      }
-      function addCart(id) {
-          $.post('/api/customer/add-cart',{flowerId:id, quantity: 1},function (res) {
-              alert('加购成功')
-          })
-      }
-  </script>
+    //商品详情页的收藏按钮动作
+    function favorite(flowerId) {
+        $.get('/api/customer/add-or-rm-favorite',{flowerId:flowerId},function (data) {
+            alert(data.msg)
+        })
+        return false
+    }
+    function addCart(id) {
+        $.post('/api/customer/add-cart',{flowerId:id, quantity: 1},function (res) {
+            alert('加购成功')
+        })
+    }
+</script>
 </body>
 </html>

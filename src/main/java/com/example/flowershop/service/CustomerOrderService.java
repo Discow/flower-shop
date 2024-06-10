@@ -5,6 +5,7 @@ import com.example.flowershop.dto.OrderItemDto;
 import com.example.flowershop.entity.Order;
 import org.springframework.data.domain.Page;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,7 +13,8 @@ import java.util.List;
  */
 public interface CustomerOrderService {
     //下单
-    void addOrder(String email, String paymentType, String receiveType, String note, List<OrderItemDto> items);
+    void addOrder(String email, String paymentType, String receiveType, String note, List<OrderItemDto> items,
+                  String receiver, String address, Date deliveryTime);
 
     //删除订单
     void deleteOrder(String email, Integer orderId);

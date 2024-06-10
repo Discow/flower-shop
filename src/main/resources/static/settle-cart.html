@@ -102,7 +102,8 @@
             }
             console.log(field)
             $.post('/api/customer/settle-cart', {paymentType:field.paymentType,
-                receiveType: field.receiveType , note: field.note},function (res) {
+                receiveType: field.receiveType , note: field.note,receiver:field.receiver,
+                address:field.address, deliveryTime: field.deliveryTime},function (res) {
                 if (res.code === 200) {
                     layer.alert('模拟支付成功', function () {
                         location.href = '/my-orders.html';
