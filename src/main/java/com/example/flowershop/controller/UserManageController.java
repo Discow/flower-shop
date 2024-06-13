@@ -58,7 +58,7 @@ public class UserManageController {
         } else if ("admin".equalsIgnoreCase(role)) {
             roleEnum = User.Role.ADMIN;
         }
-        if (password != null) {
+        if (password != null && !password.isEmpty()) {
             password = encoder.encode(password);
         }
         return User.builder()
