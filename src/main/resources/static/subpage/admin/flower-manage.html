@@ -216,6 +216,7 @@
                     offset: '0%',
                     btn: ['确认', '取消'],
                     success: function () {
+                        uploadRender()
                         fillCategory()
                         form.render()
                     },
@@ -263,6 +264,7 @@
                     shadeClose: true,
                     offset: '0%',
                     success: function () {
+                        uploadRender()
                         fillForm(data)
                     },
                     yes: function (index, layero) {
@@ -340,13 +342,7 @@
             });
         }
 
-        // 填充表单
-        var categoryName
-        function fillForm(data) {
-            if (data.length > 0) { //判断data是否为数组类型
-                data = data[0];
-            }
-            //渲染上传组件
+        function uploadRender() {
             upload.render({
                 elem: '#ID-upload-demo-drag',
                 auto: false,
@@ -361,6 +357,16 @@
                     return false;
                 },
             });
+        }
+
+        // 填充表单
+        var categoryName
+        function fillForm(data) {
+            if (data.length > 0) { //判断data是否为数组类型
+                data = data[0];
+            }
+            //渲染上传组件
+            uploadRender()
 
             //如果id为未定义，则为添加操作，不需要填充表单
             if (data.id !== undefined) {
